@@ -111,8 +111,8 @@ const DashboardTop = () => {
                             </Link>
                         </li>
 
-                        <li className="text-center w-1/4 pointer-events-none">
-                            <a href="/add-member/add-member.html" className="inline-block">
+                        <li className="text-center w-1/4">
+                            <Link to='/deliveryorder' className="inline-block">
                                 <div
                                     className="bg-warning-color w-10 h-10 sm:w-12 sm:h-12 rounded-lg text-white flex items-center justify-center m-auto mb-1"
                                 >
@@ -135,7 +135,7 @@ const DashboardTop = () => {
                                 </div>
                                 <span className="text-[10px] sm:text-xs font-medium text-custom-text-color"
                                 > Order Status</span >
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>

@@ -35,6 +35,7 @@ import { AnnouncePendingReducer } from "./reducers/AnnouncPendingReducer";
 import { ProfileGetReducer } from "./reducers/ProdileGetReducer";
 import { securityBooleanReducer } from "./reducers/SecurityBooleanReducer";
 import { DashboardDetailReducer } from "./reducers/DashboradDetailReducer";
+import { DeliveryOrderReducer } from "./reducers/DeliveryOrderReducer";
 
 const userPersistConfig = {
     key: 'user_root',
@@ -73,7 +74,8 @@ const appReducer = combineReducers({
     pendingAnnounce : AnnouncePendingReducer,
     profileDataUpdated : ProfileGetReducer,
     securityBooleanData :securityBooleanReducer,
-    dashboardDetail :DashboardDetailReducer
+    dashboardDetail :DashboardDetailReducer,
+    diliveryorder : DeliveryOrderReducer
 
 });
 

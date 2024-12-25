@@ -33,6 +33,7 @@ import SuccessPayment from '../Pages/successPayment/SuccessPayment';
 import ConverPage from '../Pages/Auth/Settings/ConverPage';
 import Successfull from '../Pages/Reorder/Successfull';
 import TransferFunction from '../Pages/Auth/Settings/TransferFunction';
+import DeliveryOrder from '../Pages/DeliveryOrder/DeliveryOrder';
 
 const BrowserRoute = () => {
 
@@ -76,6 +77,7 @@ const BrowserRoute = () => {
                     <Route path="/successfully" element={<Successfull />} />
                     <Route path="/convert" element={<ConverPage />} />
                     <Route path="/transfer" element={<TransferFunction />} />
+                    <Route path="/deliveryorder" element={<DeliveryOrder />} />
                 </Route>
 
                 {/* Error 404 */}
