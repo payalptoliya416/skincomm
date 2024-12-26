@@ -451,36 +451,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     </select>
                                     {errors.matrix_side && <p className='text-red-500 text-xs'>{errors.matrix_side}</p>}
                                 </div>
-                                {/* <div className="mb-3">
-                                    <label  className='text-[#1e293b] text-[14px] mb-1'>Account Type</label>
-                                    <div className='mt-3'>
-                                        <div className="flex items-center">
-                                            <input
-                                                id="main-account"
-                                                type="radio"
-                                                name="account_type"
-                                                value="0"
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-                                                checked={formData.account_type === 0}
-                                                onChange={handleChange}
-                                            />
-                                            <label htmlFor="main-account" className="ms-2 text-sm font-medium text-black ">Main Account</label>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <input
-                                                id="sub-account"
-                                                type="radio"
-                                                name="account_type"
-                                                value="1"
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-                                                checked={formData.account_type === 1}
-                                                onChange={handleChange}
-                                            />
-                                            <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black ">Sub Account</label>
-                                        </div>
-                                    </div>
-                                    {errors.account_type && <p className='text-red-500 text-xs'>{errors.account_type}</p>}
-                                </div> */}
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>First Name</label>
                                     <input
