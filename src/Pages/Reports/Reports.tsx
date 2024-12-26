@@ -37,7 +37,7 @@ const Reports = () => {
                     <div className="container">
                         <ul className="flex flex-col gap-3 rounded-lg  pr-0">
                             <li> 
-                                <Link  to={ '/memberleger' } className="flex items-start p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
+                                <Link  to={ '/memberleger' } className="flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
                                 >
                                     <div className="-mt-1 w-14">
                                         <svg
@@ -82,7 +82,7 @@ const Reports = () => {
                             </li>
 
                             <li>
-                                <Link to={ '/sponsoredtnetwork' }  className="flex items-start w-full p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ">
+                                <Link to={ '/sponsoredtnetwork' }  className="flex items-start w-full p-3 sm:p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ">
                                 <div className="-mt-1 w-14">
                                         <svg
                                             className="w-6 h-6 text-custom-text-color2"

@@ -99,7 +99,7 @@ function ResetChangePass() {
        <section className="py-20">
           <div className="container">
             <form onSubmit={handleSubmit}>
-              <ul className="flex flex-col gap-7 bg-white rounded-lg px-4 py-6">
+              <ul className="flex flex-col gap-5 sm:gap-7 bg-white rounded-lg px-4 py-6">
                 <li className="">
                   <p className="text-xs font-normal text-custom-text-color mb-1">
                     New Password

@@ -76,7 +76,6 @@ function Announcement() {
                             minute: '2-digit',
                             second: '2-digit',
                           })}</h3> 
-                                            {/* <div className='text-sm text-black' dangerouslySetInnerHTML={{ __html: item.announcement_content }} /> */}
                                             <h4 className='text-sm text-black'>{item.announcement_title}</h4>
                                             </div>
                                             <div >

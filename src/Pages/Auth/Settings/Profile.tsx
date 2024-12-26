@@ -132,6 +132,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     <div className="container">
                          <div className="p-[20px] bg-white rounded-md">
                          <form onSubmit={handleSubmit}>
+                          <div className="mb-3">
         <label className="text-[#1e293b] text-[14px]">Full Name</label>
         <input
           type="text"
@@ -141,7 +142,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           value={`${formData.f_name}  ${formData.l_name}`}
           readOnly
         />
-        
+                          </div>
       <div className="mb-3">
         <label className="text-[#1e293b] text-[14px]">Email</label>
         <input
@@ -188,7 +189,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           <p className="text-red-500 text-xs">{errors.mobile}</p>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-5">
+      <div className="grid grid-cols-12 sm:gap-5">
  <div className="col-span-12 sm:col-span-6">
  <div className="mb-3">
         <label className="text-[#1e293b] text-[14px]">Date of Birth</label>

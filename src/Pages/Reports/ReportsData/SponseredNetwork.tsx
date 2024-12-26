@@ -190,7 +190,7 @@
                                     <option value="2024-12">Dec 2024</option>
                                 </select>
                                 <div className="mt-4">
-                                    <button type="submit" className="py-3 w-full bg-[#178285] text-xs text-white rounded-md">Search</button>
+                                    <button type="submit" className="py-2 sm:py-3 w-full bg-[#178285] text-xs text-white rounded-md">Search</button>
                                 </div>
                             </form>
                             <div className="pt-8">

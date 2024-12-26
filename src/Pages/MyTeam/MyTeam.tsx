@@ -81,9 +81,9 @@ const MyTeam = () => {
                             placeholder="Search"
                             value={searchDate}
                             onChange={handleSearchChange}
-                            className=" py-3 px-2 w-full border rounded-md text-xs placeholder:text-sm relative"
+                            className=" py-2 sm:py-2 px-2 w-full border rounded-md text-xs placeholder:text-sm relative"
                         />
-                        <button onClick={handleSearch} className='py-3 px-3 rounded absolute right-0 top-0 bg-blue-500 '><FiSearch  className='text-white text-base mb-[1px]'/></button>
+                        <button onClick={handleSearch} className='py-2 sm:py-2 px-3 sm:px-3 rounded absolute right-0 top-0 bg-blue-500 '><FiSearch  className='text-white text-base mb-[1px]'/></button>
                             </div>
                         </div>
                             </li>
@@ -91,7 +91,7 @@ const MyTeam = () => {
                     teamsearchData  ? (
                         <>
                         <li> 
-                            <Link  to='/placement-tree' state={{SearchUserID}}  className="flex items-start p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
+                            <Link  to='/placement-tree' state={{SearchUserID}}  className="flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
                             >
                                 <div className="-mt-1 w-14">
                                     <svg
@@ -135,7 +135,7 @@ const MyTeam = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to='/sponsored-network' state={{SearchUserID}}  className="flex items-start w-full p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ">
+                            <Link to='/sponsored-network' state={{SearchUserID}}  className="flex items-start w-full p-3 sm:p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ">
                             <div className="-mt-1 w-14">
                                     <svg
                                         className="w-6 h-6 text-custom-text-color2"
@@ -181,7 +181,7 @@ const MyTeam = () => {
                     ) : (
                         <>
                          <li> 
-                        <div  className="flex items-start p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
+                        <div  className="flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
                         >
                             <div className="-mt-1 w-14">
                             </div>

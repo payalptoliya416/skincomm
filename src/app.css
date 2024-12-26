@@ -57,17 +57,13 @@ body {
     width: 0;
     height: 25px;
 }
-/* react{
-width: 200px;
-    height: 116px;
-} */
-/* table.dataTable tbody tr:nth-last-child(even){
-    background-color: #ededf5 !important;
+
+div.dt-container select.dt-input{
+    padding: 0;
 }
-.dataTables_wrapper .dataTables_length select ,.dataTables_wrapper .dataTables_filter input{
-    border: none !important;
-    border-bottom: 1px solid #ededf5 !important;
+@media (max-width:768px){
+    .dt-info ,.dt-length .dt-input,.dt-length label{
+        font-size: 14px;
+        line-height: 16px;
+    }    
 }
-.dataTables_length{
-    margin: 10px 0 ;
-} */

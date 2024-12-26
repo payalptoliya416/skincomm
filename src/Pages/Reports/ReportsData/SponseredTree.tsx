@@ -159,18 +159,18 @@ const SponseredTree = () => {
                             </div>
                            </div>
                            <div className="mt-4">
-                            <button type="submit" className="py-3 w-full bg-[#178285] text-xs text-white rounded-md">View</button>
+                            <button type="submit" className="py-2 sm:py-3 w-full bg-[#178285] text-xs text-white rounded-md">View</button>
                            </div>
                         </form>
             <div className="relative overflow-x-auto mt-5 border rounded-md">
-            <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative">
-                    <label className="mt-1">Search :</label>
+            <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
+                    <label className="mt-1 text-sm ms:text-base ">Search :</label>
             <input
         type="text"
         placeholder="Search"
         value={searchDate}
         onChange={handleSearchChange}
-        className=" py-2 px-2 border rounded mt-2 me-2 text-xs placeholder:text-sm"
+        className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
       />
                 </div>
             <table ref={tableRef}  style={{ width: "100%" }}   className="display table-auto w-full text-sm text-left rtl:text-right text-black" >

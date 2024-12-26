@@ -304,63 +304,21 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
                             </select>
-                            {/* <span>-</span>
-                            <select {...formik.getFieldProps('to_year')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
-                                <option value="2024">2024</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                            </select> */}
-                            {/* <span>-</span>
-                            <select {...formik.getFieldProps('from_month')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
-                                <option value="01">Jan</option>
-                                <option value="02">Feb</option>
-                                <option value="03">Mar</option>
-                                <option value="04">Apr</option>
-                                <option value="05">May</option>
-                                <option value="06">Jun</option>
-                                <option value="07">Jul</option>
-                                <option value="08">Aug</option>
-                                <option value="09">Sep</option>
-                                <option value="10">Oct</option>
-                                <option value="11">Nov</option>
-                                <option value="12">Dec</option>
-                            </select> */}
                             </div>
                            </div>
-                           {/* <div className="mb-3">
-                           <label className="text-xs text-[#a8a1a7]">Until</label>
-                            <div className="flex gap-20">
-                            
-                            <span>-</span>
-                            <select  {...formik.getFieldProps('to_month')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
-                                <option value="01">Jan</option>
-                                <option value="02">Feb</option>
-                                <option value="03">Mar</option>
-                                <option value="04">Apr</option>
-                                <option value="05">May</option>
-                                <option value="06">Jun</option>
-                                <option value="07">Jul</option>
-                                <option value="08">Aug</option>
-                                <option value="09">Sep</option>
-                                <option value="10">Oct</option>
-                                <option value="11">Nov</option>
-                                <option value="12">Dec</option>
-                            </select>
-                            </div>
-                           </div> */}
                            <div className="mt-4">
-                            <button type="submit" className="py-3 w-full bg-[#178285] text-xs text-white rounded-md hover:bg-[#227275]">View</button>
+                            <button type="submit" className="py-2 sm:py-3 w-full bg-[#178285] text-xs text-white rounded-md hover:bg-[#227275]">View</button>
                            </div>
                         </form>
             <div className="relative overflow-x-auto mt-5 border rounded-md">
-                <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-20 relative">
-                    <label>Search :</label>
+            <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
+                    <label className="mt-1 text-sm ms:text-base ">Search :</label>
             <input
         type="text"
         placeholder="Search"
         value={searchDate}
         onChange={handleSearchChange}
-        className=" py-2 px-2 border rounded mt-2 me-2 text-xs placeholder:text-sm"
+        className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
       />
                 </div>
                 <table ref={tableRef}  style={{ width: "100%" }}   className="display table-auto w-full text-sm text-left rtl:text-right text-black" >

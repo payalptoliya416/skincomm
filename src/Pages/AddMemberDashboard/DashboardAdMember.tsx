@@ -48,7 +48,6 @@ const DashboardAdMember = () => {
     const dispatch = useDispatch<any>();
     const { productListData } = useSelector((state: RootState) => state.product);
     const [userId , setUserId] = useState('');
-    //  const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
     const [selectedPackage ,setSelectedPackage] = useState<any>('');
      const [fName ,setFName] = useState<any>([]);
      const [placementName ,setplacementName] = useState<any>([]);
@@ -176,7 +175,6 @@ const DashboardAdMember = () => {
         
                 if (selectedPackage) {
                     const retailPrice = parseFloat(selectedPackage.combo_product_associate_price);
-                    // const retailPrice = parseFloat(selectedPackage.combo_product_retail_price);
                     const currentTotalRcSp =
                         ValuOfBalance.currency.trim() !== 'USD'
                             ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +

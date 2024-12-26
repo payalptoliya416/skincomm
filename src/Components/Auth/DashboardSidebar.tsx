@@ -120,7 +120,7 @@ const DashboardSidebar = ({ loginState }: any) => {
                             </button>
                         </div>
 
-                        <div className="bg-[#178285] p-5 flex flex-col gap-7">
+                        <div className="bg-[#178285] p-5 flex flex-col gap-5 sm:gap-7">
                         {balanceData && (
                         <>
                             <div className="text-black">

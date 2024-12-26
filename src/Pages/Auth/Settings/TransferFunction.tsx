@@ -225,11 +225,11 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                
                 {balanceData && (
                   <>
-                  <div className="flex items-center gap-4">
-                  <h3>LP : ${balanceData.available_lp.toFixed(2)}</h3>
-                  <h3>PP : ${balanceData.available_pp.toFixed(2)}</h3>
-                  <h3>PP2 : ${balanceData.available_pp2.toFixed(2)}</h3>
-                  <h3>SP : ${balanceData.available_sp.toFixed(2)}</h3>
+                  <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+                  <h3 className="text-sm sm:text-base font-semibold text-black">LP : <span className="font-normal "> ${balanceData.available_lp.toFixed(2)}</span></h3>
+                  <h3 className="text-sm sm:text-base font-semibold text-black">PP : <span className="font-normal ">${balanceData.available_pp.toFixed(2)}</span> </h3>
+                  <h3 className="text-sm sm:text-base font-semibold text-black">PP2 : <span className="font-normal "> ${balanceData.available_pp2.toFixed(2)}</span></h3>
+                  <h3 className="text-sm sm:text-base font-semibold text-black">SP : <span className="font-normal ">${balanceData.available_sp.toFixed(2)}</span> </h3>
                   </div>
                   </>
                 )}

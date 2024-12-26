@@ -39,7 +39,7 @@ const Setting = () => {
 
                 <section className="py-20">
                     <div className="container">
-                        <ul className="flex flex-col gap-7 bg-white rounded-lg p-8 pr-0">
+                        <ul className="flex flex-col gap-5 sm:gap-7 bg-white rounded-lg py-8 px-4 sm:px-8">
                             <li>
                                 <Link
                                     to={ '/profile' }
@@ -63,7 +63,7 @@ const Setting = () => {
                                         </svg>
                                     </div>
                                     <div
-                                        className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border"
+                                        className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
                                         <span>My Account</span>
                                         <svg
@@ -109,7 +109,7 @@ const Setting = () => {
                                         </svg>
                                     </div>
                                     <div
-                                        className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border"
+                                        className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
                                         <span>Bank Account</span>
                                         <svg
@@ -138,7 +138,7 @@ const Setting = () => {
                                         <img src="images/Frame.svg" alt="" />
                                     </div>
                                     <div
-                                        className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border"
+                                        className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
                                         <span> Withdrawal</span>
                                         <svg
@@ -168,7 +168,7 @@ const Setting = () => {
                                         <RiFileTransferLine className="w-[24px] h-[24px] text-custom-text-color2" />
                                     </div>
                                     <div
-                                        className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border"
+                                        className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
                                         <span>Transfer Function</span>
                                         <svg
@@ -198,7 +198,7 @@ const Setting = () => {
                                         <SiConvertio  className="w-[20px] h-[20px] text-custom-text-color2 mt-1" />
                                     </div>
                                     <div
-                                        className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border"
+                                        className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
                                         <span>Convert</span>
                                         <svg
@@ -243,7 +243,7 @@ const Setting = () => {
                                             />
                                         </svg>
                                     </div>
-                                    <div className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border">
+                                    <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
                                         <span>Login Password</span>
                                         <svg
                                             className="w-5 h-5 text-custom-text-color2"
@@ -287,7 +287,7 @@ const Setting = () => {
                                             />
                                         </svg>
                                     </div>
-                                    <div className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border">
+                                    <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
                                         <span>Security Password</span>
                                         
                                         <svg
@@ -332,7 +332,7 @@ const Setting = () => {
                                             />
                                         </svg>
                                     </div>
-                                    <div className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border">
+                                    <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
                                         <span>Share</span>
                                         <svg
                                             className="w-5 h-5 text-custom-text-color2"
@@ -377,7 +377,7 @@ const Setting = () => {
                                         </svg>
                                     </div>
                                     <div
-                                        className="w-full flex items-center justify-between pb-5 pr-2 border-b border-custom-border"
+                                        className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
                                         <span>Help Desk</span>
                                         <svg

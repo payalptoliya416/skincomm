@@ -9,6 +9,7 @@ import { fetchEditAnnounce } from '../../../Redux/thunks/AnnounceEditThunk';
 
 function AnnouncementAdd() {
   const { announceEditData } = useSelector((state: RootState) => state.announceEdit);
+ 
   const location = useLocation();
   const { id } = location.state || {};  
   
