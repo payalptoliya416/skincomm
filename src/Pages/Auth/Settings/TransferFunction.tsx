@@ -108,12 +108,6 @@ const validateForm = () => {
       case "RC":
         availableBalance = balanceData?.available_pp || 0;
         break;
-      case "PP2":
-        availableBalance = balanceData?.available_pp2 || 0;
-        break;
-      case "SP":
-        availableBalance = balanceData?.available_sp || 0;
-        break;
       default:
         availableBalance = 0;
     }
@@ -228,8 +222,6 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                   <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                   <h3 className="text-sm sm:text-base font-semibold text-black">LP : <span className="font-normal "> ${balanceData.available_lp.toFixed(2)}</span></h3>
                   <h3 className="text-sm sm:text-base font-semibold text-black">PP : <span className="font-normal ">${balanceData.available_pp.toFixed(2)}</span> </h3>
-                  <h3 className="text-sm sm:text-base font-semibold text-black">PP2 : <span className="font-normal "> ${balanceData.available_pp2.toFixed(2)}</span></h3>
-                  <h3 className="text-sm sm:text-base font-semibold text-black">SP : <span className="font-normal ">${balanceData.available_sp.toFixed(2)}</span> </h3>
                   </div>
                   </>
                 )}
@@ -264,8 +256,6 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                     <option value="">Select Currency</option>
                     <option value="CC">LP</option>
                     <option value="RC">PP</option>
-                    <option value="SP">RP</option>
-                    <option value="PP2">PP2 </option>
                   </select>
                   {errors.currency && (
                     <p className="text-red-500 text-xs">{errors.currency}</p>
