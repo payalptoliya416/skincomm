@@ -246,9 +246,9 @@ const navigate = useNavigate();
   const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
     e.preventDefault();
     const isValid = validateFormBiz();
-            if (!isValid) {
-                toast.error("Please fill in all required fields before proceeding.");
-                return;
+          if (!isValid) {
+          toast.error("Please fill up all info under Settings - My Profile before any purchases.");
+         return;
     }
 
     const errors = validationErrors();

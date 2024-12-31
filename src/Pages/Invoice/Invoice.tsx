@@ -89,11 +89,16 @@ const filteredData = invoiceData?.invoices?.filter((item: any) => {
         sponsorid,
         co_state,
         co_zip,
+        grand_total,
         total_amount ,
         co_registration_number,
         address,
         address2,
-        deliver_status
+        deliver_status,
+        shipment_costs,
+        RP,
+        PP,
+        credit_card,
     } = pdfData;
     const totalQuantity = products.reduce((acc : any, product : any) => acc + product.quantity, 0);
     // const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc * (product.shipment_costs || 1), 1);
@@ -206,7 +211,7 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                 
             <li>
                 <span class='px-1 pt-0 text-[10px] pb-3'>GRAND TOTAL : </span>
-                <span class='px-1 pt-0 text-[9px] pb-3'>$${total_amount.toFixed(2)}</span>
+               <span class='px-1 pt-0 text-[9px] pb-3'>$${(Number(total_amount) + Number(shipment_costs)).toFixed(2)}</span>
             </li>
                 </ul>
                 </td>
@@ -220,12 +225,15 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                     <tbody>
                         <tr>
                             <td class='font-semibold px-1 pt-0 text-[9px]  pb-3'>Amount Paid $: </td>
-                            <td class='text-[9px] pb-3'> $${total_amount.toFixed(2)} </td>
+                            <td class='text-[9px] pb-3'> $${grand_total.toFixed(2)} </td>
                             <td class='font-semibold px-1 pt-0 text-[9px]  pb-3'>Balance Payment $0 </td>
                             </tr>
                             <tr>
                             <td class='font-semibold px-1 pt-0 text-[9px]  pb-3'>Payment Mode: </td>
-                            <td class='px-1 pt-0 text-[9px]  pb-3'>${payment_type}</td>
+                            <td class='px-1 pt-0 text-[9px]  pb-3'>${payment_type} 
+                            ${payment_type === 'E-WALLET' ? `(PP : ${PP} RP: ${RP} Credit Card: ${credit_card})`: ""}
+                            ${payment_type === "CREDIT CARD" ? `(Credit Card: ${credit_card})`: "" }
+                           </td>
                             <td class='font-semibold px-1 pt-0 text-[9px]  pb-3 gap-2 flex items-center'><span>Deliver Status:</span> <span class='capitalize font-normal pb-1'>${deliver_status ? deliver_status.replace(/_/g, ' ') : ""}</span> </td>
                         </tr>
                     </tbody>
