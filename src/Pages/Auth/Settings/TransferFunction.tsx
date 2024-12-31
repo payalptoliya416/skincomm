@@ -30,64 +30,6 @@ function TransferFunction() {
   const [errors, setErrors] = useState<any>({});
 const [fName ,setFName] = useState<any>("");
 
-// const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-//   const { name, value } = e.target;
-
-//   if (formData.to_user) {
-//     try {
-//       const memberlineID = await dispatch(fetchMemberLine(formData.to_user));
-//       setFName(memberlineID.data);
-//     } catc  h (error) {
-//       console.error("Error fetching member line:", error);
-//     }
-//   }
-
-//   setFormData((prev) => ({
-//     ...prev,
-//     [name]: value,
-//   }));
-// };
-// const validateForm = () => {
-//   const newErrors: any = {};
-
-//   // Check if user ID is provided
-//   if (!formData.to_user) {
-//     newErrors.to_user = "UserId is required";
-//   }
-
-//   if (!formData.amount) {
-//     newErrors.amount = "Amount is required";
-//   } else {
-//     let availableBalance = 0;
-//     switch (formData.currency) {
-//       case "CC":
-//         availableBalance = balanceData?.available_lp || 0;
-//         break;
-//       case "RC":
-//         availableBalance = balanceData?.available_pp || 0;
-//         break;
-//       case "PP2":
-//         availableBalance = balanceData?.available_pp2 || 0;
-//         break;
-//       case "SP":
-//         availableBalance = balanceData?.available_sp || 0;
-//         break;
-//       default:
-//         availableBalance = 0;
-//     }
-
-//     if (parseFloat(formData.amount) > availableBalance) {
-//       newErrors.amount = `Transfer amount exceeds the available balance of ${availableBalance.toFixed(2)}`;
-//     }
-//   }
-
-//   if (!formData.currency) {
-//     newErrors.currency = "Please select a currency";
-//   }
-
-//   return newErrors;
-// };
-
 const validateForm = () => {
   const newErrors: any = {};
 
@@ -124,19 +66,48 @@ const validateForm = () => {
   return newErrors;
 };
 
+// const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+//   const { name, value } = e.target;
+//   if (name === "to_user" && value) {
+//     try {
+//       const memberlineID = await dispatch(fetchMemberLine(value));
+//       setFName(memberlineID.data); 
+//     } catch (error) {
+//       console.error("Error fetching member line:", error);
+//     }
+//   }
+
+//   if (name === "amount") {
+//     const sanitizedValue = value.replace(/[^0-9.]/g, ""); 
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: sanitizedValue,
+//     }));
+//   } else {
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+//   }
+// };
 const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
   const { name, value } = e.target;
 
-  if (name === "to_user" && value) {
-    try {
-      const memberlineID = await dispatch(fetchMemberLine(value));
-      setFName(memberlineID.data); 
-    } catch (error) {
-      console.error("Error fetching member line:", error);
-    }
-  }
+  if (name === "to_user") {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value, // Update immediately
+    }));
 
-  if (name === "amount") {
+    if (value) {
+      try {
+        const memberlineID = await dispatch(fetchMemberLine(value));
+        setFName(memberlineID.data); 
+      } catch (error) {
+        console.error("Error fetching member line:", error);
+      }
+    }
+  } else if (name === "amount") {
     const sanitizedValue = value.replace(/[^0-9.]/g, ""); 
     setFormData((prev) => ({
       ...prev,
@@ -159,7 +130,6 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
       setErrors(validationErrors);
       return;
     }
-  
     try {
       if (fName.error) {
         toast.error(fName.message);
