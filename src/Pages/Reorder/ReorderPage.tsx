@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategoryList, fetchCategoryListtable } from '../../Redux/thunks/ReorderCategoryThunk';
 import { RootState } from '../../Redux/store';
 import { fetchPaymentBy } from '../../Redux/thunks/PaymentByThunk';
-
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchReorderPost } from '../../Redux/thunks/ReorderPostThunk';
@@ -23,11 +22,11 @@ interface FormData {
     currency :string,
     deliver_status: string
 }
-interface CartItem {
-    id: string;
-    count: number;
-    price: number;
-  }
+  interface CartItem {
+      id: string;
+      count: number;
+      price: number;
+    }
 interface productData {
     product_name :string,
     product_code : string
@@ -367,7 +366,6 @@ const navigate = useNavigate();
                         ))}
                     </select>
                     </div>
-                  
                     <div className="mb-3">
                     <label className="text-[#1e293b] text-[14px]">Search By(Product Code/Number)</label>
                     <input

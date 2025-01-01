@@ -36,6 +36,7 @@ import { ProfileGetReducer } from "./reducers/ProdileGetReducer";
 import { securityBooleanReducer } from "./reducers/SecurityBooleanReducer";
 import { DashboardDetailReducer } from "./reducers/DashboradDetailReducer";
 import { DeliveryOrderReducer } from "./reducers/DeliveryOrderReducer";
+import { uprankReducer } from "./reducers/UpRankGetReducer";
 
 const userPersistConfig = {
     key: 'user_root',
@@ -75,7 +76,8 @@ const appReducer = combineReducers({
     profileDataUpdated : ProfileGetReducer,
     securityBooleanData :securityBooleanReducer,
     dashboardDetail :DashboardDetailReducer,
-    diliveryorder : DeliveryOrderReducer
+    diliveryorder : DeliveryOrderReducer,
+    uprankGetData : uprankReducer,
 
 });
 

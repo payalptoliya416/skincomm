@@ -16,9 +16,7 @@ interface DataTransfer {
 function DeliveryOrder() {
   const dispatch = useDispatch<any>();
 
-  const { DeliveryOrder } = useSelector(
-    (state: RootState) => state.diliveryorder
-  );
+  const { DeliveryOrder } = useSelector((state: RootState) => state.diliveryorder);
   const tableRef = useRef(null);
 
   useEffect(() => {

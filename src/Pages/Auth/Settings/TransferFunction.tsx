@@ -102,6 +102,7 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
     if (value) {
       try {
         const memberlineID = await dispatch(fetchMemberLine(value));
+        console.log("memberlineID",memberlineID)
         setFName(memberlineID.data); 
       } catch (error) {
         console.error("Error fetching member line:", error);
