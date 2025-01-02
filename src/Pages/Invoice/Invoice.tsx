@@ -94,6 +94,7 @@ const filteredData = invoiceData?.invoices?.filter((item: any) => {
         co_registration_number,
         address,
         address2,
+        zip,
         deliver_status,
         shipment_costs,
         RP,
@@ -154,10 +155,9 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                                     <div class="flex border-right border-solid border-black px-1 ">
                             <ul class='pt-0 pb-5'>
                                 <li class='text-[9px] mb-1'>Name: ${name}</li>
-                                <li class='text-[9px] mb-1'>Associate Address: ${address ? `${address}` : ""}${address2 ? `, ${address2}` : ""}</li>
+                                <li class='text-[9px] mb-1'>Associate Address: ${address ? `${address}` : ""} ${address2 ? `, ${address2}` : ""} ${ zip? `${zip}` : "" } </li>
                                 <li class='text-[9px] mb-1'>Contact: ${mobile ? mobile : ""}</li>
                             </ul>
-                           
                         </div>
                                     </td>
                                     <td>

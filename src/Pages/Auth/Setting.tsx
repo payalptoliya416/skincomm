@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../Components/Layout";
 import { Link } from "react-router-dom";
 import LanguageSwitcher from "../../Components/Auth/LanguageSwitcher";
@@ -6,7 +6,37 @@ import { RiFileTransferLine } from "react-icons/ri";
 import { SiConvertio } from "react-icons/si";
 
 const Setting = () => {
+   const [joinDate, setJoinDate] = useState<string>(""); 
+       const [expiredTime ,setExpiredTime] = useState<boolean>(false);
+      useEffect(() => {
+          if (joinDate) {
+              const joinDateObj = new Date(joinDate);
+              const ninetiethDayObj = new Date(joinDateObj);
+              ninetiethDayObj.setDate(joinDateObj.getDate() + 90);
+  
+              const interval = setInterval(() => {
+                  const now = new Date();
+                  const difference = ninetiethDayObj.getTime() - now.getTime(); 
+  
+                  if (difference <= 0) {
+                    setExpiredTime(true); // Set expiredTime to true
+                    clearInterval(interval); // Clear the interval after expiration
+                  }
+                }, 1000);
+  
+              return () => clearInterval(interval); 
+          }
+      }, [joinDate]);
 
+       useEffect(() => {
+                  const BizPathdata = localStorage.getItem("user");
+                  if (BizPathdata) {
+                    const parsedData = JSON.parse(BizPathdata);
+                    setJoinDate(parsedData.join_date);
+                  }
+                }, []);
+      
+  
     return (
         <>
             <Layout>
@@ -170,7 +200,7 @@ const Setting = () => {
                                     <div
                                         className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
                                     >
-                                        <span>Transfer Function</span>
+                                        <span>Transfer</span>
                                         <svg
                                             className="w-5 h-5 text-custom-text-color2"
                                             aria-hidden="true"
@@ -221,8 +251,9 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
+                            {!expiredTime && 
                             <li>
-                                <Link to="/uprank" className="flex items-start w-full text-custom-text-color font-normal text-xs">
+                                <Link to="/uprank" className={`flex items-start w-full text-custom-text-color font-normal text-xs `}>
                                     <div className="-mt-1 w-14">
                                     <RiFileTransferLine className="w-[24px] h-[24px] text-custom-text-color2" />
                                     </div>
@@ -248,6 +279,7 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
+                            }
                             <li>
                                 <Link to="/primary_password" className="flex items-start w-full text-custom-text-color font-normal text-xs">
                                     <div className="-mt-1 w-14">

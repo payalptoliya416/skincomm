@@ -48,7 +48,6 @@ function Withdrawal() {
 
 const lpminimumvalue = getLPBalanceDetail.min_limit
 const availableLp = getLPBalanceDetail.available_lp
-
 const [errors, setErrors] = useState<any>({});
 
 const validation = () => {

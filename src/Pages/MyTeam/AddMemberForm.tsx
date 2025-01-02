@@ -243,10 +243,40 @@ const AddMemberForm = () => {
     };
 
     const navigate = useNavigate();
+    const [bizData, setBizData] = useState<any>({});
    
+     const validateFormBiz = () => {
+       const newErrors: any = {};
+       if (!bizData.dob) newErrors.dob = "Date of Birth is required.";
+       if (!bizData.mobile) newErrors.mobile = "Mobile number is required.";
+       if (!bizData.address) newErrors.address = "Address is required.";
+       if (!bizData.zip) newErrors.zip = "ZIP code is required.";
+       if (!bizData.email) newErrors.email = "Email is required.";
+       
+       return Object.keys(newErrors).length === 0; 
+     };
+   
+     useEffect(() => {
+       const BizPathdata = localStorage.getItem("user");
+       if (BizPathdata) {
+         const parsedData = JSON.parse(BizPathdata);
+         setBizData({
+           dob: parsedData.dob,
+           mobile: parsedData.mobile,
+           address: parsedData.address,
+           zip: parsedData.zip,
+           email: parsedData.email,
+         });
+       }
+     }, []);
+     
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-      
+       const isValid = validateFormBiz();
+              if (!isValid) {
+                  toast.error("Please fill up all info under Settings - My Profile before any purchases");
+                  return;
+              }
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length === 0) {
           
@@ -254,6 +284,7 @@ const AddMemberForm = () => {
             toast.error("Stripe or Elements not initialized."); 
             return;
           }
+
           let paymentMethodId = null;
           
           if (formData.payment_type === "credit_card" || formData.payment_type === "e-wallet" && stripInput  ) {
