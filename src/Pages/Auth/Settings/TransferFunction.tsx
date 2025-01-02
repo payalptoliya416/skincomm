@@ -102,7 +102,6 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
     if (value) {
       try {
         const memberlineID = await dispatch(fetchMemberLine(value));
-        console.log("memberlineID",memberlineID)
         setFName(memberlineID.data); 
       } catch (error) {
         console.error("Error fetching member line:", error);
@@ -178,7 +177,7 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                   />
                 </svg>
               </Link>
-              <h3 className="text-lg font-medium">Transfer Function</h3>
+              <h3 className="text-lg font-medium">Transfer</h3>
             </div>
           </div>
         </header>

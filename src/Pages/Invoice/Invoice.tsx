@@ -47,11 +47,11 @@ const filteredData = invoiceData?.invoices?.filter((item: any) => {
       item.payment_type.toLowerCase().includes(query)
     );
   });
-
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 4 }, (_, i) => currentYear - i);
     const initialReport = {
        search_year : new Date().getFullYear().toString()
     };
-
     useEffect(() => {        
         dispatch(fetchInvoiceList(initialReport));
     }, [dispatch]);
@@ -308,9 +308,11 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                            <label className="text-xs text-[#a8a1a7]">From</label>
                             <div className="flex gap-5 md:gap-20">
                             <select  {...formik.getFieldProps('search_year')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs py-2">  
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
+                            {years.map((year) => (
+                    <option key={year} value={year}>
+                        {year}
+                    </option>
+                ))}
                             </select>
                             </div>
                            </div>

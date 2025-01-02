@@ -10,7 +10,6 @@ export const fetchUpRankPost = (data : any) => {
         dispatch(fetchUprankPostRequest());
         try {
             const response = await AxiosUPRankPostData.post("",data);
-            console.log("response",response)
             dispatch(fetchUprankPostSuccess(response.data.data));
             return {data :response.data.data}
         } catch (error: any) {

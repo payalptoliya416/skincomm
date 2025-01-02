@@ -49,6 +49,8 @@ const SponseredTree = () => {
         to_year: "",
         to_month: ""
     };
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 4 }, (_, i) => currentYear - i);
 
     useEffect(() => {
         dispatch(fetchEWalletReport(initialReport));
@@ -109,9 +111,11 @@ const SponseredTree = () => {
                             <div className="flex gap-4 sm:gap-20">
                             <select  {...formik.getFieldProps('from_year')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
                                 <option defaultValue={0}>Select Year</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
+                                 {years.map((year) => (
+                    <option key={year} value={year}>
+                        {year}
+                    </option>
+                ))}
                             </select>
                             <span>-</span>
                             <select {...formik.getFieldProps('from_month')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
@@ -136,9 +140,11 @@ const SponseredTree = () => {
                             <div className="flex gap-4 sm:gap-20">
                             <select {...formik.getFieldProps('to_year')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
                             <option defaultValue={0}>Select Year</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
+                             {years.map((year) => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        ))}
                             </select>
                             <span>-</span>
                             <select  {...formik.getFieldProps('to_month')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">

@@ -9,7 +9,6 @@ export const fetchMemberLine = (userID: any) => {
         dispatch(fetchMemberLineRequest());
         try {
             const response = await AxioInMemberLIne.post('', {"userid" : userID});
-            console.log("response",response)
             dispatch(fetchMemberLinetSuccess(response.data));
             return {data: response.data }; 
         } catch (error: any) {

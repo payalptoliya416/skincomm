@@ -13,9 +13,17 @@
         const { earningData } = useSelector((state: RootState) => state.earningReport);
         const tableRef = useRef(null);
         const dispatch = useDispatch<any>();
-        const initialReport = { period: "" };
         const [open ,setOpen] = useState(false);
-
+            const currentDate = new Date();
+            const months = Array.from({ length: 12 }, (_, i) => {
+                const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                return {
+                    value: `${year}-${month}`,
+                    label: `${date.toLocaleString('default', { month: 'short' })} ${year}`,
+                };
+            });
         useEffect(() => {
             if (tableRef.current) {
                 const dataTable = new DataTable(tableRef.current,{
@@ -39,7 +47,9 @@
         };
 
         const formik = useFormik({
-            initialValues: initialReport,
+            initialValues: {
+                period: months[0].value, 
+            },
             onSubmit: formSubmit,
         });
 
@@ -175,19 +185,11 @@
                                     {...formik.getFieldProps('period')}
                                     className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs border rounded-md px-2 py-1"
                                 >
-                                    <option value="">Select</option>
-                                    <option value="2024-01">Jan 2024</option>
-                                    <option value="2024-02">Feb 2024</option>
-                                    <option value="2024-03">Mar 2024</option>
-                                    <option value="2024-04">Apr 2024</option>
-                                    <option value="2024-05">May 2024</option>
-                                    <option value="2024-06">Jun 2024</option>
-                                    <option value="2024-07">Jul 2024</option>
-                                    <option value="2024-08">Aug 2024</option>
-                                    <option value="2024-09">Sep 2024</option>
-                                    <option value="2024-10">Oct 2024</option>
-                                    <option value="2024-11">Nov 2024</option>
-                                    <option value="2024-12">Dec 2024</option>
+                                    {months.map((month) => (
+                    <option key={month.value} value={month.value}>
+                        {month.label}
+                    </option>
+                ))}
                                 </select>
                                 <div className="mt-4">
                                     <button type="submit" className="py-2 sm:py-3 w-full bg-[#178285] text-xs text-white rounded-md">Search</button>

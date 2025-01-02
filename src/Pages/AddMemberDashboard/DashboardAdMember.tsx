@@ -368,11 +368,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     //   const [allPackage, setAllPackage] = useState<{ value: string; label: string }[]>([]);
 
     //   const handleAmenitiesChange = (newValue: any) => {
-    //     console.log("Selected Options:", newValue);
     //     setAllPackage(newValue); 
       
     //     const amenitiesString = newValue.map((option: any) => option.value).join(',');
-    //     console.log("Amenities String:", amenitiesString);
     //   };
 
     return (
