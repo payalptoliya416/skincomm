@@ -6,36 +6,47 @@ import { RiFileTransferLine } from "react-icons/ri";
 import { SiConvertio } from "react-icons/si";
 
 const Setting = () => {
-   const [joinDate, setJoinDate] = useState<string>(""); 
-       const [expiredTime ,setExpiredTime] = useState<boolean>(false);
-      useEffect(() => {
-          if (joinDate) {
-              const joinDateObj = new Date(joinDate);
-              const ninetiethDayObj = new Date(joinDateObj);
-              ninetiethDayObj.setDate(joinDateObj.getDate() + 90);
-  
-              const interval = setInterval(() => {
-                  const now = new Date();
-                  const difference = ninetiethDayObj.getTime() - now.getTime(); 
-  
-                  if (difference <= 0) {
-                    setExpiredTime(true); // Set expiredTime to true
-                    clearInterval(interval); // Clear the interval after expiration
-                  }
-                }, 1000);
-  
-              return () => clearInterval(interval); 
-          }
-      }, [joinDate]);
+    const [joinDate, setJoinDate] = useState<string>(""); 
+    const [expiredTime, setExpiredTime] = useState<boolean>(false);
 
-       useEffect(() => {
-                  const BizPathdata = localStorage.getItem("user");
-                  if (BizPathdata) {
-                    const parsedData = JSON.parse(BizPathdata);
-                    setJoinDate(parsedData.join_date);
-                  }
-                }, []);
-      
+    const checkExpiration = (joinDate: string) => {
+      const joinDateObj = new Date(joinDate);
+      const ninetiethDayObj = new Date(joinDateObj);
+      ninetiethDayObj.setDate(joinDateObj.getDate() + 90);
+  
+      const now = new Date();
+      const difference = ninetiethDayObj.getTime() - now.getTime();
+  
+      if (difference <= 0) {
+        setExpiredTime(true);
+      } else {
+        const interval = setInterval(() => {
+          const now = new Date();
+          const difference = ninetiethDayObj.getTime() - now.getTime(); 
+  
+          if (difference <= 0) {
+            setExpiredTime(true); 
+            clearInterval(interval);
+          }
+        }, 1000);
+    
+        return () => clearInterval(interval);
+      }
+    };
+  
+    useEffect(() => {
+      const BizPathdata = localStorage.getItem("user");
+      if (BizPathdata) {
+        const parsedData = JSON.parse(BizPathdata);
+        setJoinDate(parsedData.join_date);
+      }
+    }, []);
+
+    useEffect(() => {
+      if (joinDate) {
+        checkExpiration(joinDate);
+      }
+    }, [joinDate]);
   
     return (
         <>
@@ -66,7 +77,6 @@ const Setting = () => {
                         </div>
                     </div>
                 </header>
-
                 <section className="py-20">
                     <div className="container">
                         <ul className="flex flex-col gap-5 sm:gap-7 bg-white rounded-lg py-8 px-4 sm:px-8">
@@ -194,7 +204,6 @@ const Setting = () => {
                             <li>
                                 <Link to="/transfer" className="flex items-start w-full text-custom-text-color font-normal text-xs">
                                     <div className="-mt-1 w-14">
-                                        {/* <img src="images/Frame.svg" alt="" /> */}
                                         <RiFileTransferLine className="w-[24px] h-[24px] text-custom-text-color2" />
                                     </div>
                                     <div

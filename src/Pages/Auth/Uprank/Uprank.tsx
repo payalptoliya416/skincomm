@@ -430,8 +430,7 @@ function Uprank() {
        {expiredTime &&  <div className="border rounded-lg p-5 border-[#DCDCE9] bg-white mb-7">
         <h3 className='text-center text-red-500'>{expiredTime}</h3>
         </div> }
-        {
-          !expiredTime &&  <form onSubmit={handleSubmit}>
+           <form onSubmit={handleSubmit}>
           <div className="border rounded-lg p-5 border-[#DCDCE9] bg-white mb-7">
             
           {joinDate && (
@@ -627,9 +626,7 @@ function Uprank() {
                                <button className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm' type='submit'>Submit</button>
                                </div>
                    </div>
-                   </form>
-        }
-       
+            </form>
                 </div>
                 </section>
        </Layout>
