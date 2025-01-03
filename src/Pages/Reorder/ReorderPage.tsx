@@ -37,6 +37,7 @@ function ReorderPage() {
   const elements = useElements();
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
     const {  paymentData } = useSelector((state: RootState) => state.paymentby);
+    console.log("paymentData",paymentData);
     const [ewalletData , setEwalletData] = useState<any>('');
     const [formData , setFormData] = useState<FormData>({
         id: '',
@@ -200,6 +201,7 @@ const navigate = useNavigate();
         newErrors.currency = "Currency field is required";
     }
     if (formData.currency && totalPrice > paymentData.balance) {
+      newErrors.test = "Total price cannot be less than the balance!";
         toast.error("Total price cannot be less than the balance!");
     }
     if (!formData.deliver_status) {
@@ -207,6 +209,7 @@ const navigate = useNavigate();
     }
     return newErrors;
   }
+
   const [error,setError]= useState<any>();
 
   const products_data = Object.values(cart)
@@ -251,6 +254,7 @@ const navigate = useNavigate();
     }
 
     const errors = validationErrors();
+    
   const data = {
     "category_name" : formData.id,
     "products_data" : products_data,
@@ -455,6 +459,7 @@ const navigate = useNavigate();
                         <option value="">Select</option>
                         <option value="credit_card">CREDIT CARD</option>
                         <option value="e-wallet">E-Wallet</option>
+                        <option value="PP2">PP2</option>
                         {/* <option value="RC">PP</option>
                         <option value="PP2">PP2</option>
                         <option value="SP">SP</option> */}
@@ -491,7 +496,16 @@ const navigate = useNavigate();
                                     </div>
                                 ) : ""
                             }
-                        <h5 className='mt-3'>{paymentData && paymentData.balance}</h5>   
+                            <div className="mt-3">
+                              {paymentData && <input
+          type="text"
+          placeholder="balance"
+                   className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
+          value={paymentData && paymentData.balance}
+          readOnly
+        /> }
+                            
+                            </div>
                         {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
                     </div>
                     <div className="mb-3">
