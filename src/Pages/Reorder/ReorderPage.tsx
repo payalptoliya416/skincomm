@@ -498,13 +498,12 @@ const navigate = useNavigate();
                             }
                             <div className="mt-3">
                               {paymentData && <input
-          type="text"
-          placeholder="balance"
-                   className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
-          value={paymentData && paymentData.balance}
-          readOnly
-        /> }
-                            
+                          type="text"
+                          placeholder="balance"
+                                  className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
+                          value={paymentData && paymentData.balance}
+                          readOnly
+                        /> }
                             </div>
                         {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
                     </div>
