@@ -37,7 +37,6 @@ function ReorderPage() {
   const elements = useElements();
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
     const {  paymentData } = useSelector((state: RootState) => state.paymentby);
-    console.log("paymentData",paymentData);
     const [ewalletData , setEwalletData] = useState<any>('');
     const [formData , setFormData] = useState<FormData>({
         id: '',

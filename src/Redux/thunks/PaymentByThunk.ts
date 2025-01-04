@@ -5,7 +5,6 @@ import {  AxiosPaymentBy } from '../../Utilities/axios';
 import { fetchPaymentByFailure, fetchPaymentByRequest, fetchPaymentBySuccess } from '../actions/PaymentByAction';
 
 export const fetchPaymentBy = (currency: any) => {
-    console.log("currency",currency);
     return async (dispatch: Dispatch) => {
         dispatch(fetchPaymentByRequest());
         try {
@@ -13,7 +12,6 @@ export const fetchPaymentBy = (currency: any) => {
                 "action" : "getBalance",
                 "currency" : currency
             });
-            console.log("response",response)
             dispatch(fetchPaymentBySuccess(response.data.data));
             return {data: response.data.data }; 
         } catch (error: any) {

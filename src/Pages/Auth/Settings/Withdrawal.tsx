@@ -21,63 +21,104 @@ function Withdrawal() {
      lp_amount: 0,
     });
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
     dispatch(fetchLpBalance());
   }, [dispatch]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // setFormData({
-    //   ...formData,
-    //   [e.target.name]: parseFloat(e.target.value),
-    // });
-    const { name, value } = e.target;
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   if (name === "lp_amount") {
+  //     const amount = parseFloat(value);
+  //     setFormData({
+  //       ...formData,
+  //       lp_amount: amount,
+  //     });
+  //     const rate = amount * (parseFloat(getLPBalanceDetail.withdrawal_rate) || 0);
+  //     setCalculatedRate(rate.toFixed(2) );   
+  //   }
+  // };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     if (name === "lp_amount") {
       const amount = parseFloat(value);
-      setFormData({
+      const updatedFormData = {
         ...formData,
         lp_amount: amount,
-      });
-
+      };
+  
+      setFormData(updatedFormData);
+  
       const rate = amount * (parseFloat(getLPBalanceDetail.withdrawal_rate) || 0);
-      setCalculatedRate(rate.toFixed(2) ); 
-      
+      setCalculatedRate(rate.toFixed(2));
+  
+      const validationErrors = validation(updatedFormData);
+      setErrors(validationErrors);
     }
   };
-
-const lpminimumvalue = getLPBalanceDetail.min_limit
+  const lpminimumvalue = getLPBalanceDetail.min_limit
 const availableLp = getLPBalanceDetail.available_lp
-const [errors, setErrors] = useState<any>({});
 
-const validation = () => {
+  const validation = (updatedFormData = formData) => {
+    const newErrors: any = {};
   
-  const newErrors: any = {};
-  if(!formData.lp_amount){
-    newErrors.lp_amount = "write some Withdrawal Amount";
-  }
-  if (formData.lp_amount < lpminimumvalue) {
-    newErrors.lp_amount = `Withdrawal amount should be greater than the minimum limit of ${lpminimumvalue}`;
-  }
-  if (formData.lp_amount > availableLp) {
-    newErrors.lp_amount = `Withdrawal amount exceeds the available balance of ${availableLp}`;
-  }
-
-  return newErrors;
-};
-
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  const validationErrors = validation();
-
-  if (Object.keys(validationErrors).length === 0) {
-  setIsConfirmationOpen(true); 
-
-} else {
-  setErrors(validationErrors)
-}
-};
+    if (!updatedFormData.lp_amount) {
+      newErrors.lp_amount = "Write some Withdrawal Amount";
+    }
+    if (updatedFormData.lp_amount < lpminimumvalue) {
+      newErrors.lp_amount = `Withdrawal amount should be greater than the minimum limit of ${lpminimumvalue}`;
+    }
+    if (updatedFormData.lp_amount > availableLp) {
+      newErrors.lp_amount = `Withdrawal amount exceeds the available balance of ${availableLp}`;
+    }
   
+    return newErrors;
+  };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationErrors = validation();
+  
+    if (Object.keys(validationErrors).length === 0) {
+      setIsConfirmationOpen(true);
+    } else {
+      setErrors(validationErrors);
+    }
+  };
+  
+  const isButtonDisabled = Object.keys(errors).length > 0;
+
+// const validation = () => {
+  
+//   const newErrors: any = {};
+//   if(!formData.lp_amount){
+//     newErrors.lp_amount = "write some Withdrawal Amount";
+//   }
+//   if (formData.lp_amount < lpminimumvalue) {
+//     newErrors.lp_amount = `Withdrawal amount should be greater than the minimum limit of ${lpminimumvalue}`;
+//   }
+//   if (formData.lp_amount > availableLp) {
+//     newErrors.lp_amount = `Withdrawal amount exceeds the available balance of ${availableLp}`;
+//   }
+
+//   return newErrors;
+// };
+
+
+
+// const handleSubmit = (e: React.FormEvent) => {
+//   e.preventDefault();
+//   const validationErrors = validation();
+
+//   if (Object.keys(validationErrors).length === 0) {
+//   setIsConfirmationOpen(true); 
+
+// } else {
+//   setErrors(validationErrors)
+// }
+// };
+
   const handleConfirmSubmit = async () => {
       await dispatch(fetchWithDrawallData(formData));
       setIsConfirmationOpen(false); 
@@ -157,16 +198,19 @@ const handleSubmit = (e: React.FormEvent) => {
                   </div>
                 <div className="mb-3">
                   {
-                     calculatedRate === 'NaN' ? " ":calculatedRate
+                     calculatedRate === 'NaN' ? " ": calculatedRate
                   }
                 </div>
                   <div>
-                    <button
-                      type="submit"
-                      className="py-2 px-3 rounded-md bg-[#178285] text-white text-sm"
-                    >
-                      Submit
-                    </button>
+                  <button
+                  type="submit"
+                  className={`py-2 px-3 rounded-md text-white text-sm ${
+                    isButtonDisabled ? "bg-gray-400 cursor-not-allowed pointer-events-none" : "bg-[#178285]"
+                  }`}
+                  disabled={isButtonDisabled}
+                >
+                  Submit
+                </button>
                   </div>
                 </form>
               </div>

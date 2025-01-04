@@ -45,6 +45,7 @@ const [formData, setFormData] = useState<FormData>({
   bank_acount_no: bankData?.bank_acount_no || "",
   tncaggree: ''
 }); 
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "bank_acount_no" && !/^\d*$/.test(value)) {
