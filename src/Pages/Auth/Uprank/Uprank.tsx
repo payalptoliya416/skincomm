@@ -96,12 +96,10 @@ function Uprank() {
               0
           );
          NextRankFun(newTotalPrice);
-          setTotalLP(newTotalPrice);
+         setTotalLP(newTotalPrice);
       
           return updatedLPcard;
         });
-
-        
 
         setCart((prevCart) => {
           const existingItem = prevCart[productId] || { count: 0, price: 0 };

@@ -323,9 +323,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             if (numberData.success) {
 
             localStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
-            sessionStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
-            document.cookie = `addMemberData=${encodeURIComponent(JSON.stringify(formDataToSend))}; path=/;`;
-
+            // sessionStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
+            // document.cookie = `addMemberData=${encodeURIComponent(JSON.stringify(formDataToSend))}; path=/;`;
 
                 const successData =await dispatch(fetchAddMember(formDataToSend));
                 if(successData){

@@ -37,6 +37,7 @@ const DashboardSidebar = ({ loginState }: any) => {
         localStorage.removeItem('totalPrice')   
         localStorage.removeItem('joiningDate')   
         localStorage.removeItem('user');
+        localStorage.removeItem('addMemberData');
         window.location.href = '/';
     };
     
