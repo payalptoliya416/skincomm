@@ -10,7 +10,6 @@ import { FiSearch } from "react-icons/fi";
 import { toast, ToastContainer } from 'react-toastify';
 import { GrUploadOption } from 'react-icons/gr';
 import { MdError } from 'react-icons/md';
-import { fetchUserDetailData } from '../../Redux/thunks/UserDetailsThunk';
 
 // Updated interfaces to reflect the API response structure
 interface TreeDataItem {

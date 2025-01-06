@@ -59,7 +59,7 @@ function Withdrawal() {
     }
   };
   const lpminimumvalue = getLPBalanceDetail.min_limit
-const availableLp = getLPBalanceDetail.available_lp
+  const availableLp = getLPBalanceDetail.available_lp
 
   const validation = (updatedFormData = formData) => {
     const newErrors: any = {};

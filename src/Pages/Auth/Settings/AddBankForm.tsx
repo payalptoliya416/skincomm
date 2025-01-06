@@ -66,7 +66,7 @@ const [formData, setFormData] = useState<FormData>({
   const validateForm = () => {
     const newErrors: any = {};
     if (!formData.account_name) newErrors.account_name = "Account Name is required";
-    if (!formData.bank_acount_no) newErrors.bank_acount_no = "Aank Acount No is required";
+    if (!formData.bank_acount_no) newErrors.bank_acount_no = "Aank Acount No. is required";
     if (!formData.bank_id) newErrors.bank_id = "Please Select Any one Bank";
     return newErrors;
   };
