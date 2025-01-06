@@ -195,8 +195,6 @@ const AddMemberForm = () => {
         
                 if (selectedPackage) {
                     const retailPrice = parseFloat(selectedPackage.combo_product_associate_price);
-                    // const retailPrice = parseFloat(selectedPackage.combo_product_retail_price);
-
                     const currentTotalRcSp =
                         ValuOfBalance.currency.trim() !== 'USD'
                             ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +

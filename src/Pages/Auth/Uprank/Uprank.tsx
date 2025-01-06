@@ -300,7 +300,8 @@ function Uprank() {
             
             if (matchingItem) {
               if (matchingItem.max_lp > maximumTotalLP) {
-                toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
+                // toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
+                toast.error(`You cannot Up Rank anymore`);
                 return false; 
               }
             } else {
