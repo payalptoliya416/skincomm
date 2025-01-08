@@ -62,7 +62,7 @@ function Uprank() {
 
     const NextRankFun = (newTotalPrice : any) => {
       const matchedRank = UprankGetData.rank_data.find(
-        (rank: any) => newTotalPrice > rank.min_lp && newTotalPrice < rank.max_lp 
+        (rank: any) => newTotalPrice >= rank.min_lp && newTotalPrice <= rank.max_lp 
       );
     
       if (matchedRank) {
@@ -136,7 +136,6 @@ function Uprank() {
               action : "walletInfo",
               userid : "",
               }
-    
             const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
                 const { name, value } = e.target;
                 
@@ -145,22 +144,20 @@ function Uprank() {
                   [name]: value,  
                 }));
     
-                if (value) {
-                    dispatch(fetchPaymentBy(value));  
-                }
                 if (name === 'currency') {
                   if (value === 'e-wallet') {
                     await updateEwalletData(totalPrice);
                   }
+
                   setFormData((prev) => ({ ...prev, [name]: value }));
               }
             };
-             
+
             const updateEwalletData = async (newTotalPrice :any) => {
               const ewalletDataValue = await dispatch(fetchProductList(UserProductDataa));
               const ValuOfBalance = ewalletDataValue.data;
-    
               setEwalletData(ValuOfBalance);
+
               const currentTotalRcSp =
               ValuOfBalance.currency.trim() !== 'USD'
               ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
@@ -196,17 +193,16 @@ function Uprank() {
                 setSripShow(false);
               }
             };
-      
+      const availableTotalBalance =  (Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0));
       useEffect(() => {
         localStorage.removeItem('cart');
       }, [cart, totalPrice]);
-       
       const validationErrors = () => {
         const newErrors: any = {};
         if (!formData.currency) {
             newErrors.currency = "Currency field is required";
         }
-        if (formData.currency && totalPrice > paymentData.balance) {
+        if (formData.currency && totalPrice > availableTotalBalance) {
             toast.error("Total price cannot be less than the balance!");
         }
         if (!formData.deliver_status) {
@@ -295,13 +291,13 @@ function Uprank() {
             const numericCurrentRank = Number(currentRank);
             const maxLPitems = Object.values(maxLP);
             const maximumTotalLP = maxLPitems.reduce((total: number, item: any) => total + item.price, 0);
-         
             const matchingItem = UprankGetData.rank_data.find((i: any) => i.rank_id === numericCurrentRank);
-            
-            if (matchingItem) {
+
+             if(currentRank > 3 ){
+            toast.error(`You cannot Up Rank anymore`);
+             }else if (matchingItem) {
               if (matchingItem.max_lp > maximumTotalLP) {
-                // toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
-                toast.error(`You cannot Up Rank anymore`);
+                toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
                 return false; 
               }
             } else {
@@ -584,7 +580,12 @@ function Uprank() {
                                                </div>
                                            ) : ""
                                        }
-                                   <h5 className='mt-3'>{paymentData && paymentData.balance}</h5>   
+                             {/* { formData.currency === 'e-wallet' ? <h5 className="mt-3">
+                              {(Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0)).toFixed(2)}
+                            </h5> : ""} */}
+                           
+ 
+                                   {/* <h5 className='mt-3'>{paymentData && paymentData.balance}</h5>    */}
                                    {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
                                </div>
                                <div className="mb-3">

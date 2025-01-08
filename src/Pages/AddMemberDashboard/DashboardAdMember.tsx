@@ -95,10 +95,10 @@ const DashboardAdMember = () => {
         
         if(name === 'sponsor'){
             const data = await  dispatch(fetchSearchTeamData( userId )); 
-                setFName(data.member);
+                setFName(data);
         }else if(name === 'placement'){
             const placementName = await  dispatch(fetchSearchTeamData( userId ));
-                setplacementName(placementName.member);
+                setplacementName(placementName);
         }
     };
  
@@ -208,9 +208,14 @@ const DashboardAdMember = () => {
             if (!formData.package_id) newErrors.package_id = "Package is required";
                 if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }else{
+            if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
+            if (!formData.placement) newErrors.placement = "Placement ID is required";
+            if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
              if (!formData.f_name) newErrors.f_name = "First Name is required";
         if (!formData.l_name) newErrors.l_name = "Last Name is required";
         if (!formData.country) newErrors.country = "Country Name is required";
+        if (!fName.member) newErrors.sponsor = `${fName.message}`;
+        if (!placementName.member) newErrors.placement = `${placementName.message}`;
         if (!formData.e_mail || !/\S+@\S+\.\S+/.test(formData.e_mail)) newErrors.e_mail = "Valid Email is required";
         if (!formData.mobile || formData.mobile.length < 8) newErrors.mobile = "Mobile number must be at least 8 digits long";
         if (!formData.package_id) newErrors.package_id = "Package is required";
@@ -322,7 +327,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
             if (numberData.success) {
 
-            localStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
+            // localStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
             // sessionStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
             // document.cookie = `addMemberData=${encodeURIComponent(JSON.stringify(formDataToSend))}; path=/;`;
 
@@ -417,8 +422,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.sponsor && <p className='text-red-500 text-xs'>{errors.sponsor}</p>}
-                                    {fName && fName ? <h4 className='text-sm pt-2'> {fName && fName.f_name}  {fName && fName.l_name}
-                                     </h4> :""}
+                                    {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}  {fName && fName.member.l_name}
+                                 </h4> :""}
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Placement ID</label>
@@ -430,9 +435,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         value={formData.placement}
                                         onChange={handleFnameSearch}
                                     />
-                                    
                                     {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
-                                    {placementName && placementName ? <h4 className='text-sm pt-2'> {placementName && placementName.f_name}  {placementName && placementName.l_name} </h4> :""}
+                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}  {placementName.member && placementName.member.l_name} </h4> :""}
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Matrix Side</label>

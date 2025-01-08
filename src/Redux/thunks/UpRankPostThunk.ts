@@ -5,7 +5,6 @@ import {  AxiosUPRankPostData, } from '../../Utilities/axios';
 import { fetchUprankPostFailure, fetchUprankPostRequest, fetchUprankPostSuccess } from '../actions/UprankPostAction';
 
 export const fetchUpRankPost = (data : any) => {
-    
     return async (dispatch: Dispatch) => {
         dispatch(fetchUprankPostRequest());
         try {

@@ -18,13 +18,13 @@ function SuccessPayment() {
             <h3 className="md:text-2xl text-base text-black font-semibold text-center mb-5">Payment Done!</h3>
             <div className="flex gap-5 text-start ">
             <ul>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>date :</li>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>invoice_id :</li>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>associate_id :</li>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>full_name :</li>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>email :</li>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>mobile :</li>
-                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>package_name :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Date :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Invoice Id :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Associate Id :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Full Name :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Email :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Mobile :</li>
+                <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Package Name :</li>
             </ul>
             <ul>
                

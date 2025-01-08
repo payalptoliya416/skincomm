@@ -93,14 +93,14 @@ const AddMemberForm = () => {
         if (name === 'sponsor') {
             try {
                 const data = await dispatch(fetchSearchTeamData( value ));
-                setFName(data?.member || null); 
+                setFName(data); 
             } catch (error) {
                 console.error("Error fetching sponsor data:", error);
             }
         } else if (name === 'placement') {
             try {
                 const placementData = await dispatch(fetchSearchTeamData( value ));
-                setplacementName(placementData?.member || null); 
+                setplacementName(placementData); 
             } catch (error) {
                 console.error("Error fetching placement data:", error);
             }
@@ -111,9 +111,9 @@ const AddMemberForm = () => {
         const fetchData = async () => {
           try {
             const data = await dispatch(fetchSearchTeamData( upline_id ));
-            setFName(data.member); 
+            setFName(data); 
             const placementName = await dispatch(fetchSearchTeamData( upline_id ));
-            setplacementName(placementName.member); 
+            setplacementName(placementName); 
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -132,32 +132,34 @@ const AddMemberForm = () => {
         if (type === "radio" && name === "deliver_status") {
             setFormData((prev) => ({ ...prev, [name]: value }));
         } 
-        else  if (type === "radio" && name === "account_type") {
-            const newAccountType = Number(value);
-            setFormData((prev) => {
-                const updatedFormData = { ...prev, [name]: newAccountType };
+        else 
+        //  if (type === "radio" && name === "account_type") {
+        //     const newAccountType = Number(value);
+        //     setFormData((prev) => {
+        //         const updatedFormData = { ...prev, [name]: newAccountType };
     
-                if (newAccountType === 1) {
-                    return {
-                        ...updatedFormData,
-                        f_name: UserDetailData.member_detail?.f_name || '',
-                        l_name: UserDetailData.member_detail?.l_name || '',
-                        e_mail: UserDetailData.member_detail?.email || '',
-                        mobile: UserDetailData.member_detail?.mobile || '',
-                        isFieldsDisabled: true,
-                    };
-                } else {
-                    return {
-                        ...updatedFormData,
-                        f_name: '',
-                        l_name: '',
-                        e_mail: '',
-                        mobile: '',
-                        isFieldsDisabled: false,
-                    };
-                }
-            });
-        } else if (type === "radio") {
+        //         if (newAccountType === 1) {
+        //             return {
+        //                 ...updatedFormData,
+        //                 f_name: UserDetailData.member_detail?.f_name || '',
+        //                 l_name: UserDetailData.member_detail?.l_name || '',
+        //                 e_mail: UserDetailData.member_detail?.email || '',
+        //                 mobile: UserDetailData.member_detail?.mobile || '',
+        //                 isFieldsDisabled: true,
+        //             };
+        //         } else {
+        //             return {
+        //                 ...updatedFormData,
+        //                 f_name: '',
+        //                 l_name: '',
+        //                 e_mail: '',
+        //                 mobile: '',
+        //                 isFieldsDisabled: false,
+        //             };
+        //         }
+        //     });
+        // } else
+         if (type === "radio") {
             setFormData((prev) => ({ ...prev, [name]: Number(value) }));
         }else  if (name === 'payment_type') {
             if (value === 'credit_card') {
@@ -225,16 +227,19 @@ const AddMemberForm = () => {
             if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
             if (!formData.country) newErrors.country = "Country Name is required";
             if (!formData.package_id) newErrors.package_id = "Package is required";
-            // if (!formData.account_type && formData.account_type !== 0) newErrors.account_type = "Account Type is required";
             if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }else{  
+            if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
+            if (!formData.placement) newErrors.placement = "Placement ID is required";
+            if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
              if (!formData.f_name) newErrors.f_name = "First Name is required";
         if (!formData.l_name) newErrors.l_name = "Last Name is required";
         if (!formData.country) newErrors.country = "Country Name is required";
+        if (!fName.member) newErrors.sponsor = `${fName.message}`;
+        if (!placementName.member) newErrors.placement = `${placementName.message}`;
         if (!formData.e_mail || !/\S+@\S+\.\S+/.test(formData.e_mail)) newErrors.e_mail = "Valid Email is required";
         if (!formData.mobile || formData.mobile.length < 8) newErrors.mobile = "Mobile number must be at least 8 digits long";
         if (!formData.package_id) newErrors.package_id = "Package is required";
-        // if (!formData.account_type && formData.account_type !== 0) newErrors.account_type = "Account Type is required";
         if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }
         return newErrors;
@@ -421,13 +426,13 @@ const AddMemberForm = () => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.sponsor && <p className='text-red-500 text-xs'>{errors.sponsor}</p>}
-                                    {/* {fName && fName ? <h4 className='text-sm pt-2'> {fName && fName.f_name}  {fName && fName.l_name}
-                                     </h4> :""} */}
-                                     {fName && (
+                                    {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}  {fName && fName.member.l_name}
+                                    </h4> :""}
+                                     {/* {fName && (
                                     <h4 className='text-sm pt-2'>
                                         {fName.f_name} {fName.l_name}
                                     </h4>
-                                )}
+                                )} */}
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Placement ID</label>
@@ -440,12 +445,11 @@ const AddMemberForm = () => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
-                                    {/* {placementName && placementName ? <h4 className='text-sm pt-2'> {placementName && placementName.f_name}  {placementName && placementName.l_name} </h4> :""} */}
-
-                                    {placementName && (
+                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}  {placementName.member && placementName.member.l_name} </h4> :""}
+                                    {/* {placementName && (
         <h4 className='text-sm pt-2'>
             {placementName.f_name} {placementName.l_name}
-        </h4>)}
+        </h4>)} */}
                                     
                                 </div>
                                 <div className='mb-3'>
