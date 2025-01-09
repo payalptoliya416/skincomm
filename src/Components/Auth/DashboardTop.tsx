@@ -1,22 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchBalance } from "../../Redux/thunks/balanceThunks";
 import { RootState } from "../../Redux/store";
+import { toast, ToastContainer } from "react-toastify";
 
 const DashboardTop = () => {
 
-    const dispatch = useDispatch<any>(); // Initialize useDispatch hook
+    const dispatch = useDispatch<any>(); 
     const { balanceData } = useSelector((state: RootState) => state.balance);
-
+    const [customerRankID, setCustomerRankID] = useState<any>(null);
     useEffect(() => {
         dispatch(fetchBalance());
     }, [dispatch]);
+
+     useEffect(() => {
+         const BizPathdata = localStorage.getItem("user");
+         if (BizPathdata) {
+             const parsedData = JSON.parse(BizPathdata);
+           setCustomerRankID(parsedData.rank)
+         }
+       }, []);
+
+      const handleClick = () => {
+        if (customerRankID === '1') {
+          toast.error("Please upgrade to become an Associate before you can access.")
+        }
+      };
     return (
         <>
             <section className="px-4 pt-16 relative">
                 <div className="absolute top-0 left-0 w-full h-[180px] bg-[#178285] p-5"></div>
-
+                   <ToastContainer/>
                 <div className="bg-white shadow-custom-shadow p-2 sm:p-5 pt-8 rounded-lg relative z-10">
                     <h5 className="text-sm text-custom-text-color font-medium">
                     Loyalty Point - LP
@@ -27,8 +42,12 @@ const DashboardTop = () => {
                     </h3> 
                    )}
                     <ul className="mt-5 border-t border-custom-border pt-5 flex items-center justify-between">
-                        <li className="text-center w-1/4">
-                            <Link to='/addmemberUser' className="inline-block">
+                        <li className={`text-center w-1/4 ${
+                                customerRankID === '1' ? "opacity-80 " : " "
+                            }`}   onClick={handleClick}>
+                            <Link to='/addmemberUser'className={`inline-block ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}  >
                                 <div
                                     className="bg-main-color w-10 h-10 sm:w-12 sm:h-12 rounded-lg text-white flex items-center justify-center m-auto mb-1">
                                     <svg

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosAuthInstance } from "../Utilities/axios";
 import { useLocation } from "react-router-dom";
@@ -6,7 +6,7 @@ import classNames from "classnames";
 
 const Footer = () => {
     const location = useLocation();
-
+      
     useEffect(() => {
         AxiosAuthInstance.post(`/me`).then(response => {
             const userData = response?.data?.data;
@@ -14,7 +14,8 @@ const Footer = () => {
         }).catch(error => {
                 console.error("Error fetching user data:", error);
             });
-    }, [])
+    }, []);
+
 
     return (
         <>
@@ -23,7 +24,6 @@ const Footer = () => {
                     <div className="">
                         <ul className="flex items-center justify-around">
 
-                            {/* Dashboard */}
                             <li>
                                 <Link to={ '/dashboard' } className={ classNames('text-center inline-block py-2', { 'text-main-color border-t-2 border-main-color': location.pathname === '/dashboard', 'text-custom-text-color': location.pathname !== '/dashboard' }) }>
                                     <svg className="w-6 h-6 m-auto" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -33,8 +33,7 @@ const Footer = () => {
                                     <span className={ classNames('text-xs font-normal', { 'text-custom-text-color': location.pathname !== '/dashboard' }) }> Overview </span>
                                 </Link>
                             </li>
-                            <li>
-                                {/* <a href="/add-member/add-member" className="text-center text-custom-text-color inline-block py-2"> */}
+                            <li >
                                  <Link to={'/myteam'} className={ classNames('text-center inline-block py-2', { 'text-main-color border-t-2 border-main-color': location.pathname === '/myteam' || location.pathname === '/placement-tree' || location.pathname === '/sponsored-network', 'text-custom-text-color': location.pathname !== '/myteam' &&  location.pathname !== '/sponsored-network' && location.pathname !== '/placement-tree'}) }>
                                     <svg
                                         className="w-6 h-6 m-auto"
@@ -55,7 +54,6 @@ const Footer = () => {
 
                                     <span className="text-xs font-normal"> My Team </span>
                                  </Link>
-                                {/* </a> */}
                             </li>
                             <li className="-mt-10">
                                 <Link

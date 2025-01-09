@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../../Components/Layout'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,8 +55,24 @@ interface SponsoredTreeItem {
     const handleNavigate = (path : string, col : string,  upline_id:  number) => {
         navigate(path, { state: { col, upline_id } });
       }
-      
-     console.log("levelData",levelData)
+      const popupRef = useRef<HTMLDivElement>(null);
+      useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+          if (
+            popupRef.current &&
+            !popupRef.current.contains(event.target as Node)
+          ) {
+            setSelectedIndex(null);
+          }
+        };
+    
+        document.addEventListener("mousedown", handleClickOutside);
+    
+        // Cleanup event listener
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
     return (
      <>
         <div className={gridClass}>
@@ -123,19 +139,24 @@ interface SponsoredTreeItem {
                         <FaRegPlusSquare className="cursor-pointer mx-auto" />
                       </div>
                       {selectedIndex === index && (
-            <div className="block mt-1">
-              <h3
-                className="text-[10px] mb-[2px] cursor-pointer whitespace-nowrap"
+            <div >
+               <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
+               <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div    ref={popupRef} className="flex flex-col gap-1 items-center bg-gray-200 mx-auto w-full max-w-[200px] sm:max-w-[260px] py-10 px-3 rounded-md" >
+              <button
+                className="w-full text-[16px] sm:text-[18px] mb-[2px]"
                 onClick={() => handleNavigate('/addmember', item.col, item.upline_id)}
               >
                 Add Member
-              </h3>
-              <h3
-                className="text-[10px] mb-[2px] cursor-pointer whitespace-nowrap"
+              </button>
+              <button
+                className="w-full text-[16px] sm:text-[18px] mb-[2px]"
                 onClick={() => handleNavigate('/addcustomer', item.col, item.upline_id)}
               >
                 Add Customer
-              </h3>
+              </button>
+              </div>
+               </div>
             </div>
           )}
                  </div>

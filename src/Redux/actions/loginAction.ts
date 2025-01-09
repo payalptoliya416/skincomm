@@ -14,6 +14,7 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
         localStorage.setItem('contryid', response.data.user.country)
         localStorage.setItem('joiningDate', response.data.user.join_date)
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('customerrank', JSON.stringify(response.data.user.rank));
         dispatch({
             type: LoginTypes.LOGIN_SUCCESS,
             payload: response.data,

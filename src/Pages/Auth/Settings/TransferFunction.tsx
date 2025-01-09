@@ -198,11 +198,11 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
               </h5>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label className="text-[#1e293b] text-[14px]">User ID</label>
+                  <label className="text-[#1e293b] text-[14px]">Associate ID</label>
                   <input
                     type="text"
                     name="to_user"
-                    placeholder="User ID"
+                    placeholder="Associate ID"
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
                     value={formData.to_user}
                     onChange={handleChange}

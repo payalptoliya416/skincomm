@@ -34,12 +34,14 @@ const Setting = () => {
         return () => clearInterval(interval);
       }
     };
-  
+    const [customerRankID, setCustomerRankID] = useState<any>(null);
+
     useEffect(() => {
       const BizPathdata = localStorage.getItem("user");
       if (BizPathdata) {
-        const parsedData = JSON.parse(BizPathdata);
+          const parsedData = JSON.parse(BizPathdata);
         setJoinDate(parsedData.join_date);
+        setCustomerRankID(parsedData.rank)
       }
     }, []);
 
@@ -47,8 +49,8 @@ const Setting = () => {
       if (joinDate) {
         checkExpiration(joinDate);
       }
-    }, [joinDate]);
-  
+    }, [joinDate])
+
     return (
         <>
             <Layout>
@@ -127,9 +129,10 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-
-                            <li>
-                                <Link to="/addbankpage" className="flex items-start w-full text-custom-text-color font-normal text-xs">
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                                <Link to="/addbankpage" className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                     <div className="-mt-1 w-14">
                                         <svg
                                             className="w-6 h-6 text-custom-text-color2"
@@ -173,8 +176,10 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/withdrawal" className="flex items-start w-full text-custom-text-color font-normal text-xs">
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                                <Link to="/withdrawal" className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                     <div className="-mt-1 w-14">
                                         <img src="images/Frame.svg" alt="" />
                                     </div>
@@ -202,8 +207,10 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/transfer" className="flex items-start w-full text-custom-text-color font-normal text-xs">
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                                <Link to="/transfer" className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                     <div className="-mt-1 w-14">
                                         <RiFileTransferLine className="w-[24px] h-[24px] text-custom-text-color2" />
                                     </div>
@@ -231,8 +238,10 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/convert" className="flex items-start w-full text-custom-text-color font-normal text-xs">
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                                <Link to="/convert" className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                     <div className="-mt-1 w-14">
                                         {/* <img src="images/Frame.svg" alt="" /> */}
                                         <SiConvertio  className="w-[20px] h-[20px] text-custom-text-color2 mt-1" />
@@ -261,7 +270,7 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
                                 <Link to="/addcustomer" className="flex items-start w-full text-custom-text-color font-normal text-xs">
                                     <div className="-mt-1 w-14">
                                         {/* <img src="images/Frame.svg" alt="" /> */}
@@ -292,8 +301,10 @@ const Setting = () => {
                                 </Link>
                             </li>
                             {!expiredTime && 
-                            <li>
-                                <Link to="/uprank" className={`flex items-start w-full text-custom-text-color font-normal text-xs `}>
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                                <Link to="/uprank"className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                     <div className="-mt-1 w-14">
                                     <RiFileTransferLine className="w-[24px] h-[24px] text-custom-text-color2" />
                                     </div>
@@ -408,8 +419,10 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/share" className="flex items-start w-full text-custom-text-color font-normal text-xs">
+                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                                <Link to="/share" className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                     <div className="-mt-1 w-14">
                                         <svg
                                             className="w-6 h-6 text-custom-text-color2"

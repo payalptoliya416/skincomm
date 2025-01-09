@@ -10,7 +10,6 @@ const DashboardBottom = () => {
   );
   const [activeTab, setActiveTab] = useState("overview"); 
   const [bizData , setBizData] = useState<any>('');
-
   useEffect(() => {
     const BizPathdata = localStorage.getItem("user");
     if (BizPathdata) {
@@ -114,6 +113,9 @@ const DashboardBottom = () => {
         {activeTab === "bizpath" && (
           <div className="mt-5">
             <div className="flex justify-center flex-col items-center py-10">
+              <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
+              Member Rank :<span className="text-sm font-normal"> {bizData.rank} </span>
+              </p>
             <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">Maintenance Expiry Date: <span className="text-sm font-normal">  {bizData?.expiery_date ? formatDatee(bizData.expiery_date) : "N/A"} </span></p>
             <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">Status: <span className="text-sm  font-normal">{bizData.account_status}</span></p>
                          
