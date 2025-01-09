@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
 import { fetchSponsoredTree } from '../../Redux/thunks/sponsoredTree';
 import { LuUser } from "react-icons/lu";
-import { FaRegPlusSquare } from "react-icons/fa";
+import {  FaRegPlusSquare } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { toast, ToastContainer } from 'react-toastify';
 import { GrUploadOption } from 'react-icons/gr';
 import { MdError } from 'react-icons/md';
-
+import { AiOutlineInfoCircle } from "react-icons/ai";
 // Updated interfaces to reflect the API response structure
 interface TreeDataItem {
     accu_left_node: string;
@@ -50,13 +50,13 @@ interface SponsoredTreeItem {
   }
 
   const LevelGrid: React.FC<LevelGridProps> = ({ levelData =[], gridClass ,handlePersonCall , data}) => {
-    
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const navigate = useNavigate();
-
-    const handleNavigate = (col : string,  upline_id:  number) => {
-        navigate('/addmember', { state: { col, upline_id },});
+    const handleNavigate = (path : string, col : string,  upline_id:  number) => {
+        navigate(path, { state: { col, upline_id } });
       }
-     
+      
+     console.log("levelData",levelData)
     return (
      <>
         <div className={gridClass}>
@@ -66,8 +66,9 @@ interface SponsoredTreeItem {
                 {item.type === 'person' ? (
                   <div  className={`py-7 cursor-pointer text-cenetr  flex ${data === '5' ? "" : "border-after"} justify-center ${
                     item.col === "L" ? "left-after" : item.col === "R" ? "right-after" : ""
-                  }`} onClick={() =>handlePersonCall(item.userid)}>
-                   <div className='w-full max-w-[140px] bg-gray-200 flex justify-center flex-col items-center py-2 px-2 rounded-md mx-2'>
+                  }`} >
+                   <div className='transition-all duration-500 relative w-full max-w-[140px] bg-gray-200 flex justify-center flex-col items-center py-2 px-2 rounded-md mx-2' onClick={() =>handlePersonCall(item.userid)}>
+                    
                     <LuUser className='mb-2 inline' />
                    <h3 className='text-[10px] text-black'>
                       {item.data.f_name} (
@@ -83,15 +84,60 @@ interface SponsoredTreeItem {
                       L : {item.data.accu_left_node || 0} | R : {item.data.accu_right_node || 0}
                     </h3>
                    </div>
+                   <div className='group relative max-h-max'>
+                   <AiOutlineInfoCircle className='' />
+                   <div className='hidden group-hover:block text-[11px] leading-[14px] w-[150px] rounded-md bg-black text-white p-1 absolute -top-[100%] left-0] z-10 py-[5px]'>
+                    <div className="text-center mb-1">
+                       <h3 className='border-b border-dashed w-max mx-auto'>{item.userid}</h3>
+                    </div>
+                       <ul className='flex flex-col gap-1'>
+                        <li>
+                       <h3>Accumulated PV</h3>
+                       <h3>{item.data.accu_left_node || 0} | {item.data.accu_right_node || 0}</h3>
+                        </li>
+                        <li>
+                          <h3>Today Sales</h3>
+                          <h3>{item.data.addition_left_node || 0} | {item.data.addition_right_node || 0}</h3>
+                        </li>
+                        <li>
+                          <h3>Today Matching</h3>
+                          <h3>{item.data.deduction_left_node || 0} | {item.data.deduction_right_node || 0}</h3>
+                        </li>
+                        <li>
+                          <h3>Today Balance</h3>
+                          <h3>{item.data.bleft_node || 0} | {item.data.bright_node || 0}</h3>
+                        </li>
+                       </ul>
+                    </div>
+                   </div>
                   </div>
                 ) : item.type === 'blank' ? (
                     <div className={`py-7 ${
                         item.col === "L" ? "left-after" : item.col === "R" ? "right-after" : ""
                       }`}>
-                 <div className='mx-auto py-2 px-10 rounded-md'>
-                      <div onClick={() => handleNavigate(item.col , item.upline_id)}>
-                    <FaRegPlusSquare className='cursor-pointer mx-auto' />
-                    </div>
+                 <div className='mx-auto py-2 px-10 rounded-md group' >
+                      {/* <div onClick={() => handleNavigate(item.col , item.upline_id)}>
+                    <FaRegPlusSquare className='cursor-pointer mx-auto ' />
+                    </div> */}
+                    <div onClick={() => setSelectedIndex(index)}>
+                        <FaRegPlusSquare className="cursor-pointer mx-auto" />
+                      </div>
+                      {selectedIndex === index && (
+            <div className="block mt-1">
+              <h3
+                className="text-[10px] mb-[2px] cursor-pointer whitespace-nowrap"
+                onClick={() => handleNavigate('/addmember', item.col, item.upline_id)}
+              >
+                Add Member
+              </h3>
+              <h3
+                className="text-[10px] mb-[2px] cursor-pointer whitespace-nowrap"
+                onClick={() => handleNavigate('/addcustomer', item.col, item.upline_id)}
+              >
+                Add Customer
+              </h3>
+            </div>
+          )}
                  </div>
                     </div>
                   ) : item.type === 'empty' ?(

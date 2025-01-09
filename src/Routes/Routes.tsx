@@ -36,6 +36,7 @@ import TransferFunction from '../Pages/Auth/Settings/TransferFunction';
 import DeliveryOrder from '../Pages/DeliveryOrder/DeliveryOrder';
 import UprankStrip from '../Pages/Auth/Uprank/UprankStrip';
 import AddCustomerStrip from '../Pages/Auth/customer/AddCustomerStrip';
+import ViewCommissions from '../Pages/Reports/ReportsData/ViewCommissions';
 
 const BrowserRoute = () => {
 
@@ -82,6 +83,7 @@ const BrowserRoute = () => {
                     <Route path="/deliveryorder" element={<DeliveryOrder />} />
                     <Route path="/uprank" element={<UprankStrip />} />
                     <Route path="/addcustomer" element={<AddCustomerStrip />} />
+                    <Route path="/viewcommission" element={<ViewCommissions />} />
                 </Route>
 
                 {/* Error 404 */}

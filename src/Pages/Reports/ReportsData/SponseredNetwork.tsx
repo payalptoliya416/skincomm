@@ -1,5 +1,5 @@
     import React, { useEffect, useRef, useState } from "react";
-    import { Link } from "react-router-dom";
+    import { Link, useNavigate } from "react-router-dom";
     import Layout from "../../../Components/Layout";
     import { useDispatch, useSelector } from "react-redux";
     import { RootState } from "../../../Redux/store";
@@ -13,7 +13,6 @@
         const { earningData } = useSelector((state: RootState) => state.earningReport);
         const tableRef = useRef(null);
         const dispatch = useDispatch<any>();
-        const [open ,setOpen] = useState(false);
             const currentDate = new Date();
             const months = Array.from({ length: 12 }, (_, i) => {
                 const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
@@ -24,18 +23,19 @@
                     label: `${date.toLocaleString('default', { month: 'short' })} ${year}`,
                 };
             });
-        useEffect(() => {
-            if (tableRef.current) {
-                const dataTable = new DataTable(tableRef.current,{
+            useEffect(() => {
+                if (tableRef.current ) {
+                  const dataTable = new DataTable(tableRef.current,{
                     searching: false,
-                });
-                return () => {
+                  });
+            
+                  return () => {
                     if (dataTable) {
-                        dataTable.destroy(true);
+                      dataTable.destroy(true);
                     }
-                };
-            }
-        }, []);
+                  };
+                }
+              }, []);
 
         useEffect(() => {
             dispatch(fetchEarnigReport({}));
@@ -60,96 +60,15 @@
             { type: "Repeat Sale Income", balance: earningData.repeat_sale_income.balance || "0.00" },
             { type: "Roll Up Bonus", balance: earningData.roll_up_bonus.balance || "0.00" },
         ] : [];
-          
+            
+              const navigate = useNavigate();  
         const handleOpen = (bonus: string, period: string) => {            
             dispatch(fetchSingleEarnigReport({ bonus, period  }));
-            setOpen(!open);
-        };
-        
-        const { singleearningData ,loading  } = useSelector((state: RootState) => state.singleEarningData);
-        
-        useEffect(() => {
-            dispatch(fetchSingleEarnigReport({}));
-        }, [dispatch]);
+            navigate('/viewcommission', { state: { bonus, period } })
+        };  
 
         return (
             <Layout>
-               {
-                open ? (
-                    <>
-                    <header className="fixed w-full h-14 bg-white flex items-center text-center shadow-md border-b border-custom-border z-10">
-                    <div className="container">
-                        <div className="relative">
-                            <div onClick={()=>setOpen(false)} className="absolute left-0">
-                                <svg
-                                    className="w-6 h-6"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m15 19-7-7 7-7"
-                                    />
-                                </svg>
-                            </div>
-                            <h3 className="text-lg font-medium">View Commissions</h3>
-                        </div>
-                    </div>
-                </header>
-                <section className="py-20">
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-3">
-                            <table  className="display  table-auto  w-full text-sm text-left rtl:text-right text-black ">
-                                <thead className="text-xs text-white uppercase bg-[#178285]">
-                                    <tr >
-                                        <th className="px-6 py-5" >Currency</th>
-                                        <th className="px-6 py-5" >Trans Source Type</th>
-                                        <th className="px-6 py-5" >Trans No</th>
-                                        <th className="px-6 py-5" >Description</th>
-                                        <th className="px-6 py-5" >Debit</th>
-                                        <th className="px-6 py-5" >Credit</th>
-                                        <th className="px-6 py-5" >Balance</th>
-                                        <th className="px-6 py-5" >Insert Time</th>
-                                    </tr>
-                                </thead>
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan={8} className="px-6 py-2 text-center">Loading...</td>
-                                    </tr>
-                                ) : singleearningData && singleearningData.length > 0 ? (
-                                    singleearningData.map((item: any, index: number) => (
-                                        <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
-                                            <td className="px-6 py-4 text-black">{item.currency}</td>
-                                            <td className="px-6 py-4 text-black">{item.trans_source_type}</td>
-                                            <td className="px-6 py-4 text-black">{item.trans_no}</td>
-                                            <td className="px-6 py-4 text-black">{item.description}</td>
-                                            <td className="px-6 py-4 text-black">{item.debit}</td>
-                                            <td className="px-6 py-4 text-black">{item.credit}</td>
-                                            <td className="px-6 py-4 text-black">{item.balance}</td>
-                                            <td className="px-6 py-4 text-black">{item.insert_time}</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={8} className="px-6 py-2 text-center">No data available</td>
-                                    </tr>
-                                )}
-                    
-                            </tbody>
-                            </table>
-                        </div>
-                </section>
-                    </>
-                ):
-                (
-                    <>
                      <header className="fixed w-full h-14 bg-white flex items-center text-center shadow-md border-b border-custom-border z-10">
                     <div className="container">
                         <div className="relative">
@@ -232,12 +151,10 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
                         </div>
                     </div>
                 </section>
-                    </>
-                )
-               }
             </Layout>
         );
     };

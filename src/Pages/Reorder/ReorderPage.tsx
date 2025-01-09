@@ -390,7 +390,7 @@ const navigate = useNavigate();
                                 Name
                                 </th>
                                 <th className="px-6 py-3">
-                            Member Price
+                                Member Price
                                 </th>
                                 <th className="px-6 py-3">
                                   LP

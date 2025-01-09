@@ -64,6 +64,7 @@ const DashboardSidebar = ({ loginState }: any) => {
     return (
         <>
             <div className="">
+                <div className="flex gap-5">
                 <button id="toggleButton" onClick={toggleSidebar} className="text-white">
                     <svg
                         className="w-6 h-6"
@@ -80,6 +81,8 @@ const DashboardSidebar = ({ loginState }: any) => {
                         />
                     </svg>
                 </button>
+                <img src="images/logo-white.png" alt="" className="w-full max-w-[150px] h-6 object-contain" />
+                </div>
 
                 <div className="">
                     <div

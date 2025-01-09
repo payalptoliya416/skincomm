@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../../../Components/Layout';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Redux/store';
@@ -42,6 +42,8 @@ function AddCustomer() {
     const stripe = useStripe(); 
     const elements = useElements();
     const dispatch = useDispatch<any>();
+       const location = useLocation();
+    const {  upline_id , col } = location.state || {};
     const { cutomerGetData } = useSelector((state: RootState) => state.customerGetData);
     const [userId , setUserId] = useState('');
     const [selectedPackage ,setSelectedPackage] = useState<any>('');
@@ -52,9 +54,9 @@ function AddCustomer() {
      const [stripInput ,setStripInput] = useState<any>(false);
      const [totalPriceShow ,setTotalPriceShow] = useState<any>('');
     const [formData, setFormData] = useState<FormData>({
-        sponsor:  "",
-        placement:  "",
-        matrix_side: "",
+        sponsor:   upline_id || "",
+        placement:  upline_id || "",
+        matrix_side: col || "",
         account_type: 0,
         f_name: "",
         l_name: "",
@@ -107,9 +109,7 @@ const customerData = {
         if (type === "radio" && name === "deliver_status") {
             setFormData((prev) => ({ ...prev, [name]: value }));
         } 
-        else 
-        
-         if (type === "radio") {
+        else if (type === "radio") {
             setFormData(prev => ({ ...prev, [name]: Number(value) }));
         }else if (name === 'payment_type') {
             if (!formData.package_id) {
