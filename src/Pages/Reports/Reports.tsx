@@ -1,8 +1,23 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import Layout from "../../Components/Layout";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 const Reports = () => {
-
+    const [customerRankID, setCustomerRankID] = useState<any>(null);
+    useEffect(() => {
+             const BizPathdata = localStorage.getItem("user");
+             if (BizPathdata) {
+                 const parsedData = JSON.parse(BizPathdata);
+               setCustomerRankID(parsedData.rank)
+             }
+           }, []);
+    
+          const handleClick = () => {
+            if (customerRankID === '1') {
+              toast.error("Please upgrade to become an Associate before you can access.")
+            }
+          };
     return (
         <>
             <Layout>
@@ -32,7 +47,7 @@ const Reports = () => {
                         </div>
                     </div>
                 </header>
-
+                <ToastContainer/>
                 <section className="py-20">
                     <div className="container">
                         <ul className="flex flex-col gap-3 rounded-lg  pr-0">
@@ -81,8 +96,12 @@ const Reports = () => {
                                 </Link>
                             </li>
 
-                            <li>
-                                <Link to={ '/sponsoredtnetwork' }  className="flex items-start w-full p-3 sm:p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ">
+                            <li className={` ${
+                                customerRankID === '1' ? "opacity-80 " : " "
+                            }`}  onClick={handleClick} >
+                                <Link to={ '/sponsoredtnetwork' }  className={`flex items-start w-full p-3 sm:p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ${
+                                customerRankID === '1' ? "pointer-events-none" : " "
+                            }`}>
                                 <div className="-mt-1 w-14">
                                         <svg
                                             className="w-6 h-6 text-custom-text-color2"

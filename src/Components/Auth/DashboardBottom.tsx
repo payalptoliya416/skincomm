@@ -1,7 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { fetchBDashboardDetail } from "../../Redux/thunks/DashoboardDetailThunk";
+import { toast, ToastContainer } from "react-toastify";
 
 const DashboardBottom = () => {
   const dispatch = useDispatch<any>();
@@ -41,6 +43,14 @@ const DashboardBottom = () => {
     const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
     return new Intl.DateTimeFormat("en-GB", options).format(date);
   }
+    const [customerRankID, setCustomerRankID] = useState<any>(null);
+      useEffect(() => {
+               const BizPathdata = localStorage.getItem("user");
+               if (BizPathdata) {
+                   const parsedData = JSON.parse(BizPathdata);
+                 setCustomerRankID(parsedData.rank)
+               }
+             }, []);
   
   return (
     <>
@@ -76,8 +86,16 @@ const DashboardBottom = () => {
             <h5 className="text-xs sm:text-base font-medium text-custom-text-color text-center">
               Current Month {formatDate(startDate)} - Ending {formatDate(endDate)}
             </h5>
-
+               
             {DashboardDetail ? (
+            customerRankID === '1' ? (
+              <div className="p-4 mb-4 text-center">
+                <p className="text-sm md:text-lg mb-1 font-semibold">Today Sales</p>
+                <p className="text-sm mb-4">
+                  {DashboardDetail.addition_left_node} | {DashboardDetail.addition_right_node}
+                </p>
+              </div>
+            ) : (
               <div className="p-4 mb-4 text-center">
                 <p className="text-sm md:text-lg mb-1 font-semibold">Accumulated LP</p>
                 <p className="text-sm mb-4">
@@ -104,24 +122,41 @@ const DashboardBottom = () => {
                   <span className="text-sm mb-4">{DashboardDetail.right_side_sponsored}</span>
                 </p>
               </div>
-            ) : (
-              <p className="text-center text-sm font-semibold">No Data Available</p>
-            )}
+            )
+          ) : (
+            <p className="text-center text-sm font-semibold">No Data Available</p>
+          )}
+
           </>
         )}
 
-        {activeTab === "bizpath" && (
-          <div className="mt-5">
-            <div className="flex justify-center flex-col items-center py-10">
-              <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
-              Member Rank :<span className="text-sm font-normal"> {bizData.rank} </span>
-              </p>
-            <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">Maintenance Expiry Date: <span className="text-sm font-normal">  {bizData?.expiery_date ? formatDatee(bizData.expiery_date) : "N/A"} </span></p>
-            <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">Status: <span className="text-sm  font-normal">{bizData.account_status}</span></p>
-                         
-            </div>
-          </div>
-        )}
+{activeTab === "bizpath" && (
+  <div className="mt-5">
+    <div className="flex justify-center flex-col items-center py-10">
+      {customerRankID === '1' ? (
+        <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
+          Status: <span className="text-sm font-normal">{bizData.account_status}</span>
+        </p>
+      ) : (
+        <>
+          <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
+            Member Rank: <span className="text-sm font-normal">{bizData.rank}</span>
+          </p>
+          <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
+            Maintenance Expiry Date:{" "}
+            <span className="text-sm font-normal">
+              {bizData?.expiery_date ? formatDatee(bizData.expiery_date) : "N/A"}
+            </span>
+          </p>
+          <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
+            Status: <span className="text-sm font-normal">{bizData.account_status}</span>
+          </p>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
       </div>
           </div>
         </div>

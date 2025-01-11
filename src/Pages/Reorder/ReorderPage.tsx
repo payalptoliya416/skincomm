@@ -1,3 +1,4 @@
+
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Layout from '../../Components/Layout';
 import { Link, useNavigate } from 'react-router-dom';
@@ -58,7 +59,6 @@ const navigate = useNavigate();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredProducts, setFilteredProducts] = useState(productData);
-  
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value.toLowerCase();
       setSearchTerm(value);
@@ -75,6 +75,15 @@ const navigate = useNavigate();
         setFilteredProducts(filtered);
       }
     }, [searchTerm, productData]);
+
+       const [customerRankID, setCustomerRankID] = useState<any>(null);
+        useEffect(() => {
+                 const BizPathdata = localStorage.getItem("user");
+                 if (BizPathdata) {
+                     const parsedData = JSON.parse(BizPathdata);
+                   setCustomerRankID(parsedData.rank)
+                 }
+               }, []);
 
     const updateCart = async (productId: string, price: number, delta: number) => {
       setCart((prevCart) => {
@@ -137,6 +146,7 @@ const navigate = useNavigate();
             if (value) {
                 dispatch(fetchPaymentBy(value));  
             }
+            
             if (name === 'currency') {
               if (value === 'e-wallet') {
                 await updateEwalletData(totalPrice);
@@ -390,7 +400,7 @@ const navigate = useNavigate();
                                 Name
                                 </th>
                                 <th className="px-6 py-3">
-                                Member Price
+                               Price
                                 </th>
                                 <th className="px-6 py-3">
                                   LP
@@ -412,6 +422,7 @@ const navigate = useNavigate();
                                        {item.product_name}
                                 </td>
                                 <td className="px-6 py-3">
+                                  { customerRankID === '1' ? item.product_associate_price : item.product_retail_price}
                                     {item.product_associate_price}
                                 </td>
                                 <td className="px-6 py-3">
@@ -420,12 +431,12 @@ const navigate = useNavigate();
                                 <td className="px-6 py-3">
                                 <div className="flex gap-2 items-center">
                                 <HiOutlineMinusSmall
-                                  onClick={() => updateCart(item.id, item.product_associate_price, -1)}
+                                 onClick={() => updateCart(item.id, customerRankID === '1' ? item.product_retail_price : item.product_associate_price, -1)}
                                   className={`cursor-pointer ${cart[item.id]?.count === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 />
                                 <BsCart /> {cart[item.id]?.count || 0}
                                 <HiOutlinePlusSmall
-                                  onClick={() => updateCart(item.id, item.product_associate_price, 1)}
+                                 onClick={() => updateCart(item.id, customerRankID === '1' ? item.product_retail_price : item.product_associate_price, 1)}
                                   className="cursor-pointer"
                                 />
                               </div>
@@ -495,7 +506,7 @@ const navigate = useNavigate();
                                     </div>
                                 ) : ""
                             }
-                            <div className="mt-3">
+                            {/* <div className="mt-3">
                               {paymentData && <input
                           type="text"
                           placeholder="balance"
@@ -503,7 +514,15 @@ const navigate = useNavigate();
                           value={paymentData && paymentData.balance}
                           readOnly
                         /> }
-                            </div>
+                            </div> */}
+                            { formData.currency === 'e-wallet' ? <input
+                          type="text"
+                          placeholder="balance"
+                                  className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
+                          value={(Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0)).toFixed(2)}
+                          readOnly
+                        /> : ""}
+                            
                         {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
                     </div>
                     <div className="mb-3">
