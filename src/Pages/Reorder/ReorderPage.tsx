@@ -63,7 +63,6 @@ const navigate = useNavigate();
       const value = e.target.value.toLowerCase();
       setSearchTerm(value);
     };
-  
     useEffect(() => {
       if (searchTerm === '') {
         setFilteredProducts(productData);
@@ -423,7 +422,6 @@ const navigate = useNavigate();
                                 </td>
                                 <td className="px-6 py-3">
                                   { customerRankID === '1' ? item.product_associate_price : item.product_retail_price}
-                                    {item.product_associate_price}
                                 </td>
                                 <td className="px-6 py-3">
                                      {item.product_lp}
