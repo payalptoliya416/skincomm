@@ -46,6 +46,7 @@ function ReorderPage() {
     });
 const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState<any>('');
+    console.log('totalPrice',totalPrice);
     const [stripShow , setSripShow]= useState(false);
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = localStorage.getItem('cart');
@@ -421,7 +422,7 @@ const navigate = useNavigate();
                                        {item.product_name}
                                 </td>
                                 <td className="px-6 py-3">
-                                  { customerRankID === '1' ? item.product_associate_price : item.product_retail_price}
+                                  { customerRankID === '1' ? item.product_retail_price :  item.product_associate_price}
                                 </td>
                                 <td className="px-6 py-3">
                                      {item.product_lp}
@@ -438,7 +439,6 @@ const navigate = useNavigate();
                                   className="cursor-pointer"
                                 />
                               </div>
-
                                 </td>
                             </tr>
                            ))
