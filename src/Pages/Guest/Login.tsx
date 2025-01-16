@@ -39,10 +39,6 @@ const Login = () => {
             <section className="h-screen flex items-center justify-center">
            <ToastContainer />
              <div className="bg-white px-6 py-6 rounded-2xl sm:mx-auto w-full max-w-lg mx-2">
-                        {/* <div className="">
-                            <img src="../images/logo.png" alt="" className="w-100 h-70px m-auto"/>
-                        </div> */}
-
                         <div className="mt-5">
                             <div className="text-center flex justify-center mb-6">
                                 <img src="images/logo-skincomm.png" alt="" className="w-full max-w-[200px]"/>

@@ -37,8 +37,8 @@ function ReorderPage() {
   const stripe = useStripe(); 
   const elements = useElements();
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
-    const {  paymentData } = useSelector((state: RootState) => state.paymentby);
     const [ewalletData , setEwalletData] = useState<any>('');
+    const totalBalanceOfEWallet = (Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0)).toFixed(2);
     const [formData , setFormData] = useState<FormData>({
         id: '',
         currency : "",
@@ -46,7 +46,6 @@ function ReorderPage() {
     });
 const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState<any>('');
-    console.log('totalPrice',totalPrice);
     const [stripShow , setSripShow]= useState(false);
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = localStorage.getItem('cart');
@@ -203,16 +202,17 @@ const navigate = useNavigate();
   useEffect(() => {
     localStorage.removeItem('cart');
   }, [cart, totalPrice]);
-   
+
   const validationErrors = () => {
     const newErrors: any = {};
     if (!formData.currency) {
         newErrors.currency = "Currency field is required";
     }
-    if (formData.currency && totalPrice > paymentData.balance) {
+    if (formData.currency && totalPrice > totalBalanceOfEWallet) {
       newErrors.test = "Total price cannot be less than the balance!";
         toast.error("Total price cannot be less than the balance!");
     }
+
     if (!formData.deliver_status) {
       newErrors.deliver_status = 'Deliver Status field is required';
     }
@@ -504,15 +504,6 @@ const navigate = useNavigate();
                                     </div>
                                 ) : ""
                             }
-                            {/* <div className="mt-3">
-                              {paymentData && <input
-                          type="text"
-                          placeholder="balance"
-                                  className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
-                          value={paymentData && paymentData.balance}
-                          readOnly
-                        /> }
-                            </div> */}
                             { formData.currency === 'e-wallet' ? <input
                           type="text"
                           placeholder="balance"
