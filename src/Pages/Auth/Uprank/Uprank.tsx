@@ -123,7 +123,7 @@ function Uprank() {
             0
           );
           setTotalPrice(newTotalPrice);
-          updateEwalletData(newTotalPrice);
+          
           if (formData.currency === 'e-wallet') {
             updateEwalletData(newTotalPrice);
           }
@@ -197,14 +197,18 @@ function Uprank() {
       useEffect(() => {
         localStorage.removeItem('cart');
       }, [cart, totalPrice]);
+
       const validationErrors = () => {
         const newErrors: any = {};
         if (!formData.currency) {
             newErrors.currency = "Currency field is required";
         }
-        if (formData.currency && totalPrice > availableTotalBalance) {
-            toast.error("Total price cannot be less than the balance!");
-        }
+          if (formData.currency === 'e-wallet' && !stripShow) {
+              if (totalPrice > availableTotalBalance) {
+                newErrors.test = "Total price cannot be less than the balance!";
+                toast.error("Total price cannot be less than the balance!");
+              }
+            } 
         if (!formData.deliver_status) {
           newErrors.deliver_status = 'Deliver Status field is required';
         }

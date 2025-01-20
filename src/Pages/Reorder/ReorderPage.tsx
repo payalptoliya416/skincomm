@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchReorderPost } from '../../Redux/thunks/ReorderPostThunk';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { fetchProductList } from '../../Redux/thunks/productListReducer';
-
+import imageCompression from 'browser-image-compression';
 interface Product {
   id : string,
   category_name : string,
@@ -22,6 +22,7 @@ interface FormData {
     id : string,
     currency :string,
     deliver_status: string
+    payment_slip_image: any
 }
   interface CartItem {
       id: string;
@@ -42,7 +43,8 @@ function ReorderPage() {
     const [formData , setFormData] = useState<FormData>({
         id: '',
         currency : "",
-        deliver_status: 'self_collect'
+        deliver_status: 'self_collect',
+        payment_slip_image : null,
     });
 const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState<any>('');
@@ -82,7 +84,7 @@ const navigate = useNavigate();
                      const parsedData = JSON.parse(BizPathdata);
                    setCustomerRankID(parsedData.rank)
                  }
-               }, []);
+       }, []);
 
     const updateCart = async (productId: string, price: number, delta: number) => {
       setCart((prevCart) => {
@@ -107,7 +109,7 @@ const navigate = useNavigate();
           0
         );
         setTotalPrice(newTotalPrice);
-        updateEwalletData(newTotalPrice);
+
         if (formData.currency === 'e-wallet') {
           updateEwalletData(newTotalPrice);
         }
@@ -198,7 +200,66 @@ const navigate = useNavigate();
             setSripShow(false);
           }
         };
-  
+
+        const handleUploadImage = async (event: any) => {
+          const file = event.target.files[0];
+          if (!file) return;
+        
+          const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+          const validExtensions = ['jpg', 'jpeg', 'png']; 
+          const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+          // Check if the file is a valid image type and extension
+          if (!validImageTypes.includes(file.type) || !validExtensions.includes(fileExtension)) {
+            toast.error('Please upload a valid image file (jpg, jpeg, png).');
+            return;
+          }
+        
+          const options = {
+            maxSizeMB: 1, // Max size in MB (adjust as needed)
+            maxWidthOrHeight: 1920, // Max dimensions
+            useWebWorker: true,
+          };
+
+          try {
+            // Compress the image
+            const compressedFile = await imageCompression(file, options);
+            // Convert the compressed image to a Base64 string
+            const base64String = await convertBase64(compressedFile);
+            const baseImage = `data:${compressedFile.type};base64,${base64String}`;
+        
+            // Prepare the form data
+            const formData = new FormData();
+            formData.append('file', compressedFile); // Compressed file
+            formData.append('base64Image', baseImage); // Base64 string
+            setFormData((prev) => ({
+              ...prev,
+              payment_slip_image: baseImage, 
+            }));
+        
+          } catch (error) {
+            console.error('Error compressing the image:', error);
+            toast.error('Failed to upload the image.');
+          }
+        };
+        
+        // Function to convert a file to a Base64 string
+        const convertBase64 = (file: any): Promise<string> => {
+          return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+              // Extract the Base64 string without the metadata prefix
+              const result = fileReader.result as string;
+              const base64String = result.split(',')[1];
+              resolve(base64String);
+            };
+            fileReader.onerror = (error) => {
+              reject(error);
+            };
+          });
+        };
+
   useEffect(() => {
     localStorage.removeItem('cart');
   }, [cart, totalPrice]);
@@ -208,11 +269,15 @@ const navigate = useNavigate();
     if (!formData.currency) {
         newErrors.currency = "Currency field is required";
     }
-    if (formData.currency && totalPrice > totalBalanceOfEWallet) {
-      newErrors.test = "Total price cannot be less than the balance!";
-        toast.error("Total price cannot be less than the balance!");
+    if (formData.currency === 'upload_payment_slip' && !formData.payment_slip_image) {
+      newErrors.upload = "Please select an image";
     }
-
+    if (formData.currency === 'e-wallet' && !stripShow) {
+      if (totalPrice > totalBalanceOfEWallet) {
+        newErrors.test = "Total price cannot be less than the balance!";
+        toast.error("Total price cannot be less than the balance!");
+      }
+    } 
     if (!formData.deliver_status) {
       newErrors.deliver_status = 'Deliver Status field is required';
     }
@@ -264,70 +329,72 @@ const navigate = useNavigate();
 
     const errors = validationErrors();
     
-  const data = {
-    "category_name" : formData.id,
-    "products_data" : products_data,
-    "payment_type" : formData.currency,
-    "deliver_status": formData.deliver_status
-  }  
-  if (products_data.length === 0) {
-    toast.error( "Please select at least one product.")
-  }else{
-      if (Object.keys(errors).length === 0 ) {
-          
-        if (!stripe || !elements) {
-          toast.error("Stripe or Elements not initialized."); 
-          return;
-        }
-        let paymentMethodId = null;
-        if (formData.currency === "credit_card" ||  (formData.currency === "e-wallet" && stripShow)) {
-          const cardElement = elements.getElement(CardElement);
+      const data = {
+        "category_name" : formData.id,
+        "products_data" : products_data,
+        "payment_type" : formData.currency,
+        "deliver_status": formData.deliver_status,
+        "payment_slip_image":formData.payment_slip_image
+      }  
+      if (products_data.length === 0) {
+        toast.error( "Please select at least one product.")
+      }else{
+          if (Object.keys(errors).length === 0 ) {
+              
+            if (!stripe || !elements) {
+              toast.error("Stripe or Elements not initialized."); 
+              return;
+            }
+            let paymentMethodId = null;
+            if (formData.currency === "credit_card" ||  (formData.currency === "e-wallet" && stripShow)) {
+              const cardElement = elements.getElement(CardElement);
 
-          if (!cardElement) {
-            toast.error("Card Element not found."); 
-            return;
+              if (!cardElement) {
+                toast.error("Card Element not found."); 
+                return;
+              }
+
+              try {
+              const { error, token } = await stripe.createToken(cardElement);
+                if (error) {
+                  toast.error("Payment error: " + error.message);  
+                  return;
+                }
+                paymentMethodId = token?.id;
+                if (!paymentMethodId) {
+                  toast.error("Payment method ID not found.");
+                  return;
+                }
+              } catch (paymentError) {
+                toast.error("Payment processing error. Please try again.");
+                return;
+              } 
+            }
+            
+            const formDataToSend = {
+              ...data,
+              stripeToken: paymentMethodId || "", 
+            };
+                 const res =  await dispatch(fetchReorderPost(formDataToSend));
+                 if(res.data.success === true){
+                     toast.success(res.data.message)
+                     localStorage.removeItem('cart')
+                     localStorage.removeItem('totalPrice')   
+                     setFormData({
+                      id: '',
+                      currency : "",
+                      deliver_status:'self_collect',
+                      payment_slip_image: null
+                     });
+                     navigate('/successfully' , {state : { message: res.data.message } } );
+                  }else{
+                     toast.error(res.data.message)
+                 }
+          } else {
+            setError(errors)
           }
-
-          try {
-          const { error, token } = await stripe.createToken(cardElement);
-            if (error) {
-              toast.error("Payment error: " + error.message);  
-              return;
-            }
-            paymentMethodId = token?.id;
-            if (!paymentMethodId) {
-              toast.error("Payment method ID not found.");
-              return;
-            }
-          } catch (paymentError) {
-            toast.error("Payment processing error. Please try again.");
-            return;
-          } 
-        }
-        
-        const formDataToSend = {
-          ...data,
-          stripeToken: paymentMethodId || "", 
-        };
-             const res =  await dispatch(fetchReorderPost(formDataToSend));
-             if(res.data.success === true){
-                 toast.success(res.data.message)
-                 localStorage.removeItem('cart')
-                 localStorage.removeItem('totalPrice')   
-                 setFormData({
-                  id: '',
-                  currency : "",
-                  deliver_status:'self_collect'
-                 })
-                 navigate('/successfully');
-              }else{
-                 toast.error(res.data.message)
-             }
-      } else {
-        setError(errors)
       }
-  }
-  };
+      };
 
   return (
     <>
@@ -452,7 +519,9 @@ const navigate = useNavigate();
                     </div>
                     <div className="mb-3 flex items-center gap-2">
                     <h3 className="text-black text-[14px] font-semibold">Total Amount : </h3>
-                    <h4 className="text-black text-[14px] font-normal">${totalPrice || 0}</h4>
+                    <h4 className="text-black text-[14px] font-normal">
+                        ${Number(totalPrice || 0).toFixed(2)}
+                      </h4>
                     </div>
                     </div>
                     <div className="border rounded-lg p-5 border-[#DCDCE9] bg-white">
@@ -461,13 +530,13 @@ const navigate = useNavigate();
                     <select
                         name="currency"
                         className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
-                        value={formData.currency}
-                        onChange={handleChange}
-                    >
+                        value={formData.currency} 
+                        onChange={handleChange} >
                         <option value="">Select</option>
                         <option value="credit_card">CREDIT CARD</option>
                         <option value="e-wallet">E-Wallet</option>
                         <option value="PP2">Old Purchase Point</option>
+                        <option value="upload_payment_slip">Upload Payment Slip</option>
                         {/* <option value="RC">PP</option>
                         <option value="PP2">PP2</option>
                         <option value="SP">SP</option> */}
@@ -511,8 +580,22 @@ const navigate = useNavigate();
                           value={(Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0)).toFixed(2)}
                           readOnly
                         /> : ""}
-                            
-                        {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
+                        {
+                          formData.currency === 'upload_payment_slip' ? (
+                            <input
+                              type="file"
+                              accept=".jpg,.jpeg,.png" 
+                              className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-300"
+                              onChange={handleUploadImage}
+                              name='payment_slip_image'
+                            />
+                          ) : (
+                            ''
+                          )
+                        }
+                     {error?.upload && <p className="text-red-500 text-xs mt-2">{error.upload}</p>}
+{error?.currency && <p className="text-red-500 text-xs mt-2">{error.currency}</p>}
+
                     </div>
                     <div className="mb-3">
       <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
@@ -544,7 +627,7 @@ const navigate = useNavigate();
           <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black">
             Delivery
           </label>
-        </div>
+        </div>  
       </div>
       {/* {error.deliver_status && <p className="text-red-500 text-xs">{error.deliver_status}</p>} */}
                     </div>
