@@ -30,7 +30,6 @@ interface FormData {
     matrix_side: string,
     account_type: number,
     f_name: string,
-    l_name: string,
     e_mail: string,
     mobile: string,
     sponsor_type: number,
@@ -61,7 +60,6 @@ const DashboardAdMember = () => {
         matrix_side: "",
         account_type: 0,
         f_name: "",
-        l_name: "",
         e_mail: "",
         mobile: "",
         sponsor_type: 1,
@@ -112,40 +110,7 @@ const DashboardAdMember = () => {
         if (type === "radio" && name === "deliver_status") {
             setFormData((prev) => ({ ...prev, [name]: value }));
         } 
-        else 
-        // if (type === "radio" && name === "account_type") {
-        //     const newAccountType = Number(value);
-    
-        //     if (!userId) {
-        //         toast.error('Please enter Sponsor Id');
-        //         return; 
-        //     }
-
-        //     setFormData(prev => {
-        //         const updatedFormData = { ...prev, [name]: newAccountType };
-        //         if (newAccountType === 1) {
-        //             return {
-        //                 ...updatedFormData,
-        //                 f_name: UserDetailData.f_name || '',
-        //                 l_name: UserDetailData.l_name || '',
-        //                 e_mail: UserDetailData.email || '',
-        //                 mobile: UserDetailData.mobile || '',
-        //                 isFieldsDisabled: true 
-        //             };
-        //         } else {
-        //             return {
-        //                 ...updatedFormData,
-        //                 f_name: '',
-        //                 l_name: '',
-        //                 e_mail: '',
-        //                 mobile: '',
-        //                 isFieldsDisabled: false 
-        //             };
-        //         }
-        //     });
-
-        // } else 
-         if (type === "radio") {
+        else  if (type === "radio") {
             setFormData(prev => ({ ...prev, [name]: Number(value) }));
         }else if (name === 'payment_type') {
             if (!formData.package_id) {
@@ -211,8 +176,7 @@ const DashboardAdMember = () => {
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
             if (!formData.placement) newErrors.placement = "Placement ID is required";
             if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
-             if (!formData.f_name) newErrors.f_name = "First Name is required";
-        if (!formData.l_name) newErrors.l_name = "Last Name is required";
+             if (!formData.f_name) newErrors.f_name = "Full Name is required";
         if (!formData.country) newErrors.country = "Country Name is required";
         if (!fName.member) newErrors.sponsor = `${fName.message}`;
         if (!placementName.member) newErrors.placement = `${placementName.message}`;
@@ -353,7 +317,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             matrix_side: "",
             account_type: 0,
             f_name: "",
-            l_name: "",
             e_mail: "",
             mobile: "",
             sponsor_type: 1,
@@ -453,11 +416,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     {errors.matrix_side && <p className='text-red-500 text-xs'>{errors.matrix_side}</p>}
                                 </div>
                                 <div className='mb-3'>
-                                    <label className='text-[#1e293b] text-[14px]'>First Name</label>
+                                    <label className='text-[#1e293b] text-[14px]'>Full Name</label>
                                     <input
                                         type="text"
                                         name="f_name"
-                                        placeholder='First Name'
+                                        placeholder='Full Name'
                                         className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
                                         value={formData.f_name}
                                         onChange={handleChange}
@@ -467,21 +430,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         formData.isFieldsDisabled ? "" : (   errors.f_name && <p className='text-red-500 text-xs'>{errors.f_name}</p>)
                                     }
                                  
-                                </div>
-                                <div className='mb-3'>
-                                    <label className='text-[#1e293b] text-[14px]'>Last Name</label>
-                                    <input
-                                        type="text"
-                                        name="l_name"
-                                        placeholder='Last Name'
-                                        className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
-                                        value={formData.l_name}
-                                        onChange={handleChange}
-                                        disabled={formData.isFieldsDisabled}
-                                    />
-                                    {
-                                        formData.isFieldsDisabled ? "" : (errors.l_name && <p className='text-red-500 text-xs'>{errors.l_name}</p>)
-                                    }
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Email</label>

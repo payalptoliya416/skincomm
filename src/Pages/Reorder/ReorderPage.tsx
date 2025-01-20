@@ -34,7 +34,8 @@ interface productData {
     product_code : string
 }
 
-function ReorderPage() {
+function ReorderPage(props: any) {
+  const UserDetailData = props;
   const stripe = useStripe(); 
   const elements = useElements();
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
@@ -46,25 +47,37 @@ function ReorderPage() {
         deliver_status: 'self_collect',
         payment_slip_image : null,
     });
-const navigate = useNavigate();
+      const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState<any>('');
     const [stripShow , setSripShow]= useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState(productData);
+    const [customerRankID, setCustomerRankID] = useState<any>(null);
+    const [eWallerPPText ,setEWalletPPText] = useState<any>();
+    const [eWallerRPText ,setEWalletRPText] = useState<any>();
+    const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : {};
-  });
+   });
+const [deliverCharge , setDeliveryCharge ] = useState<any>('');
+const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
+   useEffect(()=>{
+    if(UserDetailData?.UserDetailData.delivery_charge_per_order){
+      setMinDeliveryCharge(UserDetailData?.UserDetailData.min_amount_to_avoid_delivery_charge)
+    }
+   })
   
     const dispatch = useDispatch<any>();
     useEffect(()=>{
         dispatch(fetchCategoryList())
     },[dispatch])
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredProducts, setFilteredProducts] = useState(productData);
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value.toLowerCase();
       setSearchTerm(value);
     };
+
     useEffect(() => {
       if (searchTerm === '') {
         setFilteredProducts(productData);
@@ -77,7 +90,7 @@ const navigate = useNavigate();
       }
     }, [searchTerm, productData]);
 
-       const [customerRankID, setCustomerRankID] = useState<any>(null);
+     
         useEffect(() => {
                  const BizPathdata = localStorage.getItem("user");
                  if (BizPathdata) {
@@ -108,8 +121,13 @@ const navigate = useNavigate();
           (total, item: any) => total + item.price,
           0
         );
-        setTotalPrice(newTotalPrice);
-
+        
+       if(formData.deliver_status === "delivery"){
+        calculateDeliveryCharge(newTotalPrice ,formData.deliver_status);
+       }else{
+        setTotalPrice(Number(newTotalPrice));
+       }
+       
         if (formData.currency === 'e-wallet') {
           updateEwalletData(newTotalPrice);
         }
@@ -147,18 +165,81 @@ const navigate = useNavigate();
             if (value) {
                 dispatch(fetchPaymentBy(value));  
             }
-            
+            if (name === "deliver_status") {
+              calculateDeliveryCharge(totalPrice, value); // Pass the new value (delivery or self-collect)
+            }
+
             if (name === 'currency') {
               if (value === 'e-wallet') {
                 await updateEwalletData(totalPrice);
               }
               setFormData((prev) => ({ ...prev, [name]: value }));
           }
+        };    
+
+        // const calculateDeliveryCharge = (totalPrice: number, deliverStatus: string) => {
+        //   const deliveryCharge = Number(UserDetailData?.UserDetailData.delivery_charge_per_order) || 0;
+        //   const newTotalPrice = Number(totalPrice);
+        //   const minCharge = Number(minDeliverCharge);
+      
+        //   if (deliverStatus === "delivery") {
+        //     if (newTotalPrice === 0) {
+        //       setTotalPrice(deliveryCharge); 
+        //       setDeliveryCharge(deliveryCharge);
+        //     } else if (newTotalPrice < minCharge) {
+        //       setTotalPrice(newTotalPrice + deliveryCharge); 
+        //       setDeliveryCharge(deliveryCharge);
+        //     } else {
+        //       setTotalPrice(newTotalPrice); 
+        //       setDeliveryCharge(0);
+        //     }
+        //   } else if (deliverStatus === "self_collect") {
+        //     console.log("newTotalPrice",newTotalPrice)
+        //     console.log("minCharge",minCharge)
+        //     if (newTotalPrice === deliveryCharge) {
+        //       setTotalPrice(0);
+        //       setDeliveryCharge(0);
+        //     } else if (newTotalPrice > minCharge) {
+        //       setTotalPrice(newTotalPrice - deliveryCharge); 
+        //       setDeliveryCharge(0);
+        //     } else {
+        //       setTotalPrice(newTotalPrice); 
+        //       setDeliveryCharge(0);
+        //     }
+        //   }
+        // };
+        const calculateDeliveryCharge = (totalPrice: number, deliverStatus: string) => {
+          const deliveryCharge = Number(UserDetailData?.UserDetailData.delivery_charge_per_order) || 0;
+          const newTotalPrice = Number(totalPrice);
+          const minCharge = Number(minDeliverCharge);
+        
+          if (deliverStatus === "delivery") {
+            if (newTotalPrice === 0) {
+              setTotalPrice(deliveryCharge);
+              setDeliveryCharge(deliveryCharge);
+            } else if (newTotalPrice < minCharge) {
+              setTotalPrice(newTotalPrice + deliveryCharge);
+              setDeliveryCharge(deliveryCharge);
+            } else {
+              setTotalPrice(newTotalPrice);
+              setDeliveryCharge(0);
+            }
+          } else if (deliverStatus === "self_collect") {
+        
+            if (newTotalPrice === deliveryCharge) {
+              setTotalPrice(0);
+              setDeliveryCharge(0);
+            } else if (newTotalPrice > 0 && deliveryCharge > 0) {
+              const updatedTotalPrice = newTotalPrice - deliveryCharge;
+              setTotalPrice(updatedTotalPrice > 0 ? updatedTotalPrice : 0);
+              setDeliveryCharge(0);
+            } else {
+              setTotalPrice(newTotalPrice);
+              setDeliveryCharge(0);
+            }
+          }
         };
-           const [eWallerPPText ,setEWalletPPText] = useState<any>();
-           const [eWallerRPText ,setEWalletRPText] = useState<any>();
-           const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
-           
+        
         const updateEwalletData = async (newTotalPrice :any) => {
           const ewalletDataValue = await dispatch(fetchProductList(UserProductDataa));
           const ValuOfBalance = ewalletDataValue.data;
@@ -523,6 +604,13 @@ const navigate = useNavigate();
                         ${Number(totalPrice || 0).toFixed(2)}
                       </h4>
                     </div>
+                    {deliverCharge ? <div className="mb-3 flex items-center gap-2">
+                    <h3 className="text-black text-[14px] font-semibold">Delivery Charge : </h3>
+                    <h4 className="text-black text-[14px] font-normal">
+                        ${Number(deliverCharge || 0).toFixed(2)}
+                      </h4>
+                    </div> : ""}
+                    
                     </div>
                     <div className="border rounded-lg p-5 border-[#DCDCE9] bg-white">
                     <div className="mb-3">
@@ -594,42 +682,41 @@ const navigate = useNavigate();
                           )
                         }
                      {error?.upload && <p className="text-red-500 text-xs mt-2">{error.upload}</p>}
-{error?.currency && <p className="text-red-500 text-xs mt-2">{error.currency}</p>}
+                   {error?.currency && <p className="text-red-500 text-xs mt-2">{error.currency}</p>}
 
                     </div>
                     <div className="mb-3">
-      <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
-      <div className="mt-3 flex gap-20 justify-around">
-        <div className="flex items-center cursor-pointer">
-          <input
-            id="main-account"
-            type="radio"
-            name="deliver_status"
-            value="self_collect"
-            checked={formData.deliver_status === 'self_collect'}
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-            onChange={handleChange}
-          />
-          <label htmlFor="main-account" className="ms-2 text-sm font-medium text-black">
-            Self Collect
-          </label>
-        </div>
-        <div className="flex items-center cursor-pointer">
-          <input
-            id="sub-account"
-            type="radio"
-            name="deliver_status"
-            value="delivery"
-            checked={formData.deliver_status === 'delivery'} 
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-            onChange={handleChange}
-          />
-          <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black">
-            Delivery
-          </label>
-        </div>  
-      </div>
-      {/* {error.deliver_status && <p className="text-red-500 text-xs">{error.deliver_status}</p>} */}
+                <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
+                <div className="mt-3 flex gap-20 justify-around">
+                  <div className="flex items-center cursor-pointer">
+                    <input
+                      id="main-account"
+                      type="radio"
+                      name="deliver_status"
+                      value="self_collect"
+                      checked={formData.deliver_status === 'self_collect'}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="main-account" className="ms-2 text-sm font-medium text-black">
+                      Self Collect
+                    </label>
+                  </div>
+                  <div className="flex items-center cursor-pointer">
+                    <input
+                      id="sub-account"
+                      type="radio"
+                      name="deliver_status"
+                      value="delivery"
+                      checked={formData.deliver_status === 'delivery'} 
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black">
+                      Delivery
+                    </label>
+                  </div>  
+                </div>
                     </div>
                      <div className="mb-3 text-end">
                      <button className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm' type='submit'>Submit</button>

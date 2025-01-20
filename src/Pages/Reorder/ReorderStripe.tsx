@@ -34,7 +34,7 @@ function ReorderStripe() {
   return (
     <>
        <Elements stripe={stripePromise}>
-         <ReorderPage/>
+         <ReorderPage UserDetailData={UserDetailData}/>
        </Elements>
     </>
   )

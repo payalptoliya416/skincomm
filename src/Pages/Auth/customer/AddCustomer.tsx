@@ -25,7 +25,6 @@ interface FormData {
     matrix_side: string,
     account_type: number,
     f_name: string,
-    l_name: string,
     e_mail: string,
     mobile: string,
     sponsor_type: number,
@@ -59,7 +58,6 @@ function AddCustomer() {
         matrix_side: col || "",
         account_type: 0,
         f_name: "",
-        l_name: "",
         e_mail: "",
         mobile: "",
         sponsor_type: 1,
@@ -69,7 +67,7 @@ function AddCustomer() {
         stripeToken : "",
         deliver_status: "self_collect"
     });
-
+    const [loading, setLoading] = useState(false);
 const customerData = {
     action : "GetProducts",
 }
@@ -83,22 +81,60 @@ const customerData = {
     dispatch(fetchcustomerGetData(customerData)); 
     }, [dispatch,userId]);
 
-    const handleFnameSearch =async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        const userId = value; 
-        setUserId(userId);
+    // const handleFnameSearch =async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    //     const { name, value } = e.target;
+    //     setFormData(prev => ({ ...prev, [name]: value }));
+    //     const userId = value; 
+    //     setUserId(userId);
         
-        if(name === 'sponsor'){
-            const data = await  dispatch(fetchSearchTeamData( userId )); 
-                setFName(data);
+    //     if(name === 'sponsor'){
+    //         const data = await  dispatch(fetchSearchTeamData( userId )); 
+    //         console.log("data",data)
+    //             setFName(data);
           
-        }else if(name === 'placement'){
-            const placementName = await  dispatch(fetchSearchTeamData( userId ));
-                setplacementName(placementName);
+    //     }else if(name === 'placement'){
+    //         const placementName = await  dispatch(fetchSearchTeamData( userId ));
+    //         console.log("placementName",placementName)
+    //             setplacementName(placementName);
+    //     }
+    // };
+
+    const handleFnameSearch = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        const userId = value;
+    
+        if (name === "sponsor") {
+          setLoading(true);
+          const data = await dispatch(fetchSearchTeamData(userId));
+          setFName(data);
+          setLoading(false);
+        } else if (name === "placement") {
+          setLoading(true);
+          const placementName = await dispatch(fetchSearchTeamData(userId));
+          setplacementName(placementName);
+          setLoading(false);
         }
-    };
- 
+      };
+    
+      useEffect(() => {
+        const fetchInitialData = async () => {
+          if (formData.sponsor) {
+            setLoading(true);
+            const data = await dispatch(fetchSearchTeamData(formData.sponsor));
+            setFName(data);
+            setLoading(false);
+          }
+          if (formData.placement) {
+            setLoading(true);
+            const placementData = await dispatch(fetchSearchTeamData(formData.placement));
+            setplacementName(placementData);
+            setLoading(false);
+          }
+        };
+        fetchInitialData();
+      }, [formData.sponsor, formData.placement, dispatch]);
+    
     const WlaletData = {
         action : "walletInfo",
         userid : "",
@@ -170,8 +206,7 @@ const customerData = {
             if (!formData.country) newErrors.country = "Country Name is required";
             if (!formData.package_id) newErrors.package_id = "Package is required";
             if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
-           if (!formData.f_name) newErrors.f_name = "First Name is required";
-        if (!formData.l_name) newErrors.l_name = "Last Name is required";
+           if (!formData.f_name) newErrors.f_name = "Full Name is required";
         if (!fName.member) newErrors.sponsor = `${fName.message}`;
         if (!placementName.member) newErrors.placement = `${placementName.message}`;
         if (!formData.e_mail || !/\S+@\S+\.\S+/.test(formData.e_mail)) newErrors.e_mail = "Valid Email is required";
@@ -306,7 +341,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             matrix_side: "",
             account_type: 0,
             f_name: "",
-            l_name: "",
             e_mail: "",
             mobile: "",
             sponsor_type: 1,
@@ -398,11 +432,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 {errors.matrix_side && <p className='text-red-500 text-xs'>{errors.matrix_side}</p>}
                             </div>
                             <div className='mb-3'>
-                                <label className='text-[#1e293b] text-[14px]'>First Name</label>
+                                <label className='text-[#1e293b] text-[14px]'>Full Name</label>
                                 <input
                                     type="text"
                                     name="f_name"
-                                    placeholder='First Name'
+                                    placeholder='Full Name'
                                     className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
                                     value={formData.f_name}
                                     onChange={handleChange}
@@ -412,21 +446,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     formData.isFieldsDisabled ? "" : (   errors.f_name && <p className='text-red-500 text-xs'>{errors.f_name}</p>)
                                 }
                              
-                            </div>
-                            <div className='mb-3'>
-                                <label className='text-[#1e293b] text-[14px]'>Last Name</label>
-                                <input
-                                    type="text"
-                                    name="l_name"
-                                    placeholder='Last Name'
-                                    className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
-                                    value={formData.l_name}
-                                    onChange={handleChange}
-                                    disabled={formData.isFieldsDisabled}
-                                />
-                                {
-                                    formData.isFieldsDisabled ? "" : (errors.l_name && <p className='text-red-500 text-xs'>{errors.l_name}</p>)
-                                }
                             </div>
                             <div className='mb-3'>
                                 <label className='text-[#1e293b] text-[14px]'>Email</label>
