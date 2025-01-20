@@ -177,37 +177,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
           }
         };    
 
-        // const calculateDeliveryCharge = (totalPrice: number, deliverStatus: string) => {
-        //   const deliveryCharge = Number(UserDetailData?.UserDetailData.delivery_charge_per_order) || 0;
-        //   const newTotalPrice = Number(totalPrice);
-        //   const minCharge = Number(minDeliverCharge);
-      
-        //   if (deliverStatus === "delivery") {
-        //     if (newTotalPrice === 0) {
-        //       setTotalPrice(deliveryCharge); 
-        //       setDeliveryCharge(deliveryCharge);
-        //     } else if (newTotalPrice < minCharge) {
-        //       setTotalPrice(newTotalPrice + deliveryCharge); 
-        //       setDeliveryCharge(deliveryCharge);
-        //     } else {
-        //       setTotalPrice(newTotalPrice); 
-        //       setDeliveryCharge(0);
-        //     }
-        //   } else if (deliverStatus === "self_collect") {
-        //     console.log("newTotalPrice",newTotalPrice)
-        //     console.log("minCharge",minCharge)
-        //     if (newTotalPrice === deliveryCharge) {
-        //       setTotalPrice(0);
-        //       setDeliveryCharge(0);
-        //     } else if (newTotalPrice > minCharge) {
-        //       setTotalPrice(newTotalPrice - deliveryCharge); 
-        //       setDeliveryCharge(0);
-        //     } else {
-        //       setTotalPrice(newTotalPrice); 
-        //       setDeliveryCharge(0);
-        //     }
-        //   }
-        // };
         const calculateDeliveryCharge = (totalPrice: number, deliverStatus: string) => {
           const deliveryCharge = Number(UserDetailData?.UserDetailData.delivery_charge_per_order) || 0;
           const newTotalPrice = Number(totalPrice);
