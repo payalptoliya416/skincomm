@@ -22,7 +22,6 @@ interface TreeDataItem {
     bleft_node: string;
     bright_node: string;
     f_name: string;
-    l_name: string;
     username: string;
     userid: string;
     rank: string;

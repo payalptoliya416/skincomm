@@ -96,9 +96,6 @@ const DashboardSidebar = ({ loginState }: any) => {
                             <h5 className="text-xs text-black font-medium">
                                 {loginState?.f_name}
                             </h5>
-                            <h5 className="text-xs text-black font-medium">
-                            {loginState?.l_name}
-                            </h5>
                           
                             </div>
                             <h5 className="text-xs text-black font-medium mt-2">

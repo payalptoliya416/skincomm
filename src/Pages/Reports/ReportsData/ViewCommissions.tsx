@@ -91,8 +91,8 @@ function ViewCommissions() {
                               <thead className="text-xs text-white uppercase bg-[#178285]">
                                     <tr>
                                         <th className="px-6 py-5" >Currency</th>
-                                        <th className="px-6 py-5" >Trans Source Type</th>
                                         <th className="px-6 py-5" >Trans No</th>
+                                       {bonus === 'Referral Bonus' ? <th className="px-6 py-5" >From</th> : ""} 
                                         <th className="px-6 py-5" >Description</th>
                                         <th className="px-6 py-5" >Debit</th>
                                         <th className="px-6 py-5" >Credit</th>
@@ -108,8 +108,8 @@ function ViewCommissions() {
                                     filteredData.map((item: any, index: number) => (
                                         <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                             <td className="px-6 py-4 text-black">{item.currency}</td>
-                                            <td className="px-6 py-4 text-black">{item.trans_source_type}</td>
                                             <td className="px-6 py-4 text-black">{item.trans_no}</td>
+                                            {bonus === 'Referral Bonus' ?  <td className="px-6 py-4 text-black">{item.from_member_f_name}</td> : ""} 
                                             <td className="px-6 py-4 text-black">{item.description}</td>
                                             <td className="px-6 py-4 text-black">{item.debit}</td>
                                             <td className="px-6 py-4 text-black">{item.credit}</td>

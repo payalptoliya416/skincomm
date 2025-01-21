@@ -60,7 +60,6 @@
             { type: "Repeat Sale Income", balance: earningData.repeat_sale_income.balance || "0.00" },
             { type: "Roll Up Bonus", balance: earningData.roll_up_bonus.balance || "0.00" },
         ] : [];
-            
               const navigate = useNavigate();  
         const handleOpen = (bonus: string, period: string) => {            
             dispatch(fetchSingleEarnigReport({ bonus, period  }));

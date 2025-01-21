@@ -395,7 +395,7 @@ const AddMemberForm = () => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.sponsor && <p className='text-red-500 text-xs'>{errors.sponsor}</p>}
-                                    {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}  {fName && fName.member.l_name}
+                                    {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}  
                                     </h4> :""}
                                      
                                 </div>
@@ -410,7 +410,7 @@ const AddMemberForm = () => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
-                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}  {placementName.member && placementName.member.l_name} </h4> :""}
+                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}</h4> :""}
                                     
                                     
                                 </div>

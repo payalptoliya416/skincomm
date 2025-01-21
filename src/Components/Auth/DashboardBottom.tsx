@@ -12,11 +12,17 @@ const DashboardBottom = () => {
   );
   const [activeTab, setActiveTab] = useState("overview"); 
   const [bizData , setBizData] = useState<any>('');
+  const [memberRank , setMemberRank] = useState<any>('');
+
   useEffect(() => {
     const BizPathdata = localStorage.getItem("user");
+    const MemberRankName = localStorage.getItem("rankNameofMember");
     if (BizPathdata) {
       const parsedData = JSON.parse(BizPathdata);
       setBizData(parsedData);
+    }
+    if(MemberRankName){
+      setMemberRank(MemberRankName);
     }
   }, []);
 
@@ -140,16 +146,16 @@ const DashboardBottom = () => {
       ) : (
         <>
           <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
-            Member Rank: <span className="text-sm font-normal">{bizData.rank}</span>
+             Rank : <span className="text-sm font-normal">{memberRank}</span>
           </p>
           <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
-            Maintenance Expiry Date:{" "}
+            Maintenance Expiry Date :{" "}
             <span className="text-sm font-normal">
               {bizData?.expiery_date ? formatDatee(bizData.expiery_date) : "N/A"}
             </span>
           </p>
           <p className="text-sm md:text-lg mb-3 font-semibold flex items-center sm:gap-2 sm:flex-row flex-col">
-            Status: <span className="text-sm font-normal">{bizData.account_status}</span>
+            Status : <span className="text-sm font-normal">{bizData.account_status}</span>
           </p>
         </>
       )}

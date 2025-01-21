@@ -13,10 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchSearchTeamData } from '../../Redux/thunks/teamSearchThunnk';
 import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
-import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
 
-const animatedComponents = makeAnimated();
 interface Product {
     combo_product_name: string,
     combo_product_lp: number,
@@ -331,15 +328,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           setErrors(validationErrors);
         }
       };
-
-    //   const [allPackage, setAllPackage] = useState<{ value: string; label: string }[]>([]);
-
-    //   const handleAmenitiesChange = (newValue: any) => {
-    //     setAllPackage(newValue); 
-      
-    //     const amenitiesString = newValue.map((option: any) => option.value).join(',');
-    //   };
-
     return (
         <>
             <Layout>
@@ -385,7 +373,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.sponsor && <p className='text-red-500 text-xs'>{errors.sponsor}</p>}
-                                    {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}  {fName && fName.member.l_name}
+                                    {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}
                                  </h4> :""}
                                 </div>
                                 <div className='mb-3'>
@@ -399,7 +387,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         onChange={handleFnameSearch}
                                     />
                                     {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
-                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}  {placementName.member && placementName.member.l_name} </h4> :""}
+                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}</h4> :""}
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Matrix Side</label>
@@ -504,21 +492,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     </select>
                                     {errors.package_id && <p className='text-red-500 text-xs'>{errors.package_id}</p>}
                                 </div>
-                                {/* <Select
-                                components={animatedComponents}
-                                isMulti
-                                value={allPackage}
-                                onChange={handleAmenitiesChange}
-                                options={
-                                    productListData && Array.isArray(productListData.products) && productListData.products.length > 0
-                                    ? productListData.products.map((product: any) => ({
-                                        value: product.id,
-                                        label: `${product.combo_product_name} - ${product.combo_product_lp}`,
-                                        }))
-                                    : []
-                                }
-                                /> */}
-
+                               
                                 <div className="mb-3">
                                 <label className='text-[#1e293b] text-[14px]'>Payment</label>
                               <select
@@ -529,10 +503,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 <option defaultValue={''}>Select</option>
                                 <option value="credit_card">Credit Card</option>
                                 <option value="e-wallet">E-Wallet</option>
-                                {/* <option value="paynow">PAYNOW</option>
-                                <option value="RC">Purchase Point</option>
-                                <option value="PP2">Purchase Point 2</option>
-                                <option value="SP">Reward Point</option> */}
                                 </select>
 
                                 {  formData.payment_type === 'e-wallet' ? (
@@ -600,7 +570,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 </label>
                                 </div>
                             </div>
-      {/* {error.deliver_status && <p className="text-red-500 text-xs">{error.deliver_status}</p>} */}
                             </div>
                                 <div className='text-end'>
                                         <button type='submit' className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm '>Submit</button>

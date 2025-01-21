@@ -89,12 +89,10 @@ const customerData = {
         
     //     if(name === 'sponsor'){
     //         const data = await  dispatch(fetchSearchTeamData( userId )); 
-    //         console.log("data",data)
     //             setFName(data);
           
     //     }else if(name === 'placement'){
     //         const placementName = await  dispatch(fetchSearchTeamData( userId ));
-    //         console.log("placementName",placementName)
     //             setplacementName(placementName);
     //     }
     // };
@@ -400,7 +398,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     onChange={handleFnameSearch}
                                 />
                                 {errors.sponsor && <p className='text-red-500 text-xs'>{errors.sponsor}</p>}
-                                {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}  {fName && fName.member.l_name}
+                                {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}
                                  </h4> :""}
                             </div>
                             <div className='mb-3'>
@@ -415,7 +413,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 />
                                 
                                 {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
-                                {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}  {placementName.member && placementName.member.l_name} </h4> :""}
+                                {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}</h4> :""}
                             </div>
                             <div className='mb-3'>
                                 <label className='text-[#1e293b] text-[14px]'>Matrix Side</label>

@@ -28,7 +28,6 @@ function Uprank() {
     const dispatch = useDispatch<any>();
     const { UprankGetData } = useSelector((state: RootState) => state.uprankGetData);
     const currentRank = UprankGetData?.current_rank_id;
-     const {  paymentData } = useSelector((state: RootState) => state.paymentby);
     const [formData , setFormData] = useState<FormData>({
             id: '',
             currency : "",
@@ -584,12 +583,6 @@ function Uprank() {
                                                </div>
                                            ) : ""
                                        }
-                             {/* { formData.currency === 'e-wallet' ? <h5 className="mt-3">
-                              {(Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0)).toFixed(2)}
-                            </h5> : ""} */}
-                           
- 
-                                   {/* <h5 className='mt-3'>{paymentData && paymentData.balance}</h5>    */}
                                    {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
                                </div>
                                <div className="mb-3">

@@ -12,7 +12,6 @@ import "react-phone-input-2/lib/style.css";
 interface FormData {
     id:string | null,
     f_name: string;
-    l_name: string;
     email: string;
     mobile: string;
     dob: string; 
@@ -33,7 +32,6 @@ const Profile = () => {
       const [formData, setFormData] = useState<FormData>({
         id: null,
         f_name: '',
-        l_name: '',
         email: '',
         mobile: '',
         dob: '',
@@ -47,7 +45,6 @@ const Profile = () => {
           setFormData({
             id: ProfileGetData.id,
             f_name: ProfileGetData.f_name || '',
-            l_name: ProfileGetData.l_name || '',
             email: ProfileGetData.email || '',
             mobile: ProfileGetData.mobile || '',
             dob: ProfileGetData.dob || '',
@@ -86,7 +83,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
       localStorage.setItem('user', JSON.stringify({
         f_name: formData.f_name,
-        l_name: formData.l_name,
         email: formData.email,
         mobile: formData.mobile,
         dob: formData.dob,
@@ -139,7 +135,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           name="f_name"
           placeholder="Full Name"
                    className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
-          value={`${formData.f_name}  ${formData.l_name}`}
+          value={`${formData.f_name}`}
           readOnly
         />
                           </div>
