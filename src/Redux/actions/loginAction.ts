@@ -8,7 +8,6 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
 
     try {
         const response = await AxiosWithOutAuthInstance.post(`/member_login`, formData);
-        console.log("response",response)
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("rankNameofMember", response.data.member_rank);
         localStorage.setItem("loginUser", response.data.user.username);
