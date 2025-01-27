@@ -6,34 +6,77 @@ import { loginAction } from "../../Redux/actions/loginAction";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from "react-router-dom";
+import { clearStorage } from "./ClearOldData";
 
 const Login = () => {
-    const loginState = useSelector((state: any) => state?.loginState?.error?.response?.data)
-    const dispatch = useDispatch() as any;
-
-    const initialValues = {
-        userid: '',
-        password: ''
-    }
-  
-    const formSubmit = (values: any) => dispatch(loginAction(values));
-     
-    const validationSchema = Yup.object().shape({
-        userid: Yup.string().required('This field is required'),
-        password: Yup.string().min(6, 'Password should be 6 characters minimum.').required("This field is required"),
-    });
-
-    const formik = useFormik({
-        initialValues: initialValues,
-        onSubmit: formSubmit,
-        validationSchema
-    }) as any;
     
+    const loginState = useSelector((state: any) => state?.loginState?.error?.response?.data);
+    const dispatch = useDispatch() as any;
+  
+    const initialValues = {
+      userid: "",
+      password: "",
+    };
+  
+    const validationSchema = Yup.object().shape({
+      userid: Yup.string().required("This field is required"),
+      password: Yup.string().min(6, "Password should be 6 characters minimum.").required("This field is required"),
+    });
+  
+    const formSubmit = (values: any) => {
+      const submit = {
+        userid: values.userid,
+        password: values.password,
+        login_type: "member",
+      };
+  
+      dispatch(loginAction(submit));
+    };
+  
+    // const url = window.location.href;
+    // const params = new URLSearchParams(new URL(url).search);
+    // const userIdFromUrl = params.get("userid");
+
+    // useEffect(()=>{
+    //     clearStorage();
+    // })
+
+    // useEffect(() => {
+    //   const handleLoginWithUserId = async () => {
+    //     if (userIdFromUrl) {
+    //       const currentUserId = localStorage.getItem("UserID");
+    
+    //       if (userIdFromUrl !== currentUserId) {
+    //         clearStorage();
+    //         setTimeout(()=>{
+    //             const submit = {
+    //               userid: userIdFromUrl,
+    //               login_type: "admin",
+    //             };
+    //             dispatch(loginAction(submit));
+    //         },700)
+    
+    //       } else {
+    //         console.log("Same user already logged in. No changes made.");
+    //       }
+    //     }
+    //   };
+    
+    //   handleLoginWithUserId();
+    // }, [userIdFromUrl, dispatch]);
+  
+    const formik = useFormik({
+      initialValues: initialValues,
+      onSubmit: formSubmit,
+      validationSchema,
+    }) as any;
+  
     useEffect(() => {
-        if (loginState?.error) {
-            toast.error(loginState.error); 
-        }
+      if (loginState?.error) {
+        toast.error(loginState.error);
+      }
     }, [loginState]);
+
     return (
         <>
             <section className="h-screen flex items-center justify-center">

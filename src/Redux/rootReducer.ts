@@ -83,7 +83,9 @@ const appReducer = combineReducers({
 
 });
 
+
 const rootReducer = (state: any, action: any) => {
+
     if (action.type === "LOG_OUT") {
         storage.removeItem("persist:user_root")
             .then(() => {

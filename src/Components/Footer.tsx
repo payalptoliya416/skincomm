@@ -23,7 +23,6 @@ const Footer = () => {
                 <div className="container">
                     <div className="">
                         <ul className="flex items-center justify-around">
-
                             <li>
                                 <Link to={ '/dashboard' } className={ classNames('text-center inline-block py-2', { 'text-main-color border-t-2 border-main-color': location.pathname === '/dashboard', 'text-custom-text-color': location.pathname !== '/dashboard' }) }>
                                     <svg className="w-6 h-6 m-auto" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -57,7 +56,7 @@ const Footer = () => {
                             </li>
                             <li className="-mt-10">
                                 <Link
-                                    to="#"
+                                    to="/dashboard"
                                     className="text-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#178285] text-white flex items-center justify-center py-2"
                                 >
                                     <span className="text-lg sm:text-3xl font-normal"> S </span>

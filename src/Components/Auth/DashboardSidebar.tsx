@@ -18,11 +18,6 @@ const DashboardSidebar = ({ loginState }: any) => {
         setSidebarVisible(false);
     };
 
-    // Function to handle logout`
-    // const handleLogout = () => {
-    //     dispatch(logoutAction()); // Dispatch the logoutAction
-    // };
-
     const handleLogout = async () => {
         await storage.removeItem("persist:user_root");
         await storage.removeItem("token");
@@ -37,6 +32,8 @@ const DashboardSidebar = ({ loginState }: any) => {
         localStorage.removeItem('totalPrice')   
         localStorage.removeItem('joiningDate')   
         localStorage.removeItem('user');
+        localStorage.removeItem('rankNameofMember');
+        localStorage.removeItem('customerrank');
         window.location.href = '/';
     };
     
