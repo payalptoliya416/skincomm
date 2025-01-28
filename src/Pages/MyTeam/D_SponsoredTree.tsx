@@ -148,12 +148,12 @@ interface SponsoredTreeItem {
               >
                 Add Member
               </button>
-              <button
+              {/* <button
                 className="w-full text-[16px] sm:text-[18px] mb-[2px]"
                 onClick={() => handleNavigate('/addcustomer', item.col, item.upline_id)}
               >
                 Add Customer
-              </button>
+              </button> */}
               </div>
                </div>
             </div>

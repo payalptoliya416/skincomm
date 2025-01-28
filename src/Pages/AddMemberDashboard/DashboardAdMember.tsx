@@ -13,6 +13,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchSearchTeamData } from '../../Redux/thunks/teamSearchThunnk';
 import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
+import Select from 'react-select'
+import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
+import { BsCart } from 'react-icons/bs';
 
 interface Product {
     combo_product_name: string,
@@ -30,7 +33,7 @@ interface FormData {
     e_mail: string,
     mobile: string,
     sponsor_type: number,
-    package_id: string,
+    products_data: any[];
     country: string,
     isFieldsDisabled?: boolean;
     payment_type : string,
@@ -51,6 +54,9 @@ const DashboardAdMember = () => {
      const [errors, setErrors] = useState<any>({});
      const [stripInput ,setStripInput] = useState<any>(false);
      const [totalPriceShow ,setTotalPriceShow] = useState<any>('');
+     const [cart, setCart] = useState<any[]>([]); 
+     const [totalPrice, setTotalPrice] = useState(0); 
+
     const [formData, setFormData] = useState<FormData>({
         sponsor:  "",
         placement:  "",
@@ -60,7 +66,7 @@ const DashboardAdMember = () => {
         e_mail: "",
         mobile: "",
         sponsor_type: 1,
-        package_id: "",
+        products_data: [],
         payment_type:'',
         country: '',
         stripeToken : "",
@@ -101,8 +107,8 @@ const DashboardAdMember = () => {
         action : "walletInfo",
         userid : "",
         }
-        
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement >) => {
         const { name, value, type } = e.target;
         if (type === "radio" && name === "deliver_status") {
             setFormData((prev) => ({ ...prev, [name]: value }));
@@ -110,7 +116,7 @@ const DashboardAdMember = () => {
         else  if (type === "radio") {
             setFormData(prev => ({ ...prev, [name]: Number(value) }));
         }else if (name === 'payment_type') {
-            if (!formData.package_id) {
+            if (!formData.products_data) {
                 toast.error("Please select a package first.");
                 return; 
             }
@@ -136,7 +142,7 @@ const DashboardAdMember = () => {
                 }
         
                 if (selectedPackage) {
-                    const retailPrice = parseFloat(selectedPackage.combo_product_associate_price);
+                    const retailPrice = parseFloat(selectedPackage.combo_product_retail_price);
                     const currentTotalRcSp =
                         ValuOfBalance.currency.trim() !== 'USD'
                             ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
@@ -150,15 +156,41 @@ const DashboardAdMember = () => {
         
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
-         else if(name === 'package_id'){
-            const selectedPackage = productListData.products.find((product : any ) => parseInt(product.id) === parseInt(value));
-            setTotalPriceShow(selectedPackage);
+         else if(name === 'products_data'){
+             const selectedPackage = productListData.products.find((product : any ) => parseInt(product.id) === parseInt(value));
             setSelectedPackage(selectedPackage);
-            setFormData(prev => ({ ...prev, [name]: value }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
+ 
+const updateCart = async (productId: string, price: number, delta: number) => {
+        setCart((prevCart) => {
+          const currentCart = Array.isArray(prevCart) ? prevCart : [];
+    
+          const existingProduct = currentCart.find((item) => item.id === productId) || { id: productId, count: 0 };
+          const newCount = existingProduct.count + delta;
+    
+          if (newCount < 0) return currentCart;
+    
+          const updatedCart = currentCart.map((item) =>
+            item.id === productId ? { ...item, count: newCount } : item
+          );
+    
+          if (!currentCart.some((item) => item.id === productId)) {
+            updatedCart.push({ id: productId, count: newCount });
+          }
+          const total = updatedCart.reduce((acc, item) => acc + item.count * price, 0);
+          setTotalPrice(total);
+    
+          setFormData((prev: FormData) => ({
+            ...prev,
+            products_data: updatedCart,
+          }));
+    
+          return updatedCart;
+        });
+      };
 
     const validateForm = () => {
         const newErrors: any = {};
@@ -167,8 +199,8 @@ const DashboardAdMember = () => {
             if (!formData.placement) newErrors.placement = "Placement ID is required";
             if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
             if (!formData.country) newErrors.country = "Country Name is required";
-            if (!formData.package_id) newErrors.package_id = "Package is required";
-                if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
+            if (!formData.products_data) newErrors.products_data = "Package is required";
+                if (!formData.payment_type) newErrors.payment_type = "Paymen    t Type is required";
         }else{
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
             if (!formData.placement) newErrors.placement = "Placement ID is required";
@@ -179,7 +211,7 @@ const DashboardAdMember = () => {
         if (!placementName.member) newErrors.placement = `${placementName.message}`;
         if (!formData.e_mail || !/\S+@\S+\.\S+/.test(formData.e_mail)) newErrors.e_mail = "Valid Email is required";
         if (!formData.mobile || formData.mobile.length < 8) newErrors.mobile = "Mobile number must be at least 8 digits long";
-        if (!formData.package_id) newErrors.package_id = "Package is required";
+        if (!formData.products_data) newErrors.products_data = "Package is required";
         if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }
         return newErrors;
@@ -312,7 +344,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e_mail: "",
             mobile: "",
             sponsor_type: 1,
-            package_id: "",
+            products_data: [],
             payment_type: '',
             country: '',
             stripeToken: "",
@@ -464,30 +496,74 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                             <option disabled>No Country available</option>
                                              )}
                                     </select>
-                                    {errors.package_id && <p className='text-red-500 text-xs'>{errors.package_id}</p>}
+                                    {errors.country && <p className='text-red-500 text-xs'>{errors.country}</p>}
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Package</label>
-                                    <select 
-                                        name="package_id"
-                                        className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
-                                        value={formData.package_id}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="">Select Package</option>
-                                        {productListData.products && productListData.products.length > 0 ? (
-                            productListData.products.map((product: Product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.combo_product_name} - {product.combo_product_lp}
-                                </option>
-                            ))
-                        ) : (
-                            <option disabled>No Package available</option>
-                             )}
-                                    </select>
-                                    {errors.package_id && <p className='text-red-500 text-xs'>{errors.package_id}</p>}
+                                    {/* <Select
+                                options={options}
+                                isMulti 
+                                onChange={selectHanldeChange} 
+                                placeholder="Select packages..."
+                                isOptionDisabled={(option) => option.isDisabled} 
+                                   /> */}
+                                    <div className="relative overflow-x-auto mt-5 border rounded-md mb-4">
+                                                       <table  id="example" className="display table-auto w-full text-sm text-left rtl:text-right text-black  ">
+                                                           <thead className="text-xs text-white uppercase bg-[#178285]">
+                                                               <tr>
+                                                                   <th className="px-6 py-3 text-center">
+                                                                   Name
+                                                                   </th>
+                                                                   <th className="px-6 py-3">
+                                                                  Price
+                                                                   </th>
+                                                                   <th className="px-6 py-3">
+                                                                     LP
+                                                                   </th>
+                                                                   <th className="px-6 py-3">
+                                                                       Action
+                                                                   </th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody>
+                                                       {productListData.products && productListData.products.length > 0 ? (
+                                                                   productListData.products.map((item: any, index: number) => (
+                                                                   <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
+                                                                           
+                                                                   <td className="px-6 py-3 text-center">
+                                                                          {item.combo_product_name}
+                                                                   </td>
+                                                                   <td className="px-6 py-3">
+                                                                    {item.combo_product_retail_price}
+                                                                   </td>
+                                                                   <td className="px-6 py-3">
+                                                                        {item.combo_product_lp}
+                                                                   </td>
+                                                                   <td className="px-6 py-3">
+                                                                <div className="flex gap-2 items-center">
+                                                                <HiOutlineMinusSmall
+                                                                    onClick={() => updateCart(item.id, item.combo_product_retail_price, -1)}
+                                                                    className={`cursor-pointer ${cart[item.id]?.count === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                                />
+                                                                <BsCart /> {cart.find(cartItem => cartItem.id === item.id)?.count || 0}
+                                                                <HiOutlinePlusSmall
+                                                                    onClick={() => updateCart(item.id, item.combo_product_retail_price, 1)}
+                                                                    className="cursor-pointer"
+                                                                />
+                                                                </div>
+                                                                   </td>
+                                                               </tr>
+                                                              ))
+                                                           ) : (
+                                                       <tr>
+                                                       <td colSpan={6} className="px-6 py-2 text-center">No data available</td>
+                                                       </tr>
+                                                           )}
+                                                           </tbody>
+                                                       </table>
+                                                       </div>
+                                    {errors.products_data && <p className='text-red-500 text-xs'>{errors.products_data}</p>}
                                 </div>
-                               
                                 <div className="mb-3">
                                 <label className='text-[#1e293b] text-[14px]'>Payment</label>
                               <select
@@ -530,7 +606,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 <div className="mb-3 ">
                                       <div className="mb-3 flex items-center gap-2">
                     <h3 className="text-black text-[14px] font-semibold">Total Amount : </h3>
-                    <h4 className="text-black text-[14px] font-normal">${totalPriceShow.combo_product_associate_price || 0}</h4>
+                    {/* <h4 className="text-black text-[14px] font-normal">${totalPriceShow.combo_product_retail_price || 0}</h4> */}${totalPrice}
                     </div>
                                 </div>
                                     <div className="mb-3">

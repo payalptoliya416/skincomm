@@ -640,7 +640,7 @@ const AddMemberForm = () => {
                             </div>
                             </div>
                                 <div className='text-end'>
-                                        <button type='submit' className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm  `}>Submit</button>
+                                        <button type='submit' className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm  ${disable ? "cursor-not-allowed opacity-50":""}`} disabled={disable}>Submit</button>
                                     </div>
                             </form>
                             

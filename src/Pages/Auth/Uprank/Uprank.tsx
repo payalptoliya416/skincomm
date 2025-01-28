@@ -310,9 +310,10 @@ function Uprank() {
           
             return true; 
           };
-          
+           const [disable , setDisable]= useState(false);
             const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
               e.preventDefault();
+               setDisable(true);
               // const isValid = validateFormBiz();
               //       if (!isValid) {
               //       toast.error("Please fill up all info under Settings - My Profile before any purchases.");
@@ -326,6 +327,7 @@ function Uprank() {
 
                 if (products_data.length === 0) {
                     toast.error("Please select at least one product.");
+                    setDisable(false);
                     return;
                   }
                 
@@ -340,6 +342,7 @@ function Uprank() {
                         
                       if (!stripe || !elements) {
                         toast.error("Stripe or Elements not initialized."); 
+                        setDisable(false);
                         return;
                       }
                       let paymentMethodId = null;
@@ -348,6 +351,7 @@ function Uprank() {
               
                         if (!cardElement) {
                           toast.error("Card Element not found."); 
+                          setDisable(false);
                           return;
                         }
               
@@ -355,16 +359,19 @@ function Uprank() {
                         const { error, token } = await stripe.createToken(cardElement);
                           if (error) {
                             toast.error("Payment error: " + error.message);  
+                            setDisable(false);
                             return;
                           }
                           paymentMethodId = token?.id;
 
                           if (!paymentMethodId) {
                             toast.error("Payment method ID not found.");
+                            setDisable(false);
                             return;
                           }
                         } catch (paymentError) {
                           toast.error("Payment processing error. Please try again.");
+                          setDisable(false);
                           return;
                         } 
                       }
@@ -386,9 +393,11 @@ function Uprank() {
                                navigate('/successfully');
                             }else{
                                toast.error(res.data.message)
+                               setDisable(false); 
                            }
                     } else {
                       setError(errors)
+                      setDisable(false);
                     }
                 
             }
@@ -620,7 +629,7 @@ function Uprank() {
                {/* {error.deliver_status && <p className="text-red-500 text-xs">{error.deliver_status}</p>} */}
                                </div>
                                <div className="mb-3 text-end">
-                               <button className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm' type='submit'>Submit</button>
+                               <button className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm ${disable ? "cursor-not-allowed opacity-50":""}`} type='submit'  disabled={disable}>Submit</button>
                                </div>
                    </div>
             </form>

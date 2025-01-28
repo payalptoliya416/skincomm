@@ -244,7 +244,6 @@ const customerData = {
   const [disable , setDisable]= useState(false);
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (disable) return; // Prevent multiple clicks
         setDisable(true);
 
         const isValid = validateFormBiz();
@@ -338,7 +337,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     else{
                         toast.success("Member added successfully !");
                         const successnavigate = successData.data
-                        navigate('/successfullyPayment', { state: {successnavigate},});
+                        // navigate('/successfullyPayment', { state: {successnavigate},});
                     }
                 }
             } else {

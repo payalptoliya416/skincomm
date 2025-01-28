@@ -270,10 +270,9 @@ const Setting = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
+                            {/* <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
                                 <Link to="/addcustomer" className="flex items-start w-full text-custom-text-color font-normal text-xs">
                                     <div className="-mt-1 w-14">
-                                        {/* <img src="images/Frame.svg" alt="" /> */}
                                         <HiUserPlus className="w-[20px] h-[20px] text-custom-text-color2 mt-1" />
                                     </div>
                                     <div
@@ -299,7 +298,7 @@ const Setting = () => {
                                         </svg>
                                     </div>
                                 </Link>
-                            </li>
+                            </li> */}
                             {!expiredTime && 
                             <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
                                 <Link to="/uprank"className={`flex items-start w-full text-custom-text-color font-normal text-xs ${

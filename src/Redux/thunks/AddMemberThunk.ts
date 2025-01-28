@@ -10,6 +10,7 @@ export const fetchAddMember = (formData : any) => {
         dispatch(fetchAddMemberRequest());
         try {
             const response = await AxiosAddMember.post('',formData);  
+            console.log("response",response)
             dispatch(fetchAddMemberSuccess(response.data));
              return {data: response.data };
         } catch (error: any) {
