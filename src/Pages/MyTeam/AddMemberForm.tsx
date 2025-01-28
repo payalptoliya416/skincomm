@@ -242,12 +242,14 @@ const AddMemberForm = () => {
          });
        }
      }, []);
-     
+       const [disable , setDisable]= useState(false);
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setDisable(true);
        const isValid = validateFormBiz();
               if (!isValid) {
                   toast.error("Please fill up all info under Settings - My Profile before any purchases");
+                  setDisable(false);
                   return;
               }
         const validationErrors = validateForm();
@@ -255,6 +257,7 @@ const AddMemberForm = () => {
           
           if (!stripe || !elements) {
             toast.error("Stripe or Elements not initialized."); 
+            setDisable(false);
             return;
           }
 
@@ -265,22 +268,26 @@ const AddMemberForm = () => {
             
             if (!cardElement) {
               toast.error("Card Element not found."); 
+              setDisable(false);
               return;
             }
             try {
             const { error, token } = await stripe.createToken(cardElement);
               if (error) {
-                toast.error("Payment error: " + error.message);  
+                toast.error("Payment error: " + error.message);
+                setDisable(false);  
                 return;
               }
               paymentMethodId = token?.id;
 
               if (!paymentMethodId) {
                 toast.error("Payment method ID not found.");
+                setDisable(false);
                 return;
               }
             } catch (paymentError) {
               toast.error("Payment processing error. Please try again.");
+              setDisable(false);
               return;
             } 
           }
@@ -322,11 +329,12 @@ const AddMemberForm = () => {
                     }else{
                         toast.success("Member added successfully !");
                         const successnavigate = successData.data.data
-                        navigate('/successfullyPayment', { state: {successnavigate},});
+                        // navigate('/successfullyPayment', { state: {successnavigate},});
                     }
                 }
             } else {
               toast.error("Mobile validation failed, form submission aborted.");
+              setDisable(false);
             }
           }
       
@@ -348,6 +356,7 @@ const AddMemberForm = () => {
       
         } else {
           setErrors(validationErrors);
+          setDisable(false);
         }
       };
     return (

@@ -368,11 +368,14 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
         });
       }
     }, []);
-  
+
+  const [disable , setDisable] = useState<any>(false);
   const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
     e.preventDefault();
+    setDisable(true);
     const isValid = validateFormBiz();
           if (!isValid) {
+            setDisable(false);
           toast.error("Please fill up all info under Settings - My Profile before any purchases.");
          return;
     }
@@ -388,11 +391,13 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
       }  
       if (products_data.length === 0) {
         toast.error( "Please select at least one product.")
+        setDisable(false);
       }else{
           if (Object.keys(errors).length === 0 ) {
               
             if (!stripe || !elements) {
-              toast.error("Stripe or Elements not initialized."); 
+              toast.error("Stripe or Elements not initialized.");
+              setDisable(false); 
               return;
             }
             let paymentMethodId = null;
@@ -401,6 +406,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
 
               if (!cardElement) {
                 toast.error("Card Element not found."); 
+                setDisable(false);
                 return;
               }
 
@@ -408,15 +414,18 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
               const { error, token } = await stripe.createToken(cardElement);
                 if (error) {
                   toast.error("Payment error: " + error.message);  
+                  setDisable(false);
                   return;
                 }
                 paymentMethodId = token?.id;
                 if (!paymentMethodId) {
                   toast.error("Payment method ID not found.");
+                  setDisable(false);
                   return;
                 }
               } catch (paymentError) {
                 toast.error("Payment processing error. Please try again.");
+                setDisable(false);
                 return;
               } 
             }
@@ -436,12 +445,14 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                       deliver_status:'self_collect',
                       payment_slip_image: null
                      });
-                     navigate('/successfully' , {state : { message: res.data.message } } );
+                      navigate('/successfully' , {state : { message: res.data.message } } );
                   }else{
                      toast.error(res.data.message)
+                     setDisable(false);
                  }
           } else {
             setError(errors)
+            setDisable(false);
           }
       }
       };
@@ -688,7 +699,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                 </div>
                     </div>
                      <div className="mb-3 text-end">
-                     <button className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm' type='submit'>Submit</button>
+                     <button className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm ${disable ? "cursor-not-allowed opacity-50":""}`} type='submit'>Submit</button>
                     </div>
                     </div>
                  </form>

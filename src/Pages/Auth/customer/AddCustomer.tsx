@@ -240,22 +240,30 @@ const customerData = {
       });
     }
   }, []);
-  
+
+  const [disable , setDisable]= useState(false);
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (disable) return; // Prevent multiple clicks
+        setDisable(true);
+
         const isValid = validateFormBiz();
         if (!isValid) {
             toast.error("Please fill up all info under Settings - My Profile before any purchases");
+            setDisable(false);
             return;
         }
         const validationErrors = validateForm();
         if(!bizData){
-            toast.error("Please fill up your profile info before proceeding with the purchase")
+            toast.error("Please fill up your profile info before proceeding with the purchase");
+            setDisable(false);
+            
         }
         if (Object.keys(validationErrors).length === 0) {
           
           if (!stripe || !elements) {
-            toast.error("Stripe or Elements not initialized."); 
+            toast.error("Stripe or Elements not initialized.");
+            setDisable(false);
             return;
           }
           let paymentMethodId = null;
@@ -265,22 +273,26 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             
             if (!cardElement) {
               toast.error("Card Element not found."); 
+              setDisable(false);
               return;
             }
             try {
             const { error, token } = await stripe.createToken(cardElement);
               if (error) {
-                toast.error("Payment error: " + error.message);  
+                toast.error("Payment error: " + error.message);
+                setDisable(false);
                 return;
               }
               paymentMethodId = token?.id;
 
               if (!paymentMethodId) {
                 toast.error("Payment method ID not found.");
+                setDisable(false);
                 return;
               }
             } catch (paymentError) {
               toast.error("Payment processing error. Please try again.");
+              setDisable(false);
               return;
             } 
           }
@@ -289,14 +301,15 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             ...formData,
             stripeToken: paymentMethodId || "",     
           };
-          
+          console.log("formDataToSend",formDataToSend)
           if (formData.isFieldsDisabled) {
      
             const successData = await dispatch(fetchcustomePostData(formDataToSend));
+            console.log("successData",successData)
             toast.error(successData.error);
             if(successData){
                 if(successData.data.data.error === true){
-                    toast.error(successData.data.data.message)
+                    toast.error(successData.data.data.message);
                 }
                 else{
                     toast.success("Member added successfully !");
@@ -330,6 +343,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 }
             } else {
               toast.error("Mobile validation failed, form submission aborted.");
+              
             }
           }
       
@@ -351,6 +365,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
         } else {
           setErrors(validationErrors);
+          setDisable(false);
         }
       };
   return (
@@ -599,7 +614,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   {/* {error.deliver_status && <p className="text-red-500 text-xs">{error.deliver_status}</p>} */}
                         </div>
                             <div className='text-end'>
-                                    <button type='submit' className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm '>Submit</button>
+                                    <button type='submit' className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm ${disable ? "cursor-not-allowed opacity-50":""}`}  disabled={disable}>Submit</button>
                                 </div>
                         </form>
                     </div>

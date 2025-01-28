@@ -72,21 +72,24 @@ const [formData, setFormData] = useState<FormData>({
   };
 
 const navigate = useNavigate();
-
+  const [disable , setDisable] = useState<any>(false)
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();  
+    e.preventDefault(); 
+    setDisable(true); 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
       try {
         await dispatch(fetchBankData(formData));       
-        await dispatch(fetchBankList()); 
-        
+        await dispatch(fetchBankList());
         navigate('/addbankpage'); 
+        setDisable(false); 
       } catch (error) {
         console.error("Error updating bank details:", error);
+        setDisable(false); 
       }
     } else {
       setErrors(validationErrors);
+      setDisable(false); 
     }
     
   };
@@ -190,9 +193,9 @@ const navigate = useNavigate();
                     <button
                       type="submit"
                       className={`py-2 px-3 rounded-md text-sm ${
-                        isChecked ? 'bg-[#178285] text-white' : 'bg-gray-300 text-black cursor-not-allowed'
+                        isChecked  ? 'bg-[#178285] text-white' : 'bg-gray-300 text-black cursor-not-allowed'
                       }`}
-                      disabled={!isChecked}
+                      disabled={!isChecked }
                     >
                       Submit
                     </button>

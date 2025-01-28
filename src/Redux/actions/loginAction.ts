@@ -1,6 +1,9 @@
 import { CommonTypes, LoginTypes } from "../types";
 import { AxiosWithOutAuthInstance } from "../../Utilities/axios";
-
+export const setLoginToken = (token: string) => ({
+    type: "SET_LOGIN_TOKEN",
+    payload: token,
+  });
 export const loginAction = (formData: any) => async (dispatch: any) => {
     dispatch({
         type: CommonTypes.ACTION_START,

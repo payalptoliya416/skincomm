@@ -262,7 +262,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             stripeToken: paymentMethodId || "",     
           };
           if (formData.isFieldsDisabled) {
-       
             const successData = await dispatch(fetchAddMember(formDataToSend));
             toast.error(successData.error);
             if(successData){
@@ -287,10 +286,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             const numberData = response.data;
       
             if (numberData.success) {
-
-            // localStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
-            // sessionStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
-            // document.cookie = `addMemberData=${encodeURIComponent(JSON.stringify(formDataToSend))}; path=/;`;
 
                 const successData =await dispatch(fetchAddMember(formDataToSend));
                 if(successData){
