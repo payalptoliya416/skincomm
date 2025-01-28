@@ -14,7 +14,6 @@ const headers = {
     Authorization: `Bearer ${localStorage.getItem("token") }`,
     Accept: 'application/json'
 };
-console.log("header")
 
 const AxiosAuthInstance = axios.create({
     baseURL: API_URL,

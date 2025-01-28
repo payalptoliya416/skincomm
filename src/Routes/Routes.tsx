@@ -39,7 +39,6 @@ import AddCustomerStrip from '../Pages/Auth/customer/AddCustomerStrip';
 import ViewCommissions from '../Pages/Reports/ReportsData/ViewCommissions';
 
 const BrowserRoute = () => {
-console.log("route")
     return (
         <Router>
             <Routes>

@@ -38,6 +38,7 @@ import { DashboardDetailReducer } from "./reducers/DashboradDetailReducer";
 import { DeliveryOrderReducer } from "./reducers/DeliveryOrderReducer";
 import { uprankReducer } from "./reducers/UpRankGetReducer";
 import { cutomerGetDataReducer } from "./reducers/CustomerGetReducer";
+import { clearStorage } from "../Pages/Guest/ClearOldData";
 
 const userPersistConfig = {
     key: 'user_root',
@@ -83,21 +84,47 @@ const appReducer = combineReducers({
 
 });
 
+// const rootReducer = (state: any, action: any) => {
+//     if (action.type === "LOG_OUT") {
+//         storage.removeItem("persist:user_root")
+//             .then(() => storage.removeItem("token"))
+//             .then(() => {
+//                 state = undefined;
+//                 window.location.href = '/'; 
+//             });
+//     }
+
+//     if (action.type === "CLEAR_OLD_STORAGE") {
+//         storage.removeItem("persist:user_root")
+//             .then(() => storage.removeItem("token"));
+//         state = undefined; 
+//     }
+
+//     return appReducer(state, action);
+// };
 
 const rootReducer = (state: any, action: any) => {
-
     if (action.type === "LOG_OUT") {
-        storage.removeItem("persist:user_root")
+        storage
+            .removeItem("persist:user_root")
+            .then(() => storage.removeItem("token"))
             .then(() => {
-                storage.removeItem("token")
-                    .then(() => {
-                        state.loginState = undefined;
-                        window.location.href = '/';
-                    }) as any;
-            }) as any;
+                state = undefined; // Clear Redux state
+                window.location.href = "/"; // Redirect to login
+            });
     }
 
-    return appReducer(state, action);
-}
+    if (action.type === "CLEAR_OLD_STORAGE") {
+        storage
+            .removeItem("persist:user_root")
+            .then(() => storage.removeItem("token"))
+            .then(() => {
+                clearStorage(); // Ensure all old data is cleared
+            });
+        state = undefined; // Reset Redux state
+    }
+
+    return appReducer(state, action); // Proceed with app reducers
+};
 
 export default rootReducer;
