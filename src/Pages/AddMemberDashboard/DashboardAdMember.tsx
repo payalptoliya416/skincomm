@@ -13,7 +13,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchSearchTeamData } from '../../Redux/thunks/teamSearchThunnk';
 import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
-import Select from 'react-select'
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
 
@@ -46,14 +45,13 @@ const DashboardAdMember = () => {
     const elements = useElements();
     const dispatch = useDispatch<any>();
     const { productListData } = useSelector((state: RootState) => state.product);
+         const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
     const [userId , setUserId] = useState('');
-    const [selectedPackage ,setSelectedPackage] = useState<any>('');
      const [fName ,setFName] = useState<any>([]);
      const [placementName ,setplacementName] = useState<any>([]);
      const [ewalletData , setEwalletData] = useState<any>('');
      const [errors, setErrors] = useState<any>({});
      const [stripInput ,setStripInput] = useState<any>(false);
-     const [totalPriceShow ,setTotalPriceShow] = useState<any>('');
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
 
@@ -116,11 +114,18 @@ const DashboardAdMember = () => {
         else  if (type === "radio") {
             setFormData(prev => ({ ...prev, [name]: Number(value) }));
         }else if (name === 'payment_type') {
-            if (!formData.products_data) {
+            if (value === 'credit_card') {
+                            if (UserDetailData.stripe === false) {
+                                toast.error("Admin Has Not Turned On Stripe Option");
+                            }
+                            if (UserDetailData.stripe_key === '') {
+                                toast.error("Admin Has Not Set Stripe Payment Option");
+                            }
+                        }
+            if (!formData.products_data || formData.products_data.length === 0) {
                 toast.error("Please select a package first.");
                 return; 
             }
-        
             if (value === 'e-wallet') {
                 const ewalletDataValue = await dispatch(fetchProductPakageList(WlaletData));
                 const ValuOfBalance = ewalletDataValue.data;
@@ -140,31 +145,17 @@ const DashboardAdMember = () => {
                         balance_sp: adjustedBalanceSp || '',
                     });
                 }
-        
-                if (selectedPackage) {
-                    const retailPrice = parseFloat(selectedPackage.combo_product_retail_price);
-                    const currentTotalRcSp =
-                        ValuOfBalance.currency.trim() !== 'USD'
-                            ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
-                              ValuOfBalance.deposite_rate * ValuOfBalance.balance_sp
-                            : ValuOfBalance.balance_rc + ValuOfBalance.balance_sp;
-                    if (currentTotalRcSp < retailPrice) { 
-                        setStripInput(true);
-                    }
-                }
             }
         
             setFormData((prev) => ({ ...prev, [name]: value }));
-        }
-         else if(name === 'products_data'){
-             const selectedPackage = productListData.products.find((product : any ) => parseInt(product.id) === parseInt(value));
-            setSelectedPackage(selectedPackage);
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
  
-const updateCart = async (productId: string, price: number, delta: number) => {
+     const updateCart = async (productId: string, price: number, delta: number) => {
+        const ewalletDataValue = await dispatch(fetchProductPakageList(WlaletData));
+        const ValuOfBalance = ewalletDataValue.data;
         setCart((prevCart) => {
           const currentCart = Array.isArray(prevCart) ? prevCart : [];
     
@@ -182,12 +173,20 @@ const updateCart = async (productId: string, price: number, delta: number) => {
           }
           const total = updatedCart.reduce((acc, item) => acc + item.count * price, 0);
           setTotalPrice(total);
-    
+          const currentTotalRcSp =
+          ValuOfBalance.currency.trim() !== 'USD'
+              ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
+                ValuOfBalance.deposite_rate * ValuOfBalance.balance_sp
+              : ValuOfBalance.balance_rc + ValuOfBalance.balance_sp;
+            if (currentTotalRcSp < total) { 
+                setStripInput(true);
+            }else{
+                setStripInput(false);
+            }
           setFormData((prev: FormData) => ({
             ...prev,
             products_data: updatedCart,
           }));
-    
           return updatedCart;
         });
       };
@@ -199,7 +198,9 @@ const updateCart = async (productId: string, price: number, delta: number) => {
             if (!formData.placement) newErrors.placement = "Placement ID is required";
             if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
             if (!formData.country) newErrors.country = "Country Name is required";
-            if (!formData.products_data) newErrors.products_data = "Package is required";
+            if (!formData.products_data || formData.products_data.length === 0) {
+                newErrors.products_data = "Package is required";
+            }
                 if (!formData.payment_type) newErrors.payment_type = "Paymen    t Type is required";
         }else{
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
@@ -211,7 +212,9 @@ const updateCart = async (productId: string, price: number, delta: number) => {
         if (!placementName.member) newErrors.placement = `${placementName.message}`;
         if (!formData.e_mail || !/\S+@\S+\.\S+/.test(formData.e_mail)) newErrors.e_mail = "Valid Email is required";
         if (!formData.mobile || formData.mobile.length < 8) newErrors.mobile = "Mobile number must be at least 8 digits long";
-        if (!formData.products_data) newErrors.products_data = "Package is required";
+        if (!formData.products_data || formData.products_data.length === 0) {
+            newErrors.products_data = "Package is required";
+        }
         if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }
         return newErrors;
@@ -244,22 +247,27 @@ const updateCart = async (productId: string, price: number, delta: number) => {
       });
     }
   }, []);
-  
+
+  const [disable , setDisable]= useState(false);
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setDisable(true);
         const isValid = validateFormBiz();
         if (!isValid) {
             toast.error("Please fill up all info under Settings - My Profile before any purchases");
+            setDisable(false);
             return;
         }
         const validationErrors = validateForm();
         if(!bizData){
             toast.error("Please fill up your profile info before proceeding with the purchase")
+            setDisable(false);
         }
         if (Object.keys(validationErrors).length === 0) {
           
           if (!stripe || !elements) {
             toast.error("Stripe or Elements not initialized."); 
+            setDisable(false);
             return;
           }
           let paymentMethodId = null;
@@ -268,23 +276,27 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             const cardElement = elements.getElement(CardElement);
             
             if (!cardElement) {
-              toast.error("Card Element not found."); 
+              toast.error("Card Element not found.");
+              setDisable(false); 
               return;
             }
             try {
             const { error, token } = await stripe.createToken(cardElement);
               if (error) {
-                toast.error("Payment error: " + error.message);  
+                toast.error("Payment error: " + error.message); 
+                setDisable(false); 
                 return;
               }
               paymentMethodId = token?.id;
 
               if (!paymentMethodId) {
                 toast.error("Payment method ID not found.");
+                setDisable(false);
                 return;
               }
             } catch (paymentError) {
               toast.error("Payment processing error. Please try again.");
+              setDisable(false);
               return;
             } 
           }
@@ -292,18 +304,20 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           const formDataToSend = {
             ...formData,
             stripeToken: paymentMethodId || "",     
-          };
+          }; 
           if (formData.isFieldsDisabled) {
             const successData = await dispatch(fetchAddMember(formDataToSend));
             toast.error(successData.error);
             if(successData){
                 if(successData.data.data.error === true){
                     toast.error(successData.data.data.message)
+                    setDisable(false);
                 }
                 else{
                     toast.success("Member added successfully !");
                     const successnavigate = successData.data.data
                     navigate('/successfullyPayment', { state: {successnavigate},});
+                    setDisable(false);
                 }
             }
           } else {
@@ -323,15 +337,18 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 if(successData){
                     if(successData.data.data.error === true){
                         toast.error(successData.data.data.message)
+                        setDisable(false);
                     }
                     else{
                         toast.success("Member added successfully !");
                         const successnavigate = successData.data.data
                         navigate('/successfullyPayment', { state: {successnavigate},});
+                        setDisable(false);
                     }
                 }
             } else {
               toast.error("Mobile validation failed, form submission aborted.");
+              setDisable(false);
             }
           }
       
@@ -353,6 +370,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
         } else {
           setErrors(validationErrors);
+          setDisable(false);
         }
       };
     return (
@@ -606,7 +624,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 <div className="mb-3 ">
                                       <div className="mb-3 flex items-center gap-2">
                     <h3 className="text-black text-[14px] font-semibold">Total Amount : </h3>
-                    {/* <h4 className="text-black text-[14px] font-normal">${totalPriceShow.combo_product_retail_price || 0}</h4> */}${totalPrice}
+                    <h4 className="text-black text-[14px] font-normal">${totalPrice}</h4>
                     </div>
                                 </div>
                                     <div className="mb-3">
@@ -643,7 +661,21 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                             </div>
                             </div>
                                 <div className='text-end'>
-                                        <button type='submit' className='py-2 px-3 rounded-md bg-[#178285] text-white text-sm '>Submit</button>
+                                <div className='text-end flex justify-end'>
+                                    <button 
+                                    type="submit" 
+                                    className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm flex items-center justify-center ${disable ? "cursor-not-allowed pointer-events-none opacity-50" : ""}`} 
+                                    disabled={disable}
+                                    >
+                                    {disable && (
+                                        <svg aria-hidden="true" role="status" className="inline mr-2 w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"></path>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"></path>
+                                        </svg>
+                                    )}
+                                    {disable ? "Loading..." : "Submit"}
+                                    </button>
+                                    </div>
                                     </div>
                             </form>
                         </div>

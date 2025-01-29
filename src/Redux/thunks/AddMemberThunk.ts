@@ -9,8 +9,7 @@ export const fetchAddMember = (formData : any) => {
     return async (dispatch: Dispatch) => {
         dispatch(fetchAddMemberRequest());
         try {
-            const response = await AxiosAddMember.post('',formData);  
-            console.log("response",response)
+            const response = await AxiosAddMember.post('',formData);
             dispatch(fetchAddMemberSuccess(response.data));
              return {data: response.data };
         } catch (error: any) {

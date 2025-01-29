@@ -9,7 +9,6 @@ export const fetchcustomePostData = (formData : any) => {
         dispatch(fetchBCutomerPostRequest());
         try {
             const response = await AxiosPostCutomerProduct.post('',formData);
-            console.log("response",response)
             dispatch(fetchCutomerPostSuccess(response.data.data));
             return {data : response.data.data}
         } catch (error: any) {

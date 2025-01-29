@@ -13,6 +13,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchSearchTeamData } from '../../Redux/thunks/teamSearchThunnk';
 import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
+import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
+import { BsCart } from 'react-icons/bs';
 
 
 interface Product {
@@ -31,7 +33,7 @@ interface FormData {
     e_mail: string,
     mobile: string,
     sponsor_type: number,
-    package_id: string,
+    products_data: any[];
     country: string,
     isFieldsDisabled?: boolean;
     payment_type : string,
@@ -50,10 +52,10 @@ const AddMemberForm = () => {
     const { productListData } = useSelector((state: RootState) => state.product);
      const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
      const [ewalletData , setEwalletData] = useState<any>('');
-     const [selectedPackage ,setSelectedPackage] = useState<any>('');
      const [errors, setErrors] = useState<any>({});
-      const [totalPriceShow ,setTotalPriceShow] = useState<any>('');
      const [stripInput ,setStripInput] = useState<any>(false);
+          const [cart, setCart] = useState<any[]>([]); 
+          const [totalPrice, setTotalPrice] = useState(0); 
     const [formData, setFormData] = useState<FormData>({
         sponsor:  upline_id || '' ,
         placement:  upline_id || '' ,
@@ -63,7 +65,7 @@ const AddMemberForm = () => {
         e_mail: "",
         mobile: "",
         sponsor_type: 1,
-        package_id: "",
+        products_data: [],
         payment_type:'',
         country: '',
         stripeToken : "",
@@ -141,10 +143,10 @@ const AddMemberForm = () => {
                     toast.error("Admin Has Not Set Stripe Payment Option");
                 }
             }
-            if (!formData.package_id) {
-                toast.error("Please select a package first.");
-                return;
-            }
+           if (!formData.products_data || formData.products_data.length === 0) {
+                         toast.error("Please select a package first.");
+                         return; 
+                     }
         
             if (value === 'e-wallet') {
                  const ewalletDataValue = await dispatch(fetchProductPakageList(WlaletData));
@@ -165,31 +167,51 @@ const AddMemberForm = () => {
                         balance_sp: adjustedBalanceSp || '',
                     });
                 }
-        
-                if (selectedPackage) {
-                    const retailPrice = parseFloat(selectedPackage.combo_product_associate_price);
-                    const currentTotalRcSp =
-                        ValuOfBalance.currency.trim() !== 'USD'
-                            ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
-                              ValuOfBalance.deposite_rate * ValuOfBalance.balance_sp
-                            : ValuOfBalance.balance_rc + ValuOfBalance.balance_sp;
-                    if (currentTotalRcSp < retailPrice) { 
-                        setStripInput(true);
-                    }
-                }
             }
         
             setFormData((prev) => ({ ...prev, [name]: value }));
-        } else if(name === 'package_id'){
-            const selectedPackage = productListData.products.find((product : any ) => parseInt(product.id) === parseInt(value));
-            setTotalPriceShow(selectedPackage);
-            setSelectedPackage(selectedPackage);
-            setFormData(prev => ({ ...prev, [name]: value }));
-        } else {
+        }else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
     
+     const updateCart = async (productId: string, price: number, delta: number) => {
+            const ewalletDataValue = await dispatch(fetchProductPakageList(WlaletData));
+            const ValuOfBalance = ewalletDataValue.data;
+            setCart((prevCart) => {
+              const currentCart = Array.isArray(prevCart) ? prevCart : [];
+        
+              const existingProduct = currentCart.find((item) => item.id === productId) || { id: productId, count: 0 };
+              const newCount = existingProduct.count + delta;
+        
+              if (newCount < 0) return currentCart;
+        
+              const updatedCart = currentCart.map((item) =>
+                item.id === productId ? { ...item, count: newCount } : item
+              );
+        
+              if (!currentCart.some((item) => item.id === productId)) {
+                updatedCart.push({ id: productId, count: newCount });
+              }
+              const total = updatedCart.reduce((acc, item) => acc + item.count * price, 0);
+              setTotalPrice(total);
+              const currentTotalRcSp =
+              ValuOfBalance.currency.trim() !== 'USD'
+                  ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
+                    ValuOfBalance.deposite_rate * ValuOfBalance.balance_sp
+                  : ValuOfBalance.balance_rc + ValuOfBalance.balance_sp;
+                if (currentTotalRcSp < total) { 
+                    setStripInput(true);
+                }else{
+                    setStripInput(false);
+                }
+              setFormData((prev: FormData) => ({
+                ...prev,
+                products_data: updatedCart,
+              }));
+              return updatedCart;
+            });
+          };
     const validateForm = () => {
         const newErrors: any = {};
         if(formData.isFieldsDisabled){
@@ -197,7 +219,9 @@ const AddMemberForm = () => {
             if (!formData.placement) newErrors.placement = "Placement ID is required";
             if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
             if (!formData.country) newErrors.country = "Country Name is required";
-            if (!formData.package_id) newErrors.package_id = "Package is required";
+            if (!formData.products_data || formData.products_data.length === 0) {
+                newErrors.products_data = "Package is required";
+            }
             if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }else{  
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
@@ -209,7 +233,9 @@ const AddMemberForm = () => {
         if (!placementName.member) newErrors.placement = `${placementName.message}`;
         if (!formData.e_mail || !/\S+@\S+\.\S+/.test(formData.e_mail)) newErrors.e_mail = "Valid Email is required";
         if (!formData.mobile || formData.mobile.length < 8) newErrors.mobile = "Mobile number must be at least 8 digits long";
-        if (!formData.package_id) newErrors.package_id = "Package is required";
+        if (!formData.products_data || formData.products_data.length === 0) {
+            newErrors.products_data = "Package is required";
+        }
         if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
         }
         return newErrors;
@@ -302,11 +328,13 @@ const AddMemberForm = () => {
              if(successData){
                 if(successData.data.data.error === true){
                     toast.error(successData.data.data.message)
+                    setDisable(false);
                 }
                 else{
                     toast.success("Member added successfully !");
                     const successnavigate = successData.data.data
                     navigate('/successfullyPayment', { state: {successnavigate},});
+                    setDisable(false);
                 }
             }
 
@@ -326,10 +354,12 @@ const AddMemberForm = () => {
                 if(successData){
                     if(successData.data.data.error === true){
                         toast.error(successData.data.data.message)
+                        setDisable(false);
                     }else{
                         toast.success("Member added successfully !");
                         const successnavigate = successData.data.data
-                        // navigate('/successfullyPayment', { state: {successnavigate},});
+                        navigate('/successfullyPayment', { state: {successnavigate},});
+                        setDisable(false);
                     }
                 }
             } else {
@@ -337,7 +367,6 @@ const AddMemberForm = () => {
               setDisable(false);
             }
           }
-      
           setFormData({
             sponsor: "",
             placement: "",
@@ -347,7 +376,7 @@ const AddMemberForm = () => {
             e_mail: "",
             mobile: "",
             sponsor_type: 1,
-            package_id: "",
+            products_data: [],
             payment_type: '',
             country: '',
             stripeToken: "",
@@ -537,24 +566,61 @@ const AddMemberForm = () => {
                                 </div>
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Package</label>
-                                    <select
-                                        name="package_id"
-                                        className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
-                                        value={formData.package_id}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="">Select Package</option>
-                                        {productListData.products && productListData.products.length > 0 ? (
-                            productListData.products.map((product: Product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.combo_product_name} - {product.combo_product_lp}
-                                </option>
-                            ))
-                        ) : (
-                            <option disabled>No products available</option>
-                             )}
-
-                                    </select>
+                                    <div className="relative overflow-x-auto mt-5 border rounded-md mb-4">
+                                                                                        <table  id="example" className="display table-auto w-full text-sm text-left rtl:text-right text-black  ">
+                                                                                            <thead className="text-xs text-white uppercase bg-[#178285]">
+                                                                                                <tr>
+                                                                                                    <th className="px-6 py-3 text-center">
+                                                                                                    Name
+                                                                                                    </th>
+                                                                                                    <th className="px-6 py-3">
+                                                                                                   Price
+                                                                                                    </th>
+                                                                                                    <th className="px-6 py-3">
+                                                                                                      LP
+                                                                                                    </th>
+                                                                                                    <th className="px-6 py-3">
+                                                                                                        Action
+                                                                                                    </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                        {productListData.products && productListData.products.length > 0 ? (
+                                                                                                    productListData.products.map((item: any, index: number) => (
+                                                                                                    <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
+                                                                                                            
+                                                                                                    <td className="px-6 py-3 text-center">
+                                                                                                           {item.combo_product_name}
+                                                                                                    </td>
+                                                                                                    <td className="px-6 py-3">
+                                                                                                     {item.combo_product_retail_price}
+                                                                                                    </td>
+                                                                                                    <td className="px-6 py-3">
+                                                                                                         {item.combo_product_lp}
+                                                                                                    </td>
+                                                                                                    <td className="px-6 py-3">
+                                                                                                 <div className="flex gap-2 items-center">
+                                                                                                 <HiOutlineMinusSmall
+                                                                                                     onClick={() => updateCart(item.id, item.combo_product_retail_price, -1)}
+                                                                                                     className={`cursor-pointer ${cart[item.id]?.count === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                                                                 />
+                                                                                                 <BsCart /> {cart.find(cartItem => cartItem.id === item.id)?.count || 0}
+                                                                                                 <HiOutlinePlusSmall
+                                                                                                     onClick={() => updateCart(item.id, item.combo_product_retail_price, 1)}
+                                                                                                     className="cursor-pointer"
+                                                                                                 />
+                                                                                                 </div>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                               ))
+                                                                                            ) : (
+                                                                                        <tr>
+                                                                                        <td colSpan={6} className="px-6 py-2 text-center">No data available</td>
+                                                                                        </tr>
+                                                                                            )}
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                        </div>
                                     {errors.package_id && <p className='text-red-500 text-xs'>{errors.package_id}</p>}
                                 </div>
                         
@@ -603,7 +669,7 @@ const AddMemberForm = () => {
                                     <div className="mb-3 ">
                                       <div className="mb-3 flex items-center gap-2">
                     <h3 className="text-black text-[14px] font-semibold">Total Amount : </h3>
-                    <h4 className="text-black text-[14px] font-normal">${totalPriceShow.combo_product_associate_price || 0}</h4>
+                    <h4 className="text-black text-[14px] font-normal">${totalPrice}</h4>
                     </div>
                                 </div>
                                     <div className="mb-3">
@@ -639,8 +705,20 @@ const AddMemberForm = () => {
                                 </div>
                             </div>
                             </div>
-                                <div className='text-end'>
-                                        <button type='submit' className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm  ${disable ? "cursor-not-allowed opacity-50":""}`} disabled={disable}>Submit</button>
+                                <div className='text-end flex justify-end'>
+                                    <button 
+                                    type="submit" 
+                                    className={`py-2 px-3 rounded-md bg-[#178285] text-white text-sm flex items-center justify-center ${disable ? "cursor-not-allowed pointer-events-none opacity-50" : ""}`} 
+                                    disabled={disable}
+                                    >
+                                    {disable && (
+                                        <svg aria-hidden="true" role="status" className="inline mr-2 w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"></path>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"></path>
+                                        </svg>
+                                    )}
+                                    {disable ? "Loading..." : "Submit"}
+                                    </button>
                                     </div>
                             </form>
                             
