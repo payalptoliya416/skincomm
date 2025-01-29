@@ -5,9 +5,9 @@ import { AxiosBankListDetail } from '../../Utilities/axios';
 import { fetchBankListFailure, fetchBankListRequest, fetchBankListSuccess } from '../actions/bankListAction';
 
 export const fetchBankList = () => {
-    const ID = localStorage.getItem("contryid")?.trim(); 
+    const ID = sessionStorage.getItem("contryid")?.trim(); 
     if (!ID) {
-        console.error("No country ID found in localStorage");
+        console.error("No country ID found in sessionStorage");
         return;
     }
 

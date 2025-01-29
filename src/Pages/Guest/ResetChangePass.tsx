@@ -9,7 +9,7 @@ interface FormData {
   }
 
 function ResetChangePass() {
-    const ID = localStorage.getItem("memberIdId");
+    const ID = sessionStorage.getItem("memberIdId");
    
     const [formData, setFormData] = useState<FormData>({
         new_password: "",

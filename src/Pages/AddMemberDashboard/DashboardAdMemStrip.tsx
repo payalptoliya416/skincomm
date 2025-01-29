@@ -11,7 +11,7 @@ function DashboardAdMemStrip() {
     const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
     const [stripePromise, setStripePromise] = useState<Promise<any> | null>(null);
   
-    const ID = localStorage.getItem("UserID");
+    const ID = sessionStorage.getItem("UserID");
   
     useEffect(() => {
       const userdatad = {

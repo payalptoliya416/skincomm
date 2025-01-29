@@ -6,9 +6,9 @@ import { fetchGetBankFailure, fetchGetBankRequest, fetchGetBankSuccess } from '.
 
 export const fetchGetBankData = () => {
     return async (dispatch: Dispatch) => {
-        const id = localStorage.getItem("loginUserId");
+        const id = sessionStorage.getItem("loginUserId");
         if (!id) {
-            console.error("No loginUserId found in localStorage");
+            console.error("No loginUserId found in sessionStorage");
             return;
         }
 

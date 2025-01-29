@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 const Reports = () => {
     const [customerRankID, setCustomerRankID] = useState<any>(null);
     useEffect(() => {
-             const BizPathdata = localStorage.getItem("user");
+             const BizPathdata = sessionStorage.getItem("user");
              if (BizPathdata) {
                  const parsedData = JSON.parse(BizPathdata);
                setCustomerRankID(parsedData.rank)

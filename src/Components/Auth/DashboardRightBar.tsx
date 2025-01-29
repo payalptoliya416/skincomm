@@ -46,9 +46,9 @@ const DashboardRightBar = () => {
         
         useEffect(() => {
             if (SubAccountLoginData && SubAccountLoginData.data?.token) {
-                localStorage.removeItem("token");
+                sessionStorage.removeItem("token");
     
-                localStorage.setItem("token", SubAccountLoginData.data.token);
+                sessionStorage.setItem("token", SubAccountLoginData.data.token);
     
                 window.location.href = '/';
             }

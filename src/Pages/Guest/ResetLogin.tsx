@@ -97,7 +97,7 @@ const [loader ,setLoader] = useState(false);
         otp: otpCode
       };
        const response = await dispatch(fetchVerifyLogin(data))
-       localStorage.setItem("memberIdId", response.res.memberid);
+       sessionStorage.setItem("memberIdId", response.res.memberid);
        try {
          
            if(response.res.success === true){

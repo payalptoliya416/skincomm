@@ -81,7 +81,7 @@ function SecurityPassEmail() {
   }
     const res = await dispatch(fetchSecurityOtpGET(data))
     const GetOtpMethod = res.data.data
-    localStorage.setItem("securityMemberId", GetOtpMethod.memberid);
+    sessionStorage.setItem("securityMemberId", GetOtpMethod.memberid);
     if(GetOtpMethod.success === true){
       toast(GetOtpMethod.message)
       navigate('/securityotpconfirmation')

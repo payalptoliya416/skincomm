@@ -11,15 +11,15 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
 
     try {
         const response = await AxiosWithOutAuthInstance.post(`/member_login`, formData);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("rankNameofMember", response.data.member_rank);
-        localStorage.setItem("loginUser", response.data.user.username);
-        localStorage.setItem("loginUserId", response.data.user.id);
-        localStorage.setItem("UserID", response.data.user.userid);
-        localStorage.setItem("contryid", response.data.user.country);
-        localStorage.setItem("joiningDate", response.data.user.join_date);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("customerrank", JSON.stringify(response.data.user.rank));
+        sessionStorage.setItem("token", response.data.token);
+        sessionStorage.setItem("rankNameofMember", response.data.member_rank);
+        sessionStorage.setItem("loginUser", response.data.user.username);
+        sessionStorage.setItem("loginUserId", response.data.user.id);
+        sessionStorage.setItem("UserID", response.data.user.userid);
+        sessionStorage.setItem("contryid", response.data.user.country);
+        sessionStorage.setItem("joiningDate", response.data.user.join_date);
+        sessionStorage.setItem("user", JSON.stringify(response.data.user));
+        sessionStorage.setItem("customerrank", JSON.stringify(response.data.user.rank));
 
         dispatch({
             type: LoginTypes.LOGIN_SUCCESS,

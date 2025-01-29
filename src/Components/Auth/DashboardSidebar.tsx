@@ -21,19 +21,19 @@ const DashboardSidebar = ({ loginState }: any) => {
     const handleLogout = async () => {
         await storage.removeItem("persist:user_root");
         await storage.removeItem("token");
-        localStorage.removeItem("user_data")
-        localStorage.removeItem("securityMemberId");
-        localStorage.removeItem('loginUser')
-        localStorage.removeItem('loginUserId')
-        localStorage.removeItem('contryid')
-        localStorage.removeItem('memberIdId')
-        localStorage.removeItem('cart')
-        localStorage.removeItem('UserID')
-        localStorage.removeItem('totalPrice')   
-        localStorage.removeItem('joiningDate')   
-        localStorage.removeItem('user');
-        localStorage.removeItem('rankNameofMember');
-        localStorage.removeItem('customerrank');
+        sessionStorage.removeItem("user_data")
+        sessionStorage.removeItem("securityMemberId");
+        sessionStorage.removeItem('loginUser')
+        sessionStorage.removeItem('loginUserId')
+        sessionStorage.removeItem('contryid')
+        sessionStorage.removeItem('memberIdId')
+        sessionStorage.removeItem('cart')
+        sessionStorage.removeItem('UserID')
+        sessionStorage.removeItem('totalPrice')   
+        sessionStorage.removeItem('joiningDate')   
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('rankNameofMember');
+        sessionStorage.removeItem('customerrank');
         window.location.href = '/';
     };
     

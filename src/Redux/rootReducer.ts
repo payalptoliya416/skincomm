@@ -84,47 +84,28 @@ const appReducer = combineReducers({
 
 });
 
-// const rootReducer = (state: any, action: any) => {
-//     if (action.type === "LOG_OUT") {
-//         storage.removeItem("persist:user_root")
-//             .then(() => storage.removeItem("token"))
-//             .then(() => {
-//                 state = undefined;
-//                 window.location.href = '/'; 
-//             });
-//     }
-
-//     if (action.type === "CLEAR_OLD_STORAGE") {
-//         storage.removeItem("persist:user_root")
-//             .then(() => storage.removeItem("token"));
-//         state = undefined; 
-//     }
-
-//     return appReducer(state, action);
-// };
-
 const rootReducer = (state: any, action: any) => {
     if (action.type === "LOG_OUT") {
         storage
             .removeItem("persist:user_root")
             .then(() => storage.removeItem("token"))
             .then(() => {
-                state = undefined; // Clear Redux state
-                window.location.href = "/"; // Redirect to login
+                state = undefined; 
+                window.location.href = "/";
             });
     }
-
+   
     if (action.type === "CLEAR_OLD_STORAGE") {
         storage
             .removeItem("persist:user_root")
             .then(() => storage.removeItem("token"))
             .then(() => {
-                clearStorage(); // Ensure all old data is cleared
+                clearStorage();
             });
-        state = undefined; // Reset Redux state
+        state = undefined; 
     }
 
-    return appReducer(state, action); // Proceed with app reducers
+    return appReducer(state, action); 
 };
 
 export default rootReducer;

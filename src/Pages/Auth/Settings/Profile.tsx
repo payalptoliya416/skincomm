@@ -22,7 +22,7 @@ interface FormData {
 
 const Profile = () => {
     const dispatch = useDispatch<any>();
-    const userID = localStorage.getItem("loginUserId"); 
+    const userID = sessionStorage.getItem("loginUserId"); 
     const { ProfileGetData } = useSelector((state: RootState) => state.profileDataUpdated);
 
       useEffect(()=>{
@@ -81,7 +81,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     dispatch(fetchProfile({ ...formData, mobile: mobileWithPlus, id: userID }));
       toast.success("Form submitted successfully")
       
-      localStorage.setItem('user', JSON.stringify({
+      sessionStorage.setItem('user', JSON.stringify({
         f_name: formData.f_name,
         email: formData.email,
         mobile: formData.mobile,

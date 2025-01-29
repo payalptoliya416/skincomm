@@ -25,7 +25,7 @@ interface Product {
 const AddBankForm = () => {
   const { bankList } = useSelector((state: RootState) => state.bankListData);    
 
-  const loginuserId = localStorage.getItem("loginUserId");
+  const loginuserId = sessionStorage.getItem("loginUserId");
   const [isChecked, setIsChecked] = useState<boolean>(false);
  
   const dispatch = useDispatch<any>();

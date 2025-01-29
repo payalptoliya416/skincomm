@@ -57,7 +57,7 @@ function ReorderPage(props: any) {
     const [eWallerRPText ,setEWalletRPText] = useState<any>();
     const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = sessionStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : {};
    });
 const [deliverCharge , setDeliveryCharge ] = useState<any>('');
@@ -92,7 +92,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
 
      
         useEffect(() => {
-                 const BizPathdata = localStorage.getItem("user");
+                 const BizPathdata = sessionStorage.getItem("user");
                  if (BizPathdata) {
                      const parsedData = JSON.parse(BizPathdata);
                    setCustomerRankID(parsedData.rank)
@@ -311,7 +311,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
         };
 
   useEffect(() => {
-    localStorage.removeItem('cart');
+    sessionStorage.removeItem('cart');
   }, [cart, totalPrice]);
 
   const validationErrors = () => {
@@ -356,7 +356,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
     };
   
     useEffect(() => {
-      const BizPathdata = localStorage.getItem("user");
+      const BizPathdata = sessionStorage.getItem("user");
       if (BizPathdata) {
         const parsedData = JSON.parse(BizPathdata);
         setBizData({
@@ -437,8 +437,8 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                  const res =  await dispatch(fetchReorderPost(formDataToSend));
                  if(res.data.success === true){
                      toast.success(res.data.message)
-                     localStorage.removeItem('cart')
-                     localStorage.removeItem('totalPrice')   
+                     sessionStorage.removeItem('cart')
+                     sessionStorage.removeItem('totalPrice')   
                      setFormData({
                       id: '',
                       currency : "",

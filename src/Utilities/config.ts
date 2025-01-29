@@ -1,7 +1,7 @@
 const ENV: string = 'Live';
 
-// const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'http://192.168.1.19:8080';
-const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'https://staging.acp.sgcoders.net';
+const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'http://192.168.1.19:8080';
+// const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'https://staging.acp.sgcoders.net';
 const API_URL: string = BASE_URL + '/api/';
 const STORAGE_URL: string = BASE_URL + '/storage/';
 const BALANCE_URLL :string = BASE_URL + '/api/getbalance'

@@ -15,8 +15,8 @@ const DashboardBottom = () => {
   const [memberRank , setMemberRank] = useState<any>('');
 
   useEffect(() => {
-    const BizPathdata = localStorage.getItem("user");
-    const MemberRankName = localStorage.getItem("rankNameofMember");
+    const BizPathdata = sessionStorage.getItem("user");
+    const MemberRankName = sessionStorage.getItem("rankNameofMember");
     if (BizPathdata) {
       const parsedData = JSON.parse(BizPathdata);
       setBizData(parsedData);
@@ -51,7 +51,7 @@ const DashboardBottom = () => {
   }
     const [customerRankID, setCustomerRankID] = useState<any>(null);
       useEffect(() => {
-               const BizPathdata = localStorage.getItem("user");
+               const BizPathdata = sessionStorage.getItem("user");
                if (BizPathdata) {
                    const parsedData = JSON.parse(BizPathdata);
                  setCustomerRankID(parsedData.rank)

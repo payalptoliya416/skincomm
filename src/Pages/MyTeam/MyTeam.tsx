@@ -12,7 +12,7 @@ const MyTeam = () => {
     const { teamsearchData } = useSelector((state: RootState) => state.myTeamSearch);
     const [errorMsj , setErrorMsj] = useState('')
     const dispatch = useDispatch<any>();    
-   const ID =  localStorage.getItem('UserID')
+   const ID =  sessionStorage.getItem('UserID')
     useEffect(() => {
         dispatch(fetchSearchTeamData(ID));
      }, [dispatch]);
@@ -40,7 +40,7 @@ const MyTeam = () => {
      const [customerRankID, setCustomerRankID] = useState<any>(null);
 
       useEffect(() => {
-              const BizPathdata = localStorage.getItem("user");
+              const BizPathdata = sessionStorage.getItem("user");
               if (BizPathdata) {
                   const parsedData = JSON.parse(BizPathdata);
                 setCustomerRankID(parsedData.rank)

@@ -37,7 +37,7 @@ function Uprank() {
             const [totalPrice, setTotalPrice] = useState<any>('');
             const [stripShow , setSripShow]= useState(false);
              const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
-            const savedCart = localStorage.getItem('cart');
+            const savedCart = sessionStorage.getItem('cart');
             return savedCart ? JSON.parse(savedCart) : {};
           });
         const [bizData, setBizData] = useState<any>({});
@@ -194,7 +194,7 @@ function Uprank() {
             };
       const availableTotalBalance =  (Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0));
       useEffect(() => {
-        localStorage.removeItem('cart');
+        sessionStorage.removeItem('cart');
       }, [cart, totalPrice]);
 
       const validationErrors = () => {
@@ -273,7 +273,7 @@ function Uprank() {
           };
 
           useEffect(() => {
-            const BizPathdata = localStorage.getItem("user");
+            const BizPathdata = sessionStorage.getItem("user");
            
             if (BizPathdata) {
               const parsedData = JSON.parse(BizPathdata);
@@ -383,8 +383,8 @@ function Uprank() {
                            const res =  await dispatch(fetchUpRankPost(formDataToSend));
                            if(res.data.success === true){
                                toast.success(res.data.message)
-                               localStorage.removeItem('cart')
-                               localStorage.removeItem('totalPrice')   
+                               sessionStorage.removeItem('cart')
+                               sessionStorage.removeItem('totalPrice')   
                                setFormData({
                                 id: '',
                                 currency : "",

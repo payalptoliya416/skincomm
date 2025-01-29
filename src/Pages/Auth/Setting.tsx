@@ -37,7 +37,7 @@ const Setting = () => {
     const [customerRankID, setCustomerRankID] = useState<any>(null);
 
     useEffect(() => {
-      const BizPathdata = localStorage.getItem("user");
+      const BizPathdata = sessionStorage.getItem("user");
       if (BizPathdata) {
           const parsedData = JSON.parse(BizPathdata);
         setJoinDate(parsedData.join_date);

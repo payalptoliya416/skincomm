@@ -228,7 +228,7 @@ const customerData = {
   };
 
   useEffect(() => {
-    const BizPathdata = localStorage.getItem("user");
+    const BizPathdata = sessionStorage.getItem("user");
     if (BizPathdata) {
       const parsedData = JSON.parse(BizPathdata);
       setBizData({
@@ -326,7 +326,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             const response = await dispatch(fetchNumber(mobileDetail));
             const numberData = response.data;
             if (numberData.success) {
-            // localStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
+            // sessionStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
                 const successData =await dispatch(fetchcustomePostData(formDataToSend));
                 if(successData){
                     if(successData.data.error === true){

@@ -11,7 +11,7 @@ const AxiosWithOutAuthInstance = axios.create({
 
 // AxiosAuthInstance
 const headers = {
-    Authorization: `Bearer ${localStorage.getItem("token") }`,
+    Authorization: `Bearer ${sessionStorage.getItem("token") }`,
     Accept: 'application/json'
 };
 
@@ -24,7 +24,7 @@ const AxiosAuthInstance = axios.create({
 AxiosAuthInstance.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -57,7 +57,7 @@ const AxiosAuthBalance = axios.create({
 AxiosAuthBalance.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -78,7 +78,7 @@ const AxiosEWalletReport = axios.create({
 AxiosEWalletReport.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -98,7 +98,7 @@ const AxiosEarningReport = axios.create({
 AxiosEarningReport.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -118,7 +118,7 @@ const AxiosSingleEarningReport = axios.create({
 AxiosSingleEarningReport.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -138,7 +138,7 @@ const AxiosSponsoredTree = axios.create({
 AxiosSponsoredTree.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -158,7 +158,7 @@ const AxiosSponsoredNetwork = axios.create({
 AxiosSponsoredNetwork.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -178,7 +178,7 @@ const AxiosSubAccountLogin = axios.create({
 AxiosSubAccountLogin.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -198,7 +198,7 @@ const AxiosSubAccountUserLogin = axios.create({
 AxiosSubAccountUserLogin.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -218,7 +218,7 @@ const AxiosProductList = axios.create({
 AxiosProductList.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -239,7 +239,7 @@ const AxiosUserDetail = axios.create({
 AxiosUserDetail.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -259,7 +259,7 @@ const AxiosAddMember = axios.create({
 AxiosAddMember.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -279,7 +279,7 @@ const AxiosMobileNum = axios.create({
 AxiosMobileNum.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -299,7 +299,7 @@ const AxiosAddBank = axios.create({
 AxiosAddBank.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -312,7 +312,7 @@ AxiosAddBank.interceptors.request.use(
     }
 );
 
-// const id = localStorage.getItem("loginUserId")
+// const id = sessionStorage.getItem("loginUserId")
 
 const AxiosGetBankDetail = axios.create({
     baseURL: SUB_GETBANKDETAIL_URL,
@@ -323,7 +323,7 @@ const AxiosGetBankDetail = axios.create({
 AxiosGetBankDetail.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -345,7 +345,7 @@ const AxiosBankListDetail = axios.create({
 AxiosBankListDetail.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -366,7 +366,7 @@ const AxiosGetLPBalance = axios.create({
 AxiosGetLPBalance.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -387,7 +387,7 @@ const AxiosWithdrawal = axios.create({
 AxiosWithdrawal.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -408,7 +408,7 @@ const AxiosLoginPassword = axios.create({
 AxiosLoginPassword.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -429,7 +429,7 @@ const AxiosSecurityPassword = axios.create({
 AxiosSecurityPassword.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -466,7 +466,7 @@ const AxiosGetEmail = axios.create({
 AxiosGetEmail.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -487,7 +487,7 @@ const AxioSendSecurityOtp = axios.create({
 AxioSendSecurityOtp.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -508,7 +508,7 @@ const AxioSecurityOtp = axios.create({
 AxioSecurityOtp.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -529,7 +529,7 @@ const AxioSecurityNewPassword = axios.create({
 AxioSecurityNewPassword.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -550,7 +550,7 @@ const AxioAnnouncement= axios.create({
 AxioAnnouncement.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -572,7 +572,7 @@ const AxiosAnnouncementEdit = axios.create({
 AxiosAnnouncementEdit.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -594,7 +594,7 @@ const AxiosReorderCategory = axios.create({
 AxiosReorderCategory.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -615,7 +615,7 @@ const AxiosPaymentBy = axios.create({
 AxiosPaymentBy.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -637,7 +637,7 @@ const AxioInvoiceList = axios.create({
 AxioInvoiceList.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -658,7 +658,7 @@ const AxioPaymentByPost = axios.create({
 AxioPaymentByPost.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -679,7 +679,7 @@ const AxioInvoiceListPDF = axios.create({
 AxioInvoiceListPDF.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -700,7 +700,7 @@ const AxioInMyTeamSearch = axios.create({
 AxioInMyTeamSearch.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -721,7 +721,7 @@ const AxioInMyAnnouncePending = axios.create({
 AxioInMyAnnouncePending.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -742,7 +742,7 @@ const AxioInMyAnnounceReading = axios.create({
 AxioInMyAnnounceReading.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -763,7 +763,7 @@ const AxioInProfile = axios.create({
 AxioInProfile.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -784,7 +784,7 @@ const AxioInProfileGet = axios.create({
 AxioInProfileGet.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -805,7 +805,7 @@ const AxioInSecurityBoolean = axios.create({
 AxioInSecurityBoolean.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -826,7 +826,7 @@ const AxioInDashboardDetails = axios.create({
 AxioInDashboardDetails.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -847,7 +847,7 @@ const AxioInConverData = axios.create({
 AxioInConverData.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -868,7 +868,7 @@ const AxioInMemberLIne= axios.create({
 AxioInMemberLIne.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -889,7 +889,7 @@ const AxioInTransfer = axios.create({
 AxioInTransfer.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -910,7 +910,7 @@ const AxioInDeliveryOrder= axios.create({
 AxioInDeliveryOrder.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -931,7 +931,7 @@ const AxiosUPRankGetData= axios.create({
 AxiosUPRankGetData.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -952,7 +952,7 @@ const AxiosUPRankPostData= axios.create({
 AxiosUPRankPostData.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -973,7 +973,7 @@ const AxiosGetCutomerProduct= axios.create({
 AxiosGetCutomerProduct.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {
@@ -994,7 +994,7 @@ const AxiosPostCutomerProduct= axios.create({
 AxiosPostCutomerProduct.interceptors.request.use(
     (config) => {
         config.headers["Accept"] = 'application/json';
-        config.headers["Authorization"] = `Bearer ${localStorage.getItem("token") }`;
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
         return config;
     },
     (error) => {

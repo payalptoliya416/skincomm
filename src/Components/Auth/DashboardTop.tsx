@@ -15,7 +15,7 @@ const DashboardTop = () => {
     }, [dispatch]);
 
      useEffect(() => {
-         const BizPathdata = localStorage.getItem("user");
+         const BizPathdata = sessionStorage.getItem("user");
          if (BizPathdata) {
              const parsedData = JSON.parse(BizPathdata);
            setCustomerRankID(parsedData.rank)

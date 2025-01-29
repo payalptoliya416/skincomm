@@ -18,7 +18,7 @@ export const  clearStorage =async () => {
       "user",
     ];
   
-    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    keysToRemove.forEach((key) => sessionStorage.removeItem(key));
     await storage.removeItem("persist:user_root");
   await storage.removeItem("token");
   };

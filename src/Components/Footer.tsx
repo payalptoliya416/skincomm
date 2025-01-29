@@ -10,7 +10,7 @@ const Footer = () => {
     useEffect(() => {
         AxiosAuthInstance.post(`/me`).then(response => {
             const userData = response?.data?.data;
-            localStorage.setItem("user_data", JSON.stringify(userData))
+            sessionStorage.setItem("user_data", JSON.stringify(userData))
         }).catch(error => {
                 console.error("Error fetching user data:", error);
             });

@@ -10,7 +10,7 @@ interface FormData {
   }
 
 function SecurityOtpConfirm() {
-  const ID = localStorage.getItem("securityMemberId");
+  const ID = sessionStorage.getItem("securityMemberId");
     const [formData, setFormData] = useState<FormData>({
         new_password: "",
       });

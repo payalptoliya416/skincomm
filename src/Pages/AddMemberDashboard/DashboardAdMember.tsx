@@ -235,7 +235,7 @@ const DashboardAdMember = () => {
   };
 
   useEffect(() => {
-    const BizPathdata = localStorage.getItem("user");
+    const BizPathdata = sessionStorage.getItem("user");
     if (BizPathdata) {
       const parsedData = JSON.parse(BizPathdata);
       setBizData({
