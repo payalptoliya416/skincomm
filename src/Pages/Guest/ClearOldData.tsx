@@ -16,6 +16,7 @@ export const  clearStorage =async () => {
       'rankNameofMember',
       "joiningDate",
       "user",
+      'userLoginstate'
     ];
   
     keysToRemove.forEach((key) => sessionStorage.removeItem(key));

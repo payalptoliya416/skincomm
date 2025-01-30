@@ -20,7 +20,8 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
         sessionStorage.setItem("joiningDate", response.data.user.join_date);
         sessionStorage.setItem("user", JSON.stringify(response.data.user));
         sessionStorage.setItem("customerrank", JSON.stringify(response.data.user.rank));
-
+        
+        sessionStorage.setItem("userLoginstate",JSON.stringify(response.data.user));
         dispatch({
             type: LoginTypes.LOGIN_SUCCESS,
             payload: response.data,

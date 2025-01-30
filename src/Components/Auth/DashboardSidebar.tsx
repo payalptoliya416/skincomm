@@ -7,6 +7,7 @@ import { RootState } from "../../Redux/store";
 const DashboardSidebar = ({ loginState }: any) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
+    const userFromLocalStorage = JSON.parse(sessionStorage.getItem("userLoginstate") || "{}");
 
     const dispatch = useDispatch<any>(); // Initialize useDispatch hook
 
@@ -34,6 +35,7 @@ const DashboardSidebar = ({ loginState }: any) => {
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('rankNameofMember');
         sessionStorage.removeItem('customerrank');
+        sessionStorage.removeItem('userLoginstate');
         window.location.href = '/';
     };
     
@@ -91,12 +93,12 @@ const DashboardSidebar = ({ loginState }: any) => {
                             <div>
                             <div className="flex gap-[3px]">
                             <h5 className="text-xs text-black font-medium">
-                                {loginState?.f_name}
+                                {userFromLocalStorage.f_name || loginState?.f_name}
                             </h5>
                           
                             </div>
                             <h5 className="text-xs text-black font-medium mt-2">
-                            Associate ID:  {loginState?.userid}
+                            Associate ID:  {userFromLocalStorage.userid || loginState?.userid}
                             </h5>
                             </div>
 
