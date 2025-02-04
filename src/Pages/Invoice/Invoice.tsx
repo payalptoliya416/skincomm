@@ -100,6 +100,7 @@ const filteredData = invoiceData?.invoices?.filter((item: any) => {
         RP,
         PP,
         credit_card,
+        status,
     } = pdfData;
     const totalQuantity = products.reduce((acc : any, product : any) => acc + product.quantity, 0);
     // const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc * (product.shipment_costs || 1), 1);
@@ -211,8 +212,12 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                 
             <li>
                 <span class='px-1 pt-0 text-[10px] pb-3'>GRAND TOTAL : </span>
-               <span class='px-1 pt-0 text-[9px] pb-3'>$${(Number(total_amount) + Number(shipment_costs)).toFixed(2)}</span>
-            </li>
+               <span class='px-1 pt-0 text-[9px]'>$${(Number(total_amount) + Number(shipment_costs)).toFixed(2)}</span>
+            </li>   
+                 ${status === "REFUND" ? `
+                <li class="font-[400] text-[10px] leading-[8px] rounded-[10px] text-center text-white bg-[#DC3545] px-[8px] pt-0 inline-block whitespace-nowrap align-baseline pb-[16px] mb-[10px]">
+                    Refund
+                </li>` : ""}
                 </ul>
                 </td>
                  </tr>
@@ -369,6 +374,7 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                     </div>
                     </div>
                 </section>
+                     
             </Layout>
     </>
   )
