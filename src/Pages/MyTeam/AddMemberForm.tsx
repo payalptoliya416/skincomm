@@ -15,8 +15,7 @@ import { fetchSearchTeamData } from '../../Redux/thunks/teamSearchThunnk';
 import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
-
-
+import imageCompression from 'browser-image-compression';
 interface Product {
     combo_product_name: string,
     combo_product_lp: number,
@@ -38,7 +37,8 @@ interface FormData {
     isFieldsDisabled?: boolean;
     payment_type : string,
     stripeToken : string,
-    deliver_status: string
+    deliver_status: string,
+    payment_slip_image: any
 }
 
 const AddMemberForm = () => {
@@ -69,7 +69,8 @@ const AddMemberForm = () => {
         payment_type:'',
         country: '',
         stripeToken : "",
-        deliver_status:'self_collect'
+        deliver_status:'self_collect',
+        payment_slip_image : null,
     });
 
     const UserProductData = {
@@ -212,6 +213,67 @@ const AddMemberForm = () => {
               return updatedCart;
             });
           };
+
+          
+                 const handleUploadImage = async (event: any) => {
+                          const file = event.target.files[0];
+                          if (!file) return;
+                        
+                          const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                          const validExtensions = ['jpg', 'jpeg', 'png']; 
+                          const fileExtension = file.name.split('.').pop().toLowerCase();
+                        
+                          // Check if the file is a valid image type and extension
+                          if (!validImageTypes.includes(file.type) || !validExtensions.includes(fileExtension)) {
+                            toast.error('Please upload a valid image file (jpg, jpeg, png).');
+                            return;
+                          }
+                        
+                          const options = {
+                            maxSizeMB: 1, // Max size in MB (adjust as needed)
+                            maxWidthOrHeight: 1920, // Max dimensions
+                            useWebWorker: true,
+                          };
+                
+                          try {
+                            // Compress the image
+                            const compressedFile = await imageCompression(file, options);
+                            // Convert the compressed image to a Base64 string
+                            const base64String = await convertBase64(compressedFile);
+                            const baseImage = `data:${compressedFile.type};base64,${base64String}`;
+                        
+                            // Prepare the form data
+                            const formData = new FormData();
+                            formData.append('file', compressedFile); // Compressed file
+                            formData.append('base64Image', baseImage); // Base64 string
+                            setFormData((prev) => ({
+                              ...prev,
+                              payment_slip_image: baseImage, 
+                            }));
+                        
+                          } catch (error) {
+                            console.error('Error compressing the image:', error);
+                            toast.error('Failed to upload the image.');
+                          }
+                        };
+                        
+                        // Function to convert a file to a Base64 string
+                        const convertBase64 = (file: any): Promise<string> => {
+                          return new Promise((resolve, reject) => {
+                            const fileReader = new FileReader();
+                            fileReader.readAsDataURL(file);
+                            fileReader.onload = () => {
+                              // Extract the Base64 string without the metadata prefix
+                              const result = fileReader.result as string;
+                              const base64String = result.split(',')[1];
+                              resolve(base64String);
+                            };
+                            fileReader.onerror = (error) => {
+                              reject(error);
+                            };
+                          });
+                        };
+
     const validateForm = () => {
         const newErrors: any = {};
         if(formData.isFieldsDisabled){
@@ -223,6 +285,9 @@ const AddMemberForm = () => {
                 newErrors.products_data = "Package is required";
             }
             if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
+            if (formData.payment_type === 'upload_payment_slip' && !formData.payment_slip_image) {
+                newErrors.upload = "Please select an image";
+              }
         }else{  
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
             if (!formData.placement) newErrors.placement = "Placement ID is required";
@@ -237,6 +302,9 @@ const AddMemberForm = () => {
             newErrors.products_data = "Package is required";
         }
         if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
+        if (formData.payment_type === 'upload_payment_slip' && !formData.payment_slip_image) {
+            newErrors.upload = "Please select an image";
+          }
         }
         return newErrors;
     };
@@ -280,7 +348,6 @@ const AddMemberForm = () => {
               }
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length === 0) {
-          
           if (!stripe || !elements) {
             toast.error("Stripe or Elements not initialized."); 
             setDisable(false);
@@ -322,7 +389,6 @@ const AddMemberForm = () => {
             ...formData,
             stripeToken: paymentMethodId || "", 
           };
-      
           if (formData.isFieldsDisabled) {      
          const successData =await dispatch(fetchAddMember(formDataToSend));
              if(successData){
@@ -333,7 +399,11 @@ const AddMemberForm = () => {
                 else{
                     toast.success("Member added successfully !");
                     const successnavigate = successData.data.data
-                    navigate('/successfullyPayment', { state: {successnavigate},});
+                    if (formData.payment_type === 'upload_payment_slip') {
+                        navigate('/successfully' , {state : { message: successnavigate.message } } );
+                      }else{
+                          navigate('/successfullyPayment', { state: {successnavigate},});
+                      }
                     setDisable(false);
                 }
             }
@@ -358,7 +428,11 @@ const AddMemberForm = () => {
                     }else{
                         toast.success("Member added successfully !");
                         const successnavigate = successData.data.data
-                        navigate('/successfullyPayment', { state: {successnavigate},});
+                        if (formData.payment_type === 'upload_payment_slip') {
+                            navigate('/successfully' , {state : { message: successnavigate.message } } );
+                          }else{
+                              navigate('/successfullyPayment', { state: {successnavigate},});
+                          }
                         setDisable(false);
                     }
                 }
@@ -380,7 +454,8 @@ const AddMemberForm = () => {
             payment_type: '',
             country: '',
             stripeToken: "",
-            deliver_status:'self_collect'
+            deliver_status:'self_collect',
+            payment_slip_image : null,
           });
       
         } else {
@@ -634,10 +709,7 @@ const AddMemberForm = () => {
                                 <option defaultValue={''}>Select</option>
                                 <option value="credit_card">Credit Card</option>
                                 <option value="e-wallet">E-Wallet</option>
-                                {/* <option value="paynow">PAYNOW</option>
-                                <option value="RC">Purchase Point</option>
-                                <option value="PP2">Purchase Point 2</option>
-                                <option value="SP">Reward Point</option> */}
+                                <option value="upload_payment_slip">Upload Payment Slip</option>
                                 </select>
                                 {  formData.payment_type === 'e-wallet' ? (
                                     <>
@@ -664,6 +736,20 @@ const AddMemberForm = () => {
                                     </div>
                                 ) : ""
                             }
+                             {
+                          formData.payment_type === 'upload_payment_slip' ? (
+                            <input
+                              type="file"
+                              accept=".jpg,.jpeg,.png" 
+                              className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-300"
+                              onChange={handleUploadImage}
+                              name='payment_slip_image'
+                            />
+                          ) : (
+                            ''
+                          )
+                        }
+                        {errors?.upload && <p className="text-red-500 text-xs mt-2">{errors.upload}</p>}
                              {errors.payment_type && <p className='text-red-500 text-xs'>{errors.payment_type}</p>}
                                     </div>
                                     <div className="mb-3 ">

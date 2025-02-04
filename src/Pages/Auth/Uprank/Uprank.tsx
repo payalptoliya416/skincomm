@@ -192,6 +192,7 @@ function Uprank() {
                 setSripShow(false);
               }
             };
+            
       const availableTotalBalance =  (Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0));
       useEffect(() => {
         sessionStorage.removeItem('cart');

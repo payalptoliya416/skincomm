@@ -37,6 +37,7 @@ import DeliveryOrder from '../Pages/DeliveryOrder/DeliveryOrder';
 import UprankStrip from '../Pages/Auth/Uprank/UprankStrip';
 import AddCustomerStrip from '../Pages/Auth/customer/AddCustomerStrip';
 import ViewCommissions from '../Pages/Reports/ReportsData/ViewCommissions';
+import JumpStartStipe from '../Pages/Auth/JumpStart/JumpStartStipe';
 
 const BrowserRoute = () => {
     return (
@@ -81,6 +82,7 @@ const BrowserRoute = () => {
                     <Route path="/transfer" element={<TransferFunction />} />
                     <Route path="/deliveryorder" element={<DeliveryOrder />} />
                     <Route path="/uprank" element={<UprankStrip />} />
+                    <Route path="/jumpstart" element={<JumpStartStipe />} />
                     <Route path="/addcustomer" element={<AddCustomerStrip />} />
                     <Route path="/viewcommission" element={<ViewCommissions />} />
                 </Route>
