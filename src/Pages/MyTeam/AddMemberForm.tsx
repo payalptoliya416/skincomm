@@ -466,7 +466,7 @@ const AddMemberForm = () => {
     return (
         <>
             <Layout>
-                <header className="fixed w-full h-14 bg-white flex items-center text-center shadow-md border-b border-custom-border">
+                <header className="fixed w-full h-14 bg-white flex items-center text-center shadow-md border-b border-custom-border z-10">
                     <div className="container">
                         <div className="relative">
                             <Link to="/placement-tree" className="absolute left-0">

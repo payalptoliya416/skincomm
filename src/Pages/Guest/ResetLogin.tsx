@@ -5,7 +5,6 @@ import { fetchSendLoginList } from '../../Redux/thunks/resetLoginOtpThunk';
 import { fetchVerifyLogin } from '../../Redux/thunks/verifyLoginThunk';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 interface emaildata {
     email : string
   }
@@ -35,13 +34,14 @@ const handleEmail = (e: ChangeEvent<HTMLInputElement>)=>{
   } 
 const dispatch = useDispatch<any>();
 const [loader ,setLoader] = useState(false);
-
+const [otpEmail ,setOtpEmail] = useState<any>('');
   const handleEmailSubmit = async (e: FormEvent)=>{
 
     e.preventDefault();
     const validationErrors = Emailvalidation();
     if (Object.keys(validationErrors).length === 0) {
       setLoader(true);
+      setOtpEmail(email);
       const response = await dispatch(fetchSendLoginList(email))
         if(response.data.success  === true){
             setOpen(true);
@@ -93,16 +93,17 @@ const [loader ,setLoader] = useState(false);
     e.preventDefault();
     const otpCode = otp.join('');
     const data = {
-        email: email,
+        email: otpEmail,
         otp: otpCode
       };
        const response = await dispatch(fetchVerifyLogin(data))
        sessionStorage.setItem("memberIdId", response.res.memberid);
        try {
-         
            if(response.res.success === true){
             navigate('/changepassword')
-        }
+         } else
+         {toast.error(response.res.message)}
+         
        } catch (error) {
            toast.error(response.res.message)
        }
