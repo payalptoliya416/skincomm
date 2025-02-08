@@ -65,30 +65,6 @@ const [packageRank , setPackageRank] = useState<any>('');
     fetchData();
   }, []);
   
-
-  // useEffect(() => {
-  //   const requestData = {
-  //     userId: LoginUserID,
-  //     action: "getuserdetails",
-  //   };
-
-  //   fetch(`${BASE_URL}/api/jumpstart-ajax`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-  //     },
-  //     body: JSON.stringify(requestData),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (data.success && data.products) {
-  //         setPackages(data.products);
-  //       }
-  //     })
-  //     .catch((error) => console.error("Error fetching packages:", error));
-  // }, []);
-
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -152,7 +128,6 @@ const [packageRank , setPackageRank] = useState<any>('');
     }
   };
 
-  // Function to convert a file to a Base64 string
   const convertBase64 = (file: any): Promise<string> => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -233,28 +208,6 @@ const [packageRank , setPackageRank] = useState<any>('');
     };
     try {
       const successData = await dispatch(fetchJumpstartPostData(formDataToSend));
-      // const response = await fetch(`${BASE_URL}/api/jumpstart-post`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      //   },
-      //   body: JSON.stringify(formDataToSend),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
-
-      // const text = await response.text();
-
-      // let data;
-      // try {
-      //   data = JSON.parse(text);
-      // } catch (jsonError) {
-      //   throw new Error("Invalid JSON response from server.");
-      // }
 
       if (successData.success) {
         toast.success(successData.message || "Form submitted successfully.");
@@ -332,20 +285,6 @@ const [packageRank , setPackageRank] = useState<any>('');
           </>
         )}
               <form onSubmit={handleSubmit}>
-                {/* <div className="mb-3">
-                  <label className="text-[#1e293b] text-[14px]">User Id</label>
-                  <input
-                    type="text"
-                    name="userid"
-                    placeholder="Enter User Name or User ID"
-                    className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
-                    value={formData.userId}
-                    onChange={handleChange}
-                  />
-                  {errors.userid && (
-                    <p className="text-red-500 text-xs">{errors.userid}</p>
-                  )}
-                </div> */}
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px] mb-1">
                     Package
