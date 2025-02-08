@@ -301,7 +301,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             stripeToken: paymentMethodId || "",     
           };
           if (formData.isFieldsDisabled) {
-     
             const successData = await dispatch(fetchcustomePostData(formDataToSend));
             toast.error(successData.error);
             if(successData){
@@ -326,7 +325,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             const response = await dispatch(fetchNumber(mobileDetail));
             const numberData = response.data;
             if (numberData.success) {
-            // sessionStorage.setItem("addMemberData", JSON.stringify(formDataToSend));
                 const successData =await dispatch(fetchcustomePostData(formDataToSend));
                 if(successData){
                     if(successData.data.error === true){
@@ -335,7 +333,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     else{
                         toast.success("Member added successfully !");
                         const successnavigate = successData.data
-                        // navigate('/successfullyPayment', { state: {successnavigate},});
+                        navigate('/successfullyPayment', { state: {successnavigate},});
                     }
                 }
             } else {

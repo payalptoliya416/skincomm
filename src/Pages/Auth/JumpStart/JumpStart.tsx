@@ -1,18 +1,29 @@
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import React, { ChangeEvent, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "../../../Components/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import imageCompression from "browser-image-compression";
+import { BASE_URL } from "../../../Utilities/config";
+import { fetchJumpstartPackage } from "../../../Redux/thunks/JumpStartThunk";
+import { fetchJumpstartPostData } from "../../../Redux/thunks/JumpStartPostThunk";
+import { IoIosCloseCircle } from "react-icons/io";
 
 interface FormData {
-  userid: string;
+  userId: string;
   package: string;
   payment_type: string;
   deliver_status: string;
-  payment_slip_image: any;
+  upload_image: any;
 }
+interface Package {
+  id: string;
+  combo_product_name: string;
+  combo_product_retail_price: string;
+  combo_product_lp: string;
+}
+
 function JumpStart() {
   const LoginUserID = sessionStorage.getItem("UserID");
   const stripe = useStripe();
@@ -20,15 +31,64 @@ function JumpStart() {
   const dispatch = useDispatch<any>();
   const [errors, setErrors] = useState<any>({});
   const [disable, setDisable] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [highRankPopup, setHighRankPopup] = useState(false);
+  const [packages, setPackages] = useState<Package[]>([]);
   const navigate = useNavigate();
+const [packageRank , setPackageRank] = useState<any>('');
   const [formData, setFormData] = useState<FormData>({
-    userid: LoginUserID || "",
+    userId: LoginUserID || "",
     package: "",
     payment_type: "",
     deliver_status: "self_collect",
-    payment_slip_image: null,
+    upload_image: null,
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const requestData: any = {
+        userId: LoginUserID,
+        action: "getuserdetails",
+      };
+  
+      try {
+        const successData = await dispatch(fetchJumpstartPackage(requestData));
+        setPackages(successData.products || []); 
+        if (!successData.products || successData.products.length === 0) {
+          setHighRankPopup(true);
+          setPackageRank(successData.message)
+        }
+      } catch (error) {
+        console.error("Error fetching Package", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+
+  // useEffect(() => {
+  //   const requestData = {
+  //     userId: LoginUserID,
+  //     action: "getuserdetails",
+  //   };
+
+  //   fetch(`${BASE_URL}/api/jumpstart-ajax`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+  //     },
+  //     body: JSON.stringify(requestData),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data.success && data.products) {
+  //         setPackages(data.products);
+  //       }
+  //     })
+  //     .catch((error) => console.error("Error fetching packages:", error));
+  // }, []);
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -84,7 +144,7 @@ function JumpStart() {
       formData.append("base64Image", baseImage); // Base64 string
       setFormData((prev) => ({
         ...prev,
-        payment_slip_image: baseImage,
+        upload_image: baseImage,
       }));
     } catch (error) {
       console.error("Error compressing the image:", error);
@@ -111,85 +171,114 @@ function JumpStart() {
   const validateForm = () => {
     const newErrors: any = {};
 
-    if (!formData.userid) newErrors.userid = "User ID is required";
+    if (!formData.userId) newErrors.userid = "User ID is required";
     if (!formData.package) newErrors.package = "Please select any One Package ";
     if (!formData.payment_type)
       newErrors.payment_type = "Payment Type is required";
     if (
       formData.payment_type === "upload_payment_slip" &&
-      !formData.payment_slip_image
+      !formData.upload_image
     ) {
       newErrors.upload = "Please select an image";
     }
 
     return newErrors;
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setDisable(true);
+
     const errors = validateForm();
-    if (Object.keys(errors).length === 0) {
-      if (!stripe || !elements) {
-        toast.error("Stripe or Elements not initialized.");
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      setDisable(false);
+      return;
+    }
+
+    if (!stripe || !elements) {
+      toast.error("Stripe or Elements not initialized.");
+      setDisable(false);
+      return;
+    }
+
+    let paymentMethodId = "";
+    if (formData.payment_type === "credit_card") {
+      const cardElement = elements.getElement(CardElement);
+
+      if (!cardElement) {
+        toast.error("Card Element not found.");
         setDisable(false);
         return;
       }
-      let paymentMethodId = null;
-      if (formData.payment_type === "credit_card") {
-        const cardElement = elements.getElement(CardElement);
 
-        if (!cardElement) {
-          toast.error("Card Element not found.");
+      try {
+        const { error, token } = await stripe.createToken(cardElement);
+        if (error) {
+          toast.error("Payment error: " + error.message);
           setDisable(false);
           return;
         }
-
-        try {
-          const { error, token } = await stripe.createToken(cardElement);
-          if (error) {
-            toast.error("Payment error: " + error.message);
-            setDisable(false);
-            return;
-          }
-          paymentMethodId = token?.id;
-
-          if (!paymentMethodId) {
-            toast.error("Payment method ID not found.");
-            setDisable(false);
-            return;
-          }
-        } catch (paymentError) {
-          toast.error("Payment processing error. Please try again.");
-          setDisable(false);
-          return;
-        }
+        paymentMethodId = token?.id || "";
+      } catch (paymentError) {
+        toast.error("Payment processing error. Please try again.");
+        setDisable(false);
+        return;
       }
-      const formDataToSend = {
-        ...formData,
-        stripeToken: paymentMethodId || "",
-      };
+    }
 
-    //   const res = await dispatch(fetchUpRankPost(formDataToSend));
-    //   if (res.data.success === true) {
-    //     toast.success(res.data.message);
-    //     sessionStorage.removeItem("cart");
-    //     sessionStorage.removeItem("totalPrice");
-    //     setFormData({
-    //       id: "",
-    //       currency: "",
-    //       deliver_status: "self_collect",
-    //     });
-    //     navigate("/successfully");
-    //     setDisable(false);
-    //   } else {
-    //     toast.error(res.data.message);
-    //     setDisable(false);
-    //   }
-    } else {
-      setErrors(errors);
+    const formDataToSend : any = {
+      ...formData,
+      stripeToken: paymentMethodId,
+    };
+    try {
+      const successData = await dispatch(fetchJumpstartPostData(formDataToSend));
+      // const response = await fetch(`${BASE_URL}/api/jumpstart-post`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      //   },
+      //   body: JSON.stringify(formDataToSend),
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! Status: ${response.status}`);
+      // }
+
+      // const text = await response.text();
+
+      // let data;
+      // try {
+      //   data = JSON.parse(text);
+      // } catch (jsonError) {
+      //   throw new Error("Invalid JSON response from server.");
+      // }
+
+      if (successData.success) {
+        toast.success(successData.message || "Form submitted successfully.");
+        sessionStorage.removeItem("cart");
+
+        setFormData({
+          userId: LoginUserID || "",
+          package: "",
+          payment_type: "",
+          deliver_status: "self_collect",
+          upload_image: null,
+        });
+
+        navigate("/successfully", { state: { message: successData.message } });
+      } else {
+        toast.error(successData.message || "Submission failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
       setDisable(false);
     }
   };
+
   return (
     <>
       <Layout>
@@ -223,21 +312,40 @@ function JumpStart() {
         <section className="py-20">
           <div className="container">
             <div className="p-[20px] bg-white rounded-md">
+            {highRankPopup && packages.length === 0 &&  (
+          <>
+            <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
+                      <div className="fixed inset-0 z-20 flex items-center justify-center ">
+                        <section className="flex items-center justify-center relative w-full max-w-[500px]">
+                          <div className="bg-white px-10 py-8 rounded-2xl sm:mx-auto w-full max-w-lg mx-2">
+                          <h3 className="mb-7 text-lg font-bold text-center">JumpStart Validation</h3>
+                <p className="mb-3 text-sm font-semibold text-center">{packageRank}</p>
+                <div className="absolute top-0 right-0">
+                                <IoIosCloseCircle
+                                  className="text-3xl text-[#178285] cursor-pointer"
+                                  onClick={()=>setHighRankPopup(false)}
+                                />
+                              </div>
+                          </div>
+                        </section>
+                      </div>
+          </>
+        )}
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">User Id</label>
                   <input
                     type="text"
                     name="userid"
                     placeholder="Enter User Name or User ID"
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
-                    value={formData.userid}
+                    value={formData.userId}
                     onChange={handleChange}
                   />
                   {errors.userid && (
                     <p className="text-red-500 text-xs">{errors.userid}</p>
                   )}
-                </div>
+                </div> */}
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px] mb-1">
                     Package
@@ -246,10 +354,45 @@ function JumpStart() {
                     name="package"
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
                     value={formData.package}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      const selectedPackage = packages.find(
+                        (pkg) => pkg.id === e.target.value
+                      );
+                      const packageInfoDiv =
+                        document.getElementById("package-info");
+
+                      if (selectedPackage && packageInfoDiv) {
+                        packageInfoDiv.classList.remove("hidden");
+                        document.getElementById(
+                          "package-name"
+                        )!.innerText = `Name: ${selectedPackage.combo_product_name}`;
+                        document.getElementById(
+                          "package-price"
+                        )!.innerText = `Price: ${selectedPackage.combo_product_retail_price}`;
+                        document.getElementById(
+                          "package-lp"
+                        )!.innerText = `LP: ${selectedPackage.combo_product_lp}`;
+                      } else {
+                        packageInfoDiv?.classList.add("hidden");
+                      }
+                    }}
                   >
-                    <option defaultValue={""}>Select</option>
+                    <option value="">Select Package</option>
+                    {packages.map((pkg) => (
+                      <option key={pkg.id} value={pkg.id}>
+                        {pkg.combo_product_name} (
+                        {pkg.combo_product_retail_price})
+                      </option>
+                    ))}
                   </select>
+                  <div id="package-info" className="hidden">
+                    <div className="flex justify-start">
+                      <div className="mx-2" id="package-name"></div> |
+                      <div id="package-price" className="mx-2"></div> |
+                      <div id="package-lp" className="mx-2"></div>
+                    </div>
+                  </div>
                   {errors.package && (
                     <p className="text-red-500 text-xs">{errors.package}</p>
                   )}
@@ -264,7 +407,7 @@ function JumpStart() {
                     value={formData.payment_type}
                     onChange={handleChange}
                   >
-                    <option defaultValue={""}>Select</option>
+                    <option defaultValue={""}>Select Payment Method</option>
                     <option value="credit_card">Credit Card</option>
                     <option value="upload_payment_slip">
                       Upload Payment Slip
@@ -287,7 +430,7 @@ function JumpStart() {
                       accept=".jpg,.jpeg,.png"
                       className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-300"
                       onChange={handleUploadImage}
-                      name="payment_slip_image"
+                      name="upload_image"
                     />
                   ) : (
                     ""

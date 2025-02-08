@@ -7,7 +7,6 @@ import { fetchUprankGet } from '../../../Redux/thunks/UpRankGetThunk';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
-import { fetchPaymentBy } from '../../../Redux/thunks/PaymentByThunk';
 import { fetchProductList } from '../../../Redux/thunks/productListReducer';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { fetchUpRankPost } from '../../../Redux/thunks/UpRankPostThunk';
