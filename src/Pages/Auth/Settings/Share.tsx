@@ -36,7 +36,6 @@ const Share = () => {
                 </header>
 
                 <section className="h-screen flex items-center justify-center">
-                    {/* <div className="container"> */}
                         <div className="max-w-lg sm:mx-auto w-full mx-3">
                         <ul className="flex flex-col gap-7 bg-white rounded-2xl px-6 py-6 ">
                             <li className="mx-auto">
@@ -59,7 +58,6 @@ const Share = () => {
                             </li>
                         </ul>
                         </div>
-                    {/* </div> */}
                 </section>
 
             </Layout>
