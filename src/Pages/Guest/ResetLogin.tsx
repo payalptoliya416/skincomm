@@ -87,8 +87,6 @@ const [otpEmail ,setOtpEmail] = useState<any>('');
     }
   };
   const navigate = useNavigate();
-
-
   const handleOTPSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join('');

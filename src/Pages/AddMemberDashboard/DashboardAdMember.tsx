@@ -612,7 +612,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                                   Price
                                                                    </th>
                                                                    <th className="px-6 py-3">
-                                                                     LP
+                                                                     RLP
                                                                    </th>
                                                                    <th className="px-6 py-3">
                                                                        Action

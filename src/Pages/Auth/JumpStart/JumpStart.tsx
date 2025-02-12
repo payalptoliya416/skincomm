@@ -5,7 +5,6 @@ import Layout from "../../../Components/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import imageCompression from "browser-image-compression";
-import { BASE_URL } from "../../../Utilities/config";
 import { fetchJumpstartPackage } from "../../../Redux/thunks/JumpStartThunk";
 import { fetchJumpstartPostData } from "../../../Redux/thunks/JumpStartPostThunk";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -34,7 +33,7 @@ function JumpStart() {
   const [highRankPopup, setHighRankPopup] = useState(false);
   const [packages, setPackages] = useState<Package[]>([]);
   const navigate = useNavigate();
-const [packageRank , setPackageRank] = useState<any>('');
+  const [packageRank, setPackageRank] = useState<any>("");
   const [formData, setFormData] = useState<FormData>({
     userId: LoginUserID || "",
     package: "",
@@ -49,22 +48,22 @@ const [packageRank , setPackageRank] = useState<any>('');
         userId: LoginUserID,
         action: "getuserdetails",
       };
-  
+
       try {
         const successData = await dispatch(fetchJumpstartPackage(requestData));
-        setPackages(successData.products || []); 
+        setPackages(successData.products || []);
         if (!successData.products || successData.products.length === 0) {
           setHighRankPopup(true);
-          setPackageRank(successData.message)
+          setPackageRank(successData.message);
         }
       } catch (error) {
         console.error("Error fetching Package", error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -202,12 +201,14 @@ const [packageRank , setPackageRank] = useState<any>('');
       }
     }
 
-    const formDataToSend : any = {
+    const formDataToSend: any = {
       ...formData,
       stripeToken: paymentMethodId,
     };
     try {
-      const successData = await dispatch(fetchJumpstartPostData(formDataToSend));
+      const successData = await dispatch(
+        fetchJumpstartPostData(formDataToSend)
+      );
 
       if (successData.success) {
         toast.success(successData.message || "Form submitted successfully.");
@@ -265,25 +266,29 @@ const [packageRank , setPackageRank] = useState<any>('');
         <section className="py-20">
           <div className="container">
             <div className="p-[20px] bg-white rounded-md">
-            {highRankPopup && packages.length === 0 &&  (
-          <>
-            <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
-                      <div className="fixed inset-0 z-20 flex items-center justify-center ">
-                        <section className="flex items-center justify-center relative w-full max-w-[500px]">
-                          <div className="bg-white px-10 py-8 rounded-2xl sm:mx-auto w-full max-w-lg mx-2">
-                          <h3 className="mb-7 text-lg font-bold text-center">JumpStart Validation</h3>
-                <p className="mb-3 text-sm font-semibold text-center">{packageRank}</p>
-                <div className="absolute top-0 right-0">
-                                <IoIosCloseCircle
-                                  className="text-3xl text-[#178285] cursor-pointer"
-                                  onClick={()=>setHighRankPopup(false)}
-                                />
-                              </div>
-                          </div>
-                        </section>
+              {highRankPopup && packages.length === 0 && (
+                <>
+                  <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
+                  <div className="fixed inset-0 z-20 flex items-center justify-center ">
+                    <section className="flex items-center justify-center relative w-full max-w-[500px]">
+                      <div className="bg-white px-10 py-8 rounded-2xl sm:mx-auto w-full max-w-lg mx-2">
+                        <h3 className="mb-7 text-lg font-bold text-center">
+                          JumpStart Validation
+                        </h3>
+                        <p className="mb-3 text-sm font-semibold text-center">
+                          {packageRank}
+                        </p>
+                        <div className="absolute top-0 right-0">
+                          <IoIosCloseCircle
+                            className="text-3xl text-[#178285] cursor-pointer"
+                            onClick={() => setHighRankPopup(false)}
+                          />
+                        </div>
                       </div>
-          </>
-        )}
+                    </section>
+                  </div>
+                </>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px] mb-1">
