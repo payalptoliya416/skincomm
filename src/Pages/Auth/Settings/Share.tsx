@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useRef } from "react";
 import Layout from "../../../Components/Layout";
 import { Link } from "react-router-dom";
 import QRCode from "react-qr-code";
+import { BASE_URL } from "../../../Utilities/config";
+import { MdOutlineContentCopy } from "react-icons/md";
+import { toast, ToastContainer } from "react-toastify";
 
 const Share = () => {
+        const userid = sessionStorage.getItem("UserID");
+        const inputRef = useRef<any>(null);
+
+  const handleCopyClick = () => {
+    if (inputRef.current) {
+      navigator.clipboard.writeText(inputRef.current.value)
+        .then(() => {
+          toast.success("Text copied to clipboard!");
+        })
+        .catch((err) => {
+            toast.error("Failed to copy text:", err);
+        });
+    }
+  };
 
     return (
         <>
+       
             <Layout>
                 <header className="fixed w-full h-14 bg-white flex items-center text-center shadow-md border-b border-custom-border">
                     <div className="container">
@@ -34,7 +52,7 @@ const Share = () => {
                         </div>
                     </div>
                 </header>
-
+               <ToastContainer/>
                 <section className="h-screen flex items-center justify-center">
                         <div className="max-w-lg sm:mx-auto w-full mx-3">
                         <ul className="flex flex-col gap-7 bg-white rounded-2xl px-6 py-6 ">
@@ -49,9 +67,20 @@ const Share = () => {
                                 </div>
                             </li>
                             <li className="flex flex-col gap-4">
-                                <button className="bg-[#148585] py-2 rounded-lg w-full text-sm text-white">
-                                    Copy
-                                </button>
+                            <div className="relative mt-2 w-full">
+                        <input
+                            type="text"
+                            ref={inputRef}
+                            value={`localhost:3000/ref=${userid}`}
+                            className="w-full text-[14px] placeholder:text-[14px] border py-2 pr-10 pl-3 rounded-md placeholder:text-black cursor-pointer"
+                            disabled
+                            onClick={handleCopyClick}
+                        />
+                        <MdOutlineContentCopy
+                            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                            onClick={handleCopyClick}
+                        />
+                        </div>
                                 <button className="bg-[#148585] py-2 rounded-lg w-full text-sm text-white">
                                     Download
                                 </button>

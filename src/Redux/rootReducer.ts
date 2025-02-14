@@ -12,7 +12,7 @@ import { sponsoredNetworkReducer } from "./reducers/sponsNetworkReducer";
 import { sponsoredTree } from "./reducers/sponsoredTreeReducer";
 import { subAccountReducer } from "./reducers/subAcoReducer";
 import { subAccountLoginReducer } from "./reducers/SubAccountLoginReducer";
-import { productListReducer } from "./reducers/productListReducer";
+import { productListReducer, SignUpproductListReducer } from "./reducers/productListReducer";
 import { userDetailReducer } from "./reducers/UserDetailReducer";
 import { addMemberReducer } from "./reducers/AddMemberReducer";
 import { numberReducer } from "./reducers/MobileNumReducer";
@@ -39,7 +39,7 @@ import { DeliveryOrderReducer } from "./reducers/DeliveryOrderReducer";
 import { uprankReducer } from "./reducers/UpRankGetReducer";
 import { cutomerGetDataReducer } from "./reducers/CustomerGetReducer";
 import { clearStorage } from "../Pages/Guest/ClearOldData";
-
+import { MatrixSideGetReducer } from "./reducers/MetrixSideGetReducer";
 const userPersistConfig = {
     key: 'user_root',
     storage,
@@ -56,6 +56,7 @@ const appReducer = combineReducers({
     subaccountData: subAccountReducer,
     SubAccountLogin : subAccountLoginReducer,
     product : productListReducer,
+    productSignup : SignUpproductListReducer,
     mobileNumber : numberReducer,
     userDetail : userDetailReducer,
     addMember : addMemberReducer,
@@ -80,7 +81,8 @@ const appReducer = combineReducers({
     dashboardDetail :DashboardDetailReducer,
     diliveryorder : DeliveryOrderReducer,
     uprankGetData : uprankReducer,
-    customerGetData : cutomerGetDataReducer
+    customerGetData : cutomerGetDataReducer,
+    metrixsidegetRed : MatrixSideGetReducer,
 
 });
 
@@ -101,7 +103,7 @@ const rootReducer = (state: any, action: any) => {
             .then(() => storage.removeItem("token"))
             .then(() => {
                 clearStorage();
-            });
+            })
         state = undefined; 
     }
 

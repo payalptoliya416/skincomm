@@ -38,7 +38,9 @@ interface SponsoredTreeItem {
     data: TreeDataItem;
     type: string;
     col:string,
-    upline_id: number
+    upline_id: number,
+    sponser_id: any,
+    referral_user_matrix_side: string
 }
   
   interface LevelGridProps {
@@ -72,6 +74,7 @@ interface SponsoredTreeItem {
           document.removeEventListener("mousedown", handleClickOutside);
         };
       }, []);
+      const userID = sessionStorage.getItem("UserID");
     return (
      <>
         <div className={gridClass}>
@@ -79,11 +82,10 @@ interface SponsoredTreeItem {
             levelData.map((item, index) => (
               <React.Fragment key={index}>
                 {item.type === 'person' ? (
-                  <div  className={`py-7 cursor-pointer text-cenetr  flex ${data === '5' ? "" : "border-after"} justify-center ${
+                  <div  className={`py-7 cursor-pointer text-cenetr  flex ${data === '5' ? "" : "border-after"} justify-center ${ item.sponser_id === userID ? item.referral_user_matrix_side === "L" ? "left-after" : item.referral_user_matrix_side === "R" ? "right-after" : "" :
                     item.col === "L" ? "left-after" : item.col === "R" ? "right-after" : ""
                   }`} >
                    <div className='transition-all duration-500 relative w-full max-w-[140px] bg-gray-200 flex justify-center flex-col items-center py-2 px-2 rounded-md mx-2' onClick={() =>handlePersonCall(item.userid)}>
-                    
                     <LuUser className='mb-2 inline' />
                    <h3 className='text-[10px] text-black'>
                       {item.data.f_name} (
@@ -178,7 +180,6 @@ function D_SponsoredTree() {
     const dispatch = useDispatch<any>();
     const { sponsoredTreeData } = useSelector((state: RootState) => state.sponsoreTree);
     const [errorMsj , setErrorMsj] = useState('')
-    
     const [loading, setLoading] = useState(true);
    const location = useLocation();
    const { SearchUserID } = location.state || {};  

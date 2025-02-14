@@ -14,10 +14,17 @@ const CheckAuthRouter = () => {
   const loginState = useSelector((state: any) => state.loginState);
   const isAuthenticated = loginState?.data?.token !== undefined;
   const dispatch = useDispatch() as any;
-  const url = window.location.href;
+  const url = new URL(window.location.href);
+    
+const pathname = url.pathname;
+const refValue = pathname.includes("=") ? pathname.split("=")[1] : null;
+
+if (refValue) {
+  sessionStorage.setItem("refUserID", refValue);
+}
+
   const params = new URLSearchParams(new URL(url).search);
   const userIdFromUrl = params.get("userid");
-
   const syncTokenFromsessionStorage = () => {
     const token = sessionStorage.getItem("token");
     if (token && token !== loginState?.data?.token) {
@@ -63,8 +70,8 @@ const CheckAuthRouter = () => {
   }, [dispatch, userIdFromUrl, loginState?.data?.token]);  
 
   if (isAuthenticated) {
-    const newUrl = `${window.location.origin}/#/dashboard`;
-    window.history.replaceState(null, "", newUrl);
+    // const newUrl = `${window.location.origin}/#/dashboard`;
+    // window.history.replaceState(null, "", newUrl);
     return <Navigate to="/dashboard" replace />;
   }
 

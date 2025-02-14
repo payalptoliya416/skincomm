@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_CUSTOMER_GETDATA, ADD_CUSTOMER_POSTDATA, ADD_TRANSFER, ANNOUNCE_PENDING_POPUP, ANNOUNCE_READ_POPUP, ANNOUNCEMENT, ANNOUNCEMENT_EDIT, API_URL, BALANCE_URLL, CHANGE_LOGIN_PASSWORD, CHANGE_SECURITY_PASSWORD, CONCERT_DATA, DASHBOARD_DETAILS, DELIVERY_ORDERS, EARNING_REPORT_URL, EWALATE_REPORT_URL, GET_LPBALANCE_URL, GET_SECURITY_EMAIL, INVOICE_LIST, INVOICE_PDF_LIST, JUMP_START_AJAX, JUMP_START_POST, MEMBER_LINE, NEW_SECURITY_PASSWORD, PAYMENT_BY, PAYMENT_POST, PRPFILE_DATA, PRPFILE_DATA_GET, REORDER_CATEGORY,RESET_LOGIN_PASSSWORD, SEARCH_MY_TEAM, SECURITY_OTP, SECURITY_PASSWORD_BOOLEAN, SEND_LOGIN_OTP, SEND_SECURITY_OTP, SINGALEARNING_REPORT_URL, SPONSORED_NETWORK_URL, SPONSORED_TREE_URL, SUB_ACCOUNT_LOGIN_URL, SUB_ACCOUNT_URL, SUB_ADDBANK_URL, SUB_ADDMEMBER_URL, SUB_BANKLIST_URL, SUB_GETBANKDETAIL_URL, SUB_MOBILENUMBER_URL, SUB_PRODUCTLIST_URL, SUB_USERDETAIL_URL, UPRANK_GETDATA, UPRANK_POST_DATA, VERIFY_LOGIN_OTP, WITHDRAWAL_REQUEST } from './config';
+import { ADD_CUSTOMER_GETDATA, ADD_CUSTOMER_POSTDATA, ADD_TRANSFER, ANNOUNCE_PENDING_POPUP, ANNOUNCE_READ_POPUP, ANNOUNCEMENT, ANNOUNCEMENT_EDIT, API_URL, BALANCE_URLL, CHANGE_LOGIN_PASSWORD, CHANGE_SECURITY_PASSWORD, CONCERT_DATA, DASHBOARD_DETAILS, DELIVERY_ORDERS, EARNING_REPORT_URL, EWALATE_REPORT_URL, GET_LPBALANCE_URL, GET_SECURITY_EMAIL, INVOICE_LIST, INVOICE_PDF_LIST, JUMP_START_AJAX, JUMP_START_POST, MATRIX_SIDE, MATRIX_SIDE_GETSIDE, MEMBER_LINE, NEW_SECURITY_PASSWORD, PAYMENT_BY, PAYMENT_POST, PRPFILE_DATA, PRPFILE_DATA_GET, REORDER_CATEGORY,RESET_LOGIN_PASSSWORD, SEARCH_MY_TEAM, SECURITY_OTP, SECURITY_PASSWORD_BOOLEAN, SEND_LOGIN_OTP, SEND_SECURITY_OTP, SINGALEARNING_REPORT_URL, SPONSORED_NETWORK_URL, SPONSORED_TREE_URL, SUB_ACCOUNT_LOGIN_URL, SUB_ACCOUNT_URL, SUB_ADDBANK_URL, SUB_ADDMEMBER_URL, SUB_BANKLIST_URL, SUB_GETBANKDETAIL_URL, SUB_MOBILENUMBER_URL, SUB_PRODUCTLIST_URL, SUB_PRODUCTLIST_URL_SIGN_UP, SUB_USERDETAIL_URL, UPRANK_GETDATA, UPRANK_POST_DATA, VERIFY_LOGIN_OTP, WITHDRAWAL_REQUEST } from './config';
 import { store } from "../Redux/store";
 
 // AxiosWithOutAuthInstance
@@ -230,7 +230,7 @@ AxiosProductList.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
+   
 const AxiosUserDetail = axios.create({
     baseURL: SUB_USERDETAIL_URL,
     timeout: 24000,
@@ -457,6 +457,13 @@ const AxiosResetLogin = axios.create({
     timeout: 24000,
     headers: {'Accept': 'application/json'}
 });
+
+const AxiosProductListSignup = axios.create({
+    baseURL: SUB_PRODUCTLIST_URL_SIGN_UP,
+    timeout: 24000,
+    headers: {'Accept': 'application/json'}
+});
+
 const AxiosGetEmail = axios.create({
     baseURL: GET_SECURITY_EMAIL ,
     timeout: 24000,
@@ -1048,5 +1055,47 @@ AxiosJumpStartPOST.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+const AxiosMatrixside= axios.create({
+    baseURL:MATRIX_SIDE,
+    timeout: 24000,
+    headers
+});
 
-export { AxiosWithOutAuthInstance, AxiosAuthInstance, AxiosAuthBalance,AxiosEWalletReport, AxiosEarningReport ,AxiosSponsoredTree , AxiosSingleEarningReport ,AxiosSponsoredNetwork ,AxiosSubAccountLogin ,AxiosSubAccountUserLogin ,AxiosProductList,AxiosMobileNum , AxiosUserDetail,AxiosAddMember ,AxiosAddBank , AxiosGetBankDetail, AxiosBankListDetail,AxiosGetLPBalance,AxiosWithdrawal,AxiosLoginPassword,AxiosSecurityPassword,AxiosSendLoginOtp,AxiosVerifyLogin,AxiosResetLogin,AxiosGetEmail,AxioSendSecurityOtp,AxioSecurityOtp,AxioSecurityNewPassword,AxioAnnouncement,AxiosAnnouncementEdit,AxiosReorderCategory,AxiosPaymentBy,AxioPaymentByPost,AxioInvoiceList,AxioInvoiceListPDF ,AxioInMyTeamSearch ,AxioInMyAnnounceReading,AxioInMyAnnouncePending ,AxioInProfile,AxioInProfileGet ,AxioInSecurityBoolean,AxioInDashboardDetails, AxioInConverData ,AxioInMemberLIne,AxioInTransfer ,AxioInDeliveryOrder,AxiosUPRankGetData,AxiosUPRankPostData ,AxiosGetCutomerProduct ,AxiosPostCutomerProduct , AxiosJumpStart, AxiosJumpStartPOST};
+AxiosMatrixside.interceptors.request.use(
+    (config) => {
+        config.headers["Accept"] = 'application/json';
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
+        return config;
+    },
+    (error) => {
+        if (error?.response?.status === 401) {
+            store.dispatch({
+                type: "LOG_OUT",
+            });
+        }
+        return Promise.reject(error);
+    }
+);
+const AxiosMatrixsideGetSide= axios.create({
+    baseURL:MATRIX_SIDE_GETSIDE,
+    timeout: 24000,
+    headers
+});
+
+AxiosMatrixsideGetSide.interceptors.request.use(
+    (config) => {
+        config.headers["Accept"] = 'application/json';
+        config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
+        return config;
+    },
+    (error) => {
+        if (error?.response?.status === 401) {
+            store.dispatch({
+                type: "LOG_OUT",
+            });
+        }
+        return Promise.reject(error);
+    }
+);
+
+export { AxiosWithOutAuthInstance, AxiosAuthInstance, AxiosAuthBalance,AxiosEWalletReport, AxiosEarningReport ,AxiosSponsoredTree , AxiosSingleEarningReport ,AxiosSponsoredNetwork ,AxiosSubAccountLogin ,AxiosSubAccountUserLogin ,AxiosProductList,AxiosMobileNum , AxiosUserDetail,AxiosAddMember ,AxiosAddBank , AxiosGetBankDetail, AxiosBankListDetail,AxiosGetLPBalance,AxiosWithdrawal,AxiosLoginPassword,AxiosSecurityPassword,AxiosSendLoginOtp,AxiosVerifyLogin,AxiosResetLogin,AxiosGetEmail,AxioSendSecurityOtp,AxioSecurityOtp,AxioSecurityNewPassword,AxioAnnouncement,AxiosAnnouncementEdit,AxiosReorderCategory,AxiosPaymentBy,AxioPaymentByPost,AxioInvoiceList,AxioInvoiceListPDF ,AxioInMyTeamSearch ,AxioInMyAnnounceReading,AxioInMyAnnouncePending ,AxioInProfile,AxioInProfileGet ,AxioInSecurityBoolean,AxioInDashboardDetails, AxioInConverData ,AxioInMemberLIne,AxioInTransfer ,AxioInDeliveryOrder,AxiosUPRankGetData,AxiosUPRankPostData ,AxiosGetCutomerProduct ,AxiosPostCutomerProduct , AxiosJumpStart, AxiosJumpStartPOST, AxiosProductListSignup, AxiosMatrixside,AxiosMatrixsideGetSide};

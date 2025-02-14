@@ -1,5 +1,5 @@
-import React from 'react';
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, BrowserRouter, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { PrivateRouter, CheckAuthRouter } from "./PrivateRouter";
 import Login from "../Pages/Guest/Login";
 
@@ -25,7 +25,6 @@ import Announcement from '../Pages/Auth/Settings/Announcement';
 import AnnouncementAdd from '../Pages/Auth/Settings/AnnouncementAdd';
 import Invoice from '../Pages/Invoice/Invoice';
 import D_SponsoredTree from '../Pages/MyTeam/D_SponsoredTree';
-import AnnouncementPopup from '../Pages/Guest/AnnouncementPopup';
 import AddMemberFormStript from '../Pages/MyTeam/AddMemberFormStript';
 import ReorderStripe from '../Pages/Reorder/ReorderStripe';
 import DashboardAdMemStrip from '../Pages/AddMemberDashboard/DashboardAdMemStrip';
@@ -38,17 +37,27 @@ import UprankStrip from '../Pages/Auth/Uprank/UprankStrip';
 import AddCustomerStrip from '../Pages/Auth/customer/AddCustomerStrip';
 import ViewCommissions from '../Pages/Reports/ReportsData/ViewCommissions';
 import JumpStartStipe from '../Pages/Auth/JumpStart/JumpStartStipe';
+import RegistrationStrip from '../Pages/Guest/registration/RegistrationStrip';
+import MatrixSide from '../Pages/Auth/Settings/MatrixSide';
 
 const BrowserRoute = () => {
+    const url = new URL(window.location.href);
+    
+    const pathname = url.pathname;
+    const refValue = pathname.includes("=") ? pathname.split("=")[1] : null;
+    
+    if (refValue) {
+      sessionStorage.setItem("refUserID", refValue);
+    }
     return (
-        <Router>
+        <BrowserRouter>
             <Routes>
                 {/* Guest Routers */}
                 <Route element={<CheckAuthRouter/>}>
                     <Route path="/" element={<Login/>}/>
                     <Route path="/resetpassword" element={<ResetLogin/>}/>
                     <Route path="/changepassword" element={<ResetChangePass/>}/>
-                    <Route path="/pending-announcement" element={<AnnouncementPopup/>}/>
+                    <Route path="/signup" element={<RegistrationStrip />} />
                 </Route>
 
                 {/* Private Routers */}
@@ -85,12 +94,14 @@ const BrowserRoute = () => {
                     <Route path="/jumpstart" element={<JumpStartStipe />} />
                     <Route path="/addcustomer" element={<AddCustomerStrip />} />
                     <Route path="/viewcommission" element={<ViewCommissions />} />
+                    <Route path="/matrix-side" element={<MatrixSide />} />
+                 
                 </Route>
 
                 {/* Error 404 */}
-                {/* <Route path="*" element={<E404 />} /> */}
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
 }
 

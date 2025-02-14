@@ -6,7 +6,6 @@ import { fetchProfile } from "../../../Redux/thunks/ProfileThunk";
 import { toast, ToastContainer } from "react-toastify";
 import { RootState } from "../../../Redux/store";
 import { fetchProfileGet } from "../../../Redux/thunks/ProfileGetThunk";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 interface FormData {
@@ -248,7 +247,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       >
         Submit
       </button>
-    </form>
+                          </form>
                          </div>
                     </div>
                 </section>
