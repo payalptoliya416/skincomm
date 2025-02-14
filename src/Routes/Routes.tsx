@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, BrowserRouter, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { PrivateRouter, CheckAuthRouter } from "./PrivateRouter";
 import Login from "../Pages/Guest/Login";
 
@@ -42,15 +42,20 @@ import MatrixSide from '../Pages/Auth/Settings/MatrixSide';
 
 const BrowserRoute = () => {
     const url = new URL(window.location.href);
+    console.log("url", url);
     
-    const pathname = url.pathname;
-    const refValue = pathname.includes("=") ? pathname.split("=")[1] : null;
+    const hash = url.hash; // This includes everything after #
+    console.log("hash", hash);
+    
+    const refValue = hash.includes("ref=") ? hash.split("ref=")[1] : null;
     
     if (refValue) {
       sessionStorage.setItem("refUserID", refValue);
+      console.log("Stored refUserID:", refValue);
     }
+    
     return (
-        <BrowserRouter>
+        <Router>
             <Routes>
                 {/* Guest Routers */}
                 <Route element={<CheckAuthRouter/>}>
@@ -101,7 +106,7 @@ const BrowserRoute = () => {
                 {/* Error 404 */}
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
-        </BrowserRouter>
+        </Router>
     );
 }
 

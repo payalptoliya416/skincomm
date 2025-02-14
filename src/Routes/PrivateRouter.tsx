@@ -70,8 +70,8 @@ if (refValue) {
   }, [dispatch, userIdFromUrl, loginState?.data?.token]);  
 
   if (isAuthenticated) {
-    // const newUrl = `${window.location.origin}/#/dashboard`;
-    // window.history.replaceState(null, "", newUrl);
+    const newUrl = `${window.location.origin}/#/dashboard`;
+    window.history.replaceState(null, "", newUrl);
     return <Navigate to="/dashboard" replace />;
   }
 

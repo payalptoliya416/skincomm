@@ -1,6 +1,6 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
@@ -31,8 +31,7 @@ interface FormData {
 }
 
 function Registration() {
-  const params = useParams();
-    // const ID = params.id;
+  const navigate = useNavigate();
     const ID = sessionStorage.getItem("refUserID")
     const stripe = useStripe(); 
     const elements = useElements();
@@ -44,7 +43,6 @@ function Registration() {
      const [errors, setErrors] = useState<any>({});
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
-
     const [formData, setFormData] = useState<FormData>({
         sponsor:  ID || "",
         placement:  ID || "",
@@ -246,7 +244,7 @@ function Registration() {
         
         return newErrors;
     };
-    const navigate = useNavigate();
+ 
 
   const [disable , setDisable]= useState(false);
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -365,6 +363,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     else{
                         toast.success("Member added successfully !");
                         setDisable(false);
+                        navigate('/');
                     }
                 }
             } else {

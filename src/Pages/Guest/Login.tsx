@@ -75,7 +75,7 @@ const Login = () => {
                                     type="password"
                                     { ...formik.getFieldProps('password') }
                                     placeholder="Password"
-                                    className="border-b border-custom-border focus:border-main-color w-full text-base font-normal text-custom-text-color py-2 focus:outline-none"
+                                    className="border-b border-custom-border w-full text-base font-normal text-custom-text-color py-2 focus:outline-none"
                                 />
                                 { formik.touched.password && formik.errors.password ? (
                                     <span
@@ -86,9 +86,9 @@ const Login = () => {
                               <button type="submit"  className="bg-[#148585]  px-10 py-2 rounded-lg mt-3 text-sm text-white" >
                                     Login
                                 </button>
-                              <div className="text-center">  <Link to='/resetpassword' className="underline text-blue-500">Reset Password?</Link></div>
+                              <div className="text-center mt-2">  <Link to='/resetpassword' className="underline text-blue-500">Reset Password?</Link></div>
+                              <div className="text-center">  <Link to='/signup' className="underline text-blue-500">Create an account</Link></div>
                               </div>
-
                             </div>
                         </form>
               </div>

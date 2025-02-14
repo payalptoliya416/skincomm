@@ -2,25 +2,25 @@ import React, { useRef } from "react";
 import Layout from "../../../Components/Layout";
 import { Link } from "react-router-dom";
 import QRCode from "react-qr-code";
-import { BASE_URL } from "../../../Utilities/config";
+import {   LIVE_URL } from "../../../Utilities/config";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
 
 const Share = () => {
         const userid = sessionStorage.getItem("UserID");
-        const inputRef = useRef<any>(null);
+        const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleCopyClick = () => {
-    if (inputRef.current) {
-      navigator.clipboard.writeText(inputRef.current.value)
-        .then(() => {
-          toast.success("Text copied to clipboard!");
-        })
-        .catch((err) => {
-            toast.error("Failed to copy text:", err);
-        });
-    }
-  };
+        const handleCopyClick = () => {
+          if (inputRef.current) {
+            navigator.clipboard.writeText(inputRef.current.value)
+              .then(() => {
+                toast.success("Text copied to clipboard!");
+              })
+              .catch((err) => {
+                toast.error("Failed to copy text:", err);
+              });
+          }
+        };
 
     return (
         <>
@@ -71,7 +71,7 @@ const Share = () => {
                         <input
                             type="text"
                             ref={inputRef}
-                            value={`localhost:3000/ref=${userid}`}
+                            value={`${LIVE_URL}/#/ref=${userid}`}
                             className="w-full text-[14px] placeholder:text-[14px] border py-2 pr-10 pl-3 rounded-md placeholder:text-black cursor-pointer"
                             disabled
                             onClick={handleCopyClick}
