@@ -42,16 +42,13 @@ import MatrixSide from '../Pages/Auth/Settings/MatrixSide';
 
 const BrowserRoute = () => {
     const url = new URL(window.location.href);
-    console.log("url", url);
     
-    const hash = url.hash; // This includes everything after #
-    console.log("hash", hash);
+    const hash = url.hash; 
     
     const refValue = hash.includes("ref=") ? hash.split("ref=")[1] : null;
     
     if (refValue) {
       sessionStorage.setItem("refUserID", refValue);
-      console.log("Stored refUserID:", refValue);
     }
     
     return (

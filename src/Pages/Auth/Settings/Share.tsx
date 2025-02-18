@@ -71,6 +71,7 @@ const Share = () => {
                         <input
                             type="text"
                             ref={inputRef}
+                            // value={`localhost:3000/#/ref=${userid}`}
                             value={`${LIVE_URL}/#/ref=${userid}`}
                             className="w-full text-[14px] placeholder:text-[14px] border py-2 pr-10 pl-3 rounded-md placeholder:text-black cursor-pointer"
                             disabled

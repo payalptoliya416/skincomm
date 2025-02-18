@@ -43,6 +43,7 @@ function Registration() {
      const [errors, setErrors] = useState<any>({});
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
+     const [matrixSide, setMatrixSide] = useState<any>('');
     const [formData, setFormData] = useState<FormData>({
         sponsor:  ID || "",
         placement:  ID || "",
@@ -65,9 +66,10 @@ function Registration() {
         action : "checkuserdetail",
         userid : userId
     }   
-
     fetchSignUpProductList();
     fetchUserDetailData(userdatad); 
+    fetchPlcamentTreeData(ID)
+
     }, [userId]);
 
     const fetchSignUpProductList = async () => {
@@ -141,7 +143,45 @@ function Registration() {
         console.error("Error fetching data:", error);
       }
     };
-    
+    const fetchPlcamentTreeData = async (userId: any) => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/placementtree-public`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              "userid" : userId
+          }),
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+  
+        const placementTree = await response.json();
+       const blankCols = placementTree.data.level5
+      .filter((item: any) => item.type === "blank")
+      .map((item: any) => item.col);
+      setMatrixSide(blankCols)
+    return { placementTree, blankCols };
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    useEffect(() => {
+      if (matrixSide.length > 0) {
+          const firstCol = matrixSide[0]; // Get the first value
+          setFormData(prev => ({
+              ...prev,
+              matrix_side: firstCol === "L" ? "R" : "L" 
+          }));
+      }
+  }, [matrixSide]);
+
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -191,8 +231,8 @@ function Registration() {
                 toast.error("Please select a package first.");
                 return; 
             }
-        
             setFormData((prev) => ({ ...prev, [name]: value }));
+        
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -229,8 +269,8 @@ function Registration() {
     const validateForm = () => {
         const newErrors: any = {};
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
-            if (!formData.placement) newErrors.placement = "Placement ID is required";
-            if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
+            // if (!formData.placement) newErrors.placement = "Placement ID is required";
+            // if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
              if (!formData.f_name) newErrors.f_name = "Full Name is required";
         if (!formData.country) newErrors.country = "Country Name is required";
         if (!fName.member) newErrors.sponsor = `${fName.message}`;
@@ -441,7 +481,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}
                                  </h4> :""}
                                 </div>
-                                <div className='mb-3'>
+                                {/* <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Placement ID</label>
                                     <input
                                         type="text"
@@ -453,8 +493,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     />
                                     {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
                                     {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}</h4> :""}
-                                </div>
-                                <div className='mb-3'>
+                                </div> */}
+                                {/* <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Matrix Side</label>
                                     <select
                                         name="matrix_side"
@@ -467,7 +507,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         <option value="L">Left</option>
                                     </select>
                                     {errors.matrix_side && <p className='text-red-500 text-xs'>{errors.matrix_side}</p>}
-                                </div>
+                                </div> */}
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Full Name</label>
                                     <input

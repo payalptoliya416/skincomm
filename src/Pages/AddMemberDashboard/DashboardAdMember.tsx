@@ -404,7 +404,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             const numberData = response.data;
       
             if (numberData.success) {
-
                 const successData =await dispatch(fetchAddMember(formDataToSend));
                 if(successData){
                     if(successData.data.data.error === true){
