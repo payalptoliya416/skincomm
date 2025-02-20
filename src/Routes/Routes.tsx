@@ -39,6 +39,8 @@ import ViewCommissions from '../Pages/Reports/ReportsData/ViewCommissions';
 import JumpStartStipe from '../Pages/Auth/JumpStart/JumpStartStipe';
 import RegistrationStrip from '../Pages/Guest/registration/RegistrationStrip';
 import MatrixSide from '../Pages/Auth/Settings/MatrixSide';
+import ELibrary from '../Pages/Auth/Settings/ELibrary';
+import ELIbraryAdd from '../Pages/Auth/Settings/ELIbraryAdd';
 
 const BrowserRoute = () => {
     const url = new URL(window.location.href);
@@ -97,6 +99,8 @@ const BrowserRoute = () => {
                     <Route path="/addcustomer" element={<AddCustomerStrip />} />
                     <Route path="/viewcommission" element={<ViewCommissions />} />
                     <Route path="/matrix-side" element={<MatrixSide />} />
+                    <Route path="/e-library" element={<ELibrary />} />
+                    <Route path="/e-library/e-library-content-add" element={<ELIbraryAdd />} />
                  
                 </Route>
 

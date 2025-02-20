@@ -47,6 +47,7 @@ const SponsoredNetworkList: React.FC<{
     subSubOpenStates: Record<number, boolean>;
     handleSubSub: (id: number) => void;
 }> = ({ items, openStates, handleOpen, subOpenStates, handleSub, subSubOpenStates, handleSubSub }) => {
+
     return (
         <>
             {items.map(item => (

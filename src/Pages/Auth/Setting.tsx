@@ -5,6 +5,7 @@ import LanguageSwitcher from "../../Components/Auth/LanguageSwitcher";
 import { RiFileTransferLine } from "react-icons/ri";
 import { SiConvertio } from "react-icons/si";
 import { PiArrowsLeftRightBold } from "react-icons/pi";
+import { BsCameraVideo } from "react-icons/bs";
 
 const Setting = () => {
   const [joinDate, setJoinDate] = useState<string>("");
@@ -472,7 +473,7 @@ const Setting = () => {
                   <PiArrowsLeftRightBold className="w-[24px] h-[24px] text-custom-text-color2"  />
                   </div>
                   <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
-                    <span>Matrix Side</span>
+                    <span>Placement Setting</span>
 
                     <svg
                       className="w-5 h-5 text-custom-text-color2"
@@ -522,6 +523,39 @@ const Setting = () => {
                   </div>
                   <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
                     <span>Share</span>
+                    <svg
+                      className="w-5 h-5 text-custom-text-color2"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="m9 5 7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </Link>
+              </li>
+             
+              <li className={`${customerRankID === "1" ? "hidden" : ""}`}>
+                <Link
+                  to={`/e-library`}
+                  className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
+                    customerRankID === "1" ? "pointer-events-none" : " "
+                  }`}
+                >
+                  <div className="-mt-1 w-14">
+                   <BsCameraVideo className="w-[24px] h-[24px] text-custom-text-color2" />
+                  </div>
+                  <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
+                    <span>e-Library</span>
                     <svg
                       className="w-5 h-5 text-custom-text-color2"
                       aria-hidden="true"

@@ -40,6 +40,8 @@ import { uprankReducer } from "./reducers/UpRankGetReducer";
 import { cutomerGetDataReducer } from "./reducers/CustomerGetReducer";
 import { clearStorage } from "../Pages/Guest/ClearOldData";
 import { MatrixSideGetReducer } from "./reducers/MetrixSideGetReducer";
+import { eLibraryListReducer } from "./reducers/ELibraryListReducer";
+import { getSubcategoryReducer } from "./reducers/GetSubCatReducer";
 const userPersistConfig = {
     key: 'user_root',
     storage,
@@ -83,6 +85,8 @@ const appReducer = combineReducers({
     uprankGetData : uprankReducer,
     customerGetData : cutomerGetDataReducer,
     metrixsidegetRed : MatrixSideGetReducer,
+    elibrary : eLibraryListReducer,
+    getSubCategory : getSubcategoryReducer
 
 });
 

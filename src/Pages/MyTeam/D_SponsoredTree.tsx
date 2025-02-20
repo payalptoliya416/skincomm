@@ -99,6 +99,8 @@ interface SponsoredTreeItem {
                     <h3 className='text-[10px] text-black'>{item.userid}</h3>
                     <h3 className='text-[10px] text-black'>
                       L : {item.data.accu_left_node || 0} | R : {item.data.accu_right_node || 0}
+                    <h3>Tooday Balance</h3>
+                    <h3>{item.data.bleft_node || 0} | {item.data.bright_node || 0}</h3>
                     </h3>
                    </div>
                    <div className='group relative max-h-max'>
@@ -109,7 +111,7 @@ interface SponsoredTreeItem {
                     </div>
                        <ul className='flex flex-col gap-1'>
                         <li>
-                       <h3>Accumulated PV</h3>
+                       <h3>Accumulated Pts</h3>
                        <h3>{item.data.accu_left_node || 0} | {item.data.accu_right_node || 0}</h3>
                         </li>
                         <li>
