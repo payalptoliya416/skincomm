@@ -47,27 +47,31 @@ const SponsoredNetworkList: React.FC<{
     subSubOpenStates: Record<number, boolean>;
     handleSubSub: (id: number) => void;
 }> = ({ items, openStates, handleOpen, subOpenStates, handleSub, subSubOpenStates, handleSubSub }) => {
-
     return (
         <>
-            {items.map(item => (
-                <React.Fragment key={item.id}>
-                    <SponsoredNetworkItem item={item} openStates={openStates} handleOpen={handleOpen} />
-                    {openStates[item.id] && item.sponsored && (
-                        <div className='ml-6'>
-                            <SponsoredNetworkList
-                                items={item.sponsored.filter(sponsor => sponsor.sponsorid === item.id)}
-                                openStates={subOpenStates}
-                                handleOpen={handleSub}
-                                subOpenStates={subOpenStates}
-                                handleSub={handleSub}
-                                subSubOpenStates={subSubOpenStates}
-                                handleSubSub={handleSubSub}
-                            />
-                        </div>
-                    )}
-                </React.Fragment>
-            ))}
+            {items.map(item =>{
+             
+                return(
+                    (
+                        <React.Fragment key={item.id}>
+                            <SponsoredNetworkItem item={item} openStates={openStates} handleOpen={handleOpen} />
+                            {openStates[item.id] && item.sponsored && (
+                                <div className='ml-6'>
+                                    <SponsoredNetworkList
+                                        items={item.sponsored.filter(sponsor => Number(sponsor.sponsorid) === item.id)}
+                                        openStates={subOpenStates}
+                                        handleOpen={handleSub}
+                                        subOpenStates={subOpenStates}
+                                        handleSub={handleSub}
+                                        subSubOpenStates={subSubOpenStates}
+                                        handleSubSub={handleSubSub}
+                                    />
+                                </div>
+                            )}
+                        </React.Fragment>
+                    )
+                )
+            })}
         </>
     );
 }
@@ -77,7 +81,6 @@ function SposoredNetwork() {
     const { SearchUserID } = location.state || {};  
     const dispatch = useDispatch<any>();
     const { sponsoredNetworkData } = useSelector((state: RootState) => state.sponsoorednetwork);
-
     useEffect(() => {
         dispatch(fetchSponsredNetwork({ userid: SearchUserID }));
     }, [dispatch]);
