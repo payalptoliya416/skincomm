@@ -207,6 +207,7 @@ const Setting = () => {
                   </div>
                 </Link>
               </li>
+          
               <li className={`${customerRankID === "1" ? "hidden" : ""}`}>
                 <Link
                   to="/transfer"

@@ -133,7 +133,7 @@ function Withdrawal() {
         <header className="fixed w-full h-14 bg-white flex items-center text-center shadow-md border-b border-custom-border">
           <div className="container">
             <div className="relative">
-              <Link to="/settings" className="absolute left-0">
+              <Link to="/withdrawal" className="absolute left-0">
                 <svg
                   className="w-6 h-6"
                   aria-hidden="true"
@@ -152,7 +152,7 @@ function Withdrawal() {
                   />
                 </svg>
               </Link>
-              <h3 className="text-lg font-medium">Withdrawal</h3>
+              <h3 className="text-lg font-medium">Withdrawal Add</h3>
             </div>
           </div>
         </header>

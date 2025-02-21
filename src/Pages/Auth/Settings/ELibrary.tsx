@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../../../Components/Layout'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Redux/store';
 import DataTable from 'datatables.net-dt';
@@ -10,7 +10,7 @@ import { FaEye } from "react-icons/fa6";
 function ELibrary() {
     const dispatch = useDispatch<any>();
 
-    const { eLibraryListData ,loading } = useSelector((state: RootState) => state.elibrary);
+    const { eLibraryListData  } = useSelector((state: RootState) => state.elibrary);
     const tableRef = useRef(null);
   
     useEffect(() => {
@@ -55,10 +55,6 @@ function ELibrary() {
             );
           });
           
-          const navigate = useNavigate();
-          const handleNavigate = ()=>{
-            navigate('/e-library/e-library-content-add')
-          }
   return (
     <>
       <Layout>

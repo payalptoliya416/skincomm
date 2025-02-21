@@ -41,6 +41,8 @@ import RegistrationStrip from '../Pages/Guest/registration/RegistrationStrip';
 import MatrixSide from '../Pages/Auth/Settings/MatrixSide';
 import ELibrary from '../Pages/Auth/Settings/ELibrary';
 import ELIbraryAdd from '../Pages/Auth/Settings/ELIbraryAdd';
+import WithdrawalPage from '../Pages/Auth/Settings/WithdrawalPage';
+import WithdrwalMain from '../Pages/Auth/Settings/WithdrwalMain';
 
 const BrowserRoute = () => {
     const url = new URL(window.location.href);
@@ -80,7 +82,7 @@ const BrowserRoute = () => {
                     <Route path="/security_password" element={<SecondaryPassword />} />
                     <Route path="/share" element={<Share />} />
                     <Route path="/securityotpconfirmation" element={<SecurityOtpConfirm />} />
-                    <Route path="/withdrawal" element={<Withdrawal />} />
+                    <Route path="/withdrawal-add" element={<Withdrawal />} />
                     <Route path="/email_otp_verification" element={<SecurityPassEmail />} />
                     <Route path="/addbankpage" element={<AddBankPage />} />
                     <Route path="/addbankform" element={<AddBankForm />} />
@@ -101,6 +103,8 @@ const BrowserRoute = () => {
                     <Route path="/matrix-side" element={<MatrixSide />} />
                     <Route path="/e-library" element={<ELibrary />} />
                     <Route path="/e-library/e-library-content-add" element={<ELIbraryAdd />} />
+                    <Route path="/withdrawal-request" element={<WithdrawalPage />} />
+                    <Route path="/withdrawal" element={<WithdrwalMain />} />
                  
                 </Route>
 
