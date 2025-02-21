@@ -1,7 +1,8 @@
 import React from "react";
 import Layout from "../../../Components/Layout";
 import { Link } from "react-router-dom";
-import { PiHandCoins } from "react-icons/pi"; // Example alternative
+import { MdOutlineLibraryAdd } from "react-icons/md";
+import { IoIosList } from "react-icons/io";
 
 function WithdrwalMain() {
   return (
@@ -39,10 +40,10 @@ function WithdrwalMain() {
               <li>
                 <Link
                   to="/withdrawal-add"
-                  className={`flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white `}
+                  className={`flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white`}
                 >
                   <div className="-mt-1 w-14">
-                   <PiHandCoins/>
+                   <MdOutlineLibraryAdd  className="w-[24px] h-[24px] text-custom-text-color2"/>
                   </div>
                   <div className="w-full flex items-center justify-between pr-2">
                     <span>Withdrawal Add</span>
@@ -71,11 +72,11 @@ function WithdrwalMain() {
                   to="/withdrawal-request"
                   className={`flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white `}
                 >
-                  <div className="-mt-1 w-14">
-                    <img src="images/Frame.svg" alt="" />
+                 <div className="-mt-1 w-14">
+                   <IoIosList className="w-[24px] h-[24px] text-custom-text-color2"/>
                   </div>
                   <div className="w-full flex items-center justify-between pr-2">
-                    <span>Withdrawal Request</span>
+                    <span> Request</span>
                     <svg
                       className="w-5 h-5 text-custom-text-color2"
                       aria-hidden="true"
