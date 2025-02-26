@@ -99,7 +99,7 @@ interface SponsoredTreeItem {
                     <h3 className='text-[10px] text-black'>{item.userid}</h3>
                     <h3 className='text-[10px] text-black'>
                       L : {item.data.accu_left_node || 0} | R : {item.data.accu_right_node || 0}
-                    <h3>Tooday Balance</h3>
+                    <h3>Today Balance</h3>
                     <h3>{item.data.bleft_node || 0} | {item.data.bright_node || 0}</h3>
                     </h3>
                    </div>

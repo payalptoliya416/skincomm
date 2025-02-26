@@ -87,7 +87,7 @@ const Login = () => {
                                     Login
                                 </button>
                               <div className="text-center mt-2">  <Link to='/resetpassword' className="underline text-blue-500">Reset Password?</Link></div>
-                              <div className="text-center">  <Link to='/signup' className="underline text-blue-500">Create an account</Link></div>
+                              {/* <div className="text-center">  <Link to='/signup' className="underline text-blue-500">Create an account</Link></div> */}
                               </div>
                             </div>
                         </form>
