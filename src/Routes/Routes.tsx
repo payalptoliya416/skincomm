@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { PrivateRouter, CheckAuthRouter } from "./PrivateRouter";
 import Login from "../Pages/Guest/Login";
 
@@ -45,21 +45,22 @@ import WithdrawalPage from '../Pages/Auth/Settings/WithdrawalPage';
 import WithdrwalMain from '../Pages/Auth/Settings/WithdrwalMain';
 
 const BrowserRoute = () => {
-    // const url = new URL(window.location.href);
-    
-    // const hash = url.hash; 
-    // const refValue = hash.includes("") ? hash.split("")[1] : null;
-    
-    // if (refValue) {
-    //   sessionStorage.setItem("refUserID", refValue);
-    // }
 
-    const urlSegments = window.location.pathname.split("/");
-const refValue = urlSegments[urlSegments.length - 1]; 
+    const url = new URL(window.location.href);
+const hash = url.hash; 
+
+const refValue = hash.startsWith("#/") ? hash.substring(2) : null;
 
 if (refValue) {
   sessionStorage.setItem("refUserID", refValue);
 }
+
+//     const urlSegments = window.location.pathname.split("/");
+// const refValue = urlSegments[urlSegments.length - 1]; 
+
+// if (refValue) {
+//   sessionStorage.setItem("refUserID", refValue);
+// }
     
     return (
         <Router>

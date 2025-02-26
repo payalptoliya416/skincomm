@@ -5,58 +5,58 @@ import { fetchSubAccounData } from "../../Redux/thunks/subAcoThunks";
 import { fetchSubAccounLoginData } from "../../Redux/thunks/SubAccountLoginThunk";
 import { Link } from "react-router-dom";
 
-interface SunAccount {
-    f_name : string
-    userid : string
-} 
+// interface SunAccount {
+//     f_name : string
+//     userid : string
+// } 
 const DashboardRightBar = () => {
 
-    const [overlayVisible, setOverlayVisible] = useState(false);
-    const sidebarRef = useRef<HTMLDivElement>(null);
+    // const [overlayVisible, setOverlayVisible] = useState(false);
+    // const sidebarRef = useRef<HTMLDivElement>(null);
 
-    const toggleUserSidebar = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-        setOverlayVisible(!overlayVisible);
-    };
+    // const toggleUserSidebar = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     event.stopPropagation();
+    //     setOverlayVisible(!overlayVisible);
+    // };
 
-    const closeUserSidebar = () => {
-        setOverlayVisible(false);
-    };
+    // const closeUserSidebar = () => {
+    //     setOverlayVisible(false);
+    // };
 
-    const handleClickOutside = (event: any) => {
-        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-            closeUserSidebar();
-        }
-    };
+    // const handleClickOutside = (event: any) => {
+    //     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+    //         closeUserSidebar();
+    //     }
+    // };
 
-    useEffect(() => {
-        document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
+    // useEffect(() => {
+    //     document.addEventListener("click", handleClickOutside);
+    //     return () => {
+    //         document.removeEventListener("click", handleClickOutside);
+    //     };
+    // }, []);
 
-    const { SubAccountData } = useSelector((state: RootState) => state.subaccountData);
-    const { SubAccountLoginData } = useSelector((state: RootState) => state.SubAccountLogin);
+    // const { SubAccountData } = useSelector((state: RootState) => state.subaccountData);
+    // const { SubAccountLoginData } = useSelector((state: RootState) => state.SubAccountLogin);
 
-        const dispatch = useDispatch<any>();
-        useEffect(() => {
-            dispatch(fetchSubAccounData());
-        }, [dispatch]);
+        // const dispatch = useDispatch<any>();
+        // useEffect(() => {
+        //     dispatch(fetchSubAccounData());
+        // }, [dispatch]);
         
-        useEffect(() => {
-            if (SubAccountLoginData && SubAccountLoginData.data?.token) {
-                sessionStorage.removeItem("token");
+        // useEffect(() => {
+        //     if (SubAccountLoginData && SubAccountLoginData.data?.token) {
+        //         sessionStorage.removeItem("token");
     
-                sessionStorage.setItem("token", SubAccountLoginData.data.token);
+        //         sessionStorage.setItem("token", SubAccountLoginData.data.token);
     
-                window.location.href = '/';
-            }
-        }, [SubAccountLoginData]);
+        //         window.location.href = '/';
+        //     }
+        // }, [SubAccountLoginData]);
 
-        const handleLogin = async (userid : string)=>{
-             dispatch(fetchSubAccounLoginData(userid));
-        }
+        // const handleLogin = async (userid : string)=>{
+        //      dispatch(fetchSubAccounLoginData(userid));
+        // }
 
     return (
         <>
