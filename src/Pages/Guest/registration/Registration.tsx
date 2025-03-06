@@ -502,7 +502,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         value={formData.matrix_side}
                                         onChange={handleChange}
                                     >
-                                        <option value="">Auto</option>
+                                        <option value="" disabled>Auto</option>
                                         <option value="R">Right</option>
                                         <option value="L">Left</option>
                                     </select>

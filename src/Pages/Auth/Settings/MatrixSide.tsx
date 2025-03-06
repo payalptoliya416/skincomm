@@ -107,7 +107,7 @@ function MatrixSide() {
                 </svg>
               </Link>
               <h3 className="text-lg font-medium">
-                Referral Member Matrix side{" "}
+              Placement Setting
               </h3>
             </div>
           </div>
@@ -127,7 +127,7 @@ function MatrixSide() {
                     value={formData.referral_user_matrix_side}
                     onChange={handleChange}
                   >
-                    <option value="">Auto</option>
+                    <option value="" disabled>Auto</option>
                     <option value="R">Right</option>
                     <option value="L">Left</option>
                   </select>

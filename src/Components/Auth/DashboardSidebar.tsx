@@ -9,7 +9,7 @@ const DashboardSidebar = ({ loginState }: any) => {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const userFromLocalStorage = JSON.parse(sessionStorage.getItem("userLoginstate") || "{}");
 
-    const dispatch = useDispatch<any>(); // Initialize useDispatch hook
+    const dispatch = useDispatch<any>(); 
 
     const toggleSidebar = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
