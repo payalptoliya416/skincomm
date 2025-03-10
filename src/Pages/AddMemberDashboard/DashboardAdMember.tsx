@@ -606,6 +606,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                            <thead className="text-xs text-white uppercase bg-[#178285]">
                                                                <tr>
                                                                    <th className="px-6 py-3 text-center">
+                                                                   Code
+                                                                   </th>
+                                                                   <th className="px-6 py-3 text-center">
                                                                    Name
                                                                    </th>
                                                                    <th className="px-6 py-3">
@@ -624,6 +627,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                                    productListData.products.map((item: any, index: number) => (
                                                                    <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                                            
+                                                                   <td className="px-6 py-3 text-center">
+                                                                          {item.combo_product_code}
+                                                                   </td>
                                                                    <td className="px-6 py-3 text-center">
                                                                           {item.combo_product_name}
                                                                    </td>

@@ -39,7 +39,6 @@ function Uprank() {
             const savedCart = sessionStorage.getItem('cart');
             return savedCart ? JSON.parse(savedCart) : {};
           });
-        const [bizData, setBizData] = useState<any>({});
         const [eWallerPPText ,setEWalletPPText] = useState<any>();
         const [eWallerRPText ,setEWalletRPText] = useState<any>();
         const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
@@ -260,32 +259,13 @@ function Uprank() {
               return () => clearInterval(interval); 
           }
       }, [joinDate]);
-  
-          const validateFormBiz = () => {
-            const newErrors: any = {};
-            if (!bizData.dob) newErrors.dob = "Date of Birth is required.";
-            if (!bizData.mobile) newErrors.mobile = "Mobile number is required.";
-            if (!bizData.address) newErrors.address = "Address is required.";
-            if (!bizData.zip) newErrors.zip = "ZIP code is required.";
-            if (!bizData.email) newErrors.email = "Email is required.";
-            
-            return Object.keys(newErrors).length === 0; 
-          };
 
           useEffect(() => {
             const BizPathdata = sessionStorage.getItem("user");
            
             if (BizPathdata) {
               const parsedData = JSON.parse(BizPathdata);
-              
               setJoinDate(parsedData.join_date);
-              setBizData({
-                dob: parsedData.dob,
-                mobile: parsedData.mobile,
-                address: parsedData.address,
-                zip: parsedData.zip,
-                email: parsedData.email,
-              });
             }
           }, []);
           
@@ -314,11 +294,7 @@ function Uprank() {
             const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
               e.preventDefault();
                setDisable(true);
-              // const isValid = validateFormBiz();
-              //       if (!isValid) {
-              //       toast.error("Please fill up all info under Settings - My Profile before any purchases.");
-              //      return;
-              // }
+              
               const data = {
                 "package_ids": products_data,
                   "payment_type" : formData.currency,
@@ -333,6 +309,7 @@ function Uprank() {
                 
                   const isRankValid = rankValidation();
                   if (!isRankValid) {
+                    setDisable(false);
                     return; 
                   }
 

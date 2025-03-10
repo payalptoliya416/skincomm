@@ -10,7 +10,6 @@ export const fetchSecurityPassword = (formData : any) => {
         dispatch(fetchSecurityPassRequest());
         try {
             const response = await AxiosSecurityPassword.post('',formData);
-            
             dispatch(fetchSecurityPasstSuccess(response.data));
             return {data: response.data };
         } catch (error: any) {

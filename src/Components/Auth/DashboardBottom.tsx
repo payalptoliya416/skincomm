@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { fetchBDashboardDetail } from "../../Redux/thunks/DashoboardDetailThunk";
-import { toast, ToastContainer } from "react-toastify";
 
 const DashboardBottom = () => {
   const dispatch = useDispatch<any>();

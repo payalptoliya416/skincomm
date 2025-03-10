@@ -145,6 +145,13 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
      if(successTransfer.data.success === true){
        toast.success(successTransfer.data.message);
        await dispatch(fetchBalance());
+
+       setFormData({
+        to_user: "",
+        amount: "",
+        currency: "",
+      })
+      setFName("")
      }
     } catch (error) {
       console.error("Error Transfer details:", error);

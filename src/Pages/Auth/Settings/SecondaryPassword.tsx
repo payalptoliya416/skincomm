@@ -15,7 +15,6 @@ interface FormData {
 
 const SecondaryPassword = () => {
     const { securityBoolean } = useSelector((state: RootState) => state.securityBooleanData);
-    
   const dispatch = useDispatch<any>();
 
   useEffect(()=>{

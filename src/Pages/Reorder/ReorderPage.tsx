@@ -66,7 +66,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
     if(UserDetailData?.UserDetailData.delivery_charge_per_order){
       setMinDeliveryCharge(UserDetailData?.UserDetailData.min_amount_to_avoid_delivery_charge)
     }
-   })
+   },[]);
   
     const dispatch = useDispatch<any>();
     useEffect(()=>{
@@ -523,6 +523,9 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                         <thead className="text-xs text-white uppercase bg-[#178285]">
                             <tr>
                                 <th className="px-6 py-3">
+                                Images
+                                </th>
+                                <th className="px-6 py-3">
                                         Code
                                 </th>
                                 <th className="px-6 py-3 text-center">
@@ -544,6 +547,9 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                                 filteredProducts.map((item: any, index: number) => (
                                 <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                       
+                                <td className="px-6 py-3">
+                                    <img src={item.image} alt="" className='w-[40px] h-[40px] rounded-full' />
+                                </td>
                                 <td className="px-6 py-3">
                                     {item.product_code}
                                 </td>

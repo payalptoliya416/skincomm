@@ -15,12 +15,14 @@ const CheckAuthRouter = () => {
   const isAuthenticated = loginState?.data?.token !== undefined;
   const dispatch = useDispatch() as any;
   const url = new URL(window.location.href);
+  
   // const pathname = url.pathname;
   // const refValue = pathname.includes("=") ? pathname.split("=")[1] : null;
   
   // if (refValue) {
   //   sessionStorage.setItem("refUserID", refValue);
   // }
+
   const params = new URLSearchParams(new URL(url).search);
   const userIdFromUrl = params.get("userid");
   const syncTokenFromsessionStorage = () => {

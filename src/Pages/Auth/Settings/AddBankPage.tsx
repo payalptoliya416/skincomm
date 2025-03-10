@@ -17,7 +17,6 @@ interface data {
 
 function AddBankPage() {
     const { getBankDetail } = useSelector((state: RootState) => state.getBankDetails);
-    
     const dispatch = useDispatch<any>();
 
     useEffect(() => {
@@ -26,7 +25,6 @@ function AddBankPage() {
     
     const navigate = useNavigate();
     const handleEdit = (item : data)=>{
-        
         navigate('/addbankform', { state: { bankData: item } });
     }
 

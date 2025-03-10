@@ -10,6 +10,7 @@ export const fetchWithDrawallData = (formData : any) => {
         try {
             const response = await AxiosWithdrawal.post('', formData);
             dispatch(fetchUserWhithdrawalSuccess(response.data));
+            return response.data.data
         } catch (error: any) {
             dispatch(fetchUserWhithdrawalFailure(error.message || 'Failed to fetch withdrawal data'));
         }

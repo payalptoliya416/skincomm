@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../../../Components/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { IoIosList } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../Redux/store";
+import { fetchGetBankData } from "../../../Redux/thunks/getBankDetailThunk";
+import { toast, ToastContainer } from "react-toastify";
 
 function WithdrwalMain() {
+  const { getBankDetail ,loading} = useSelector((state: RootState) => state.getBankDetails);
+  const dispatch = useDispatch<any>();
+
+    useEffect(() => {
+        dispatch(fetchGetBankData());
+    }, [dispatch]);
+   const navigate = useNavigate();
+
+    const handleNavigation = () => {
+      if (loading) {
+        toast.info("Fetching bank details, please wait...");
+        return;
+      }
+  
+      if (!getBankDetail || getBankDetail.length === 0) {
+        toast.error("Please enter bank details before proceeding.");
+        return;
+      }
+  
+      navigate("/withdrawal-add");
+    };
+
   return (
     <>
       <Layout>
@@ -34,39 +60,40 @@ function WithdrwalMain() {
             </div>
           </div>
         </header>
+        <ToastContainer/>
         <section className="py-20">
           <div className="container">
             <ul className="flex flex-col gap-3 rounded-md  pr-0">
-              <li>
-                <Link
-                  to="/withdrawal-add"
-                  className={`flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white`}
-                >
-                  <div className="-mt-1 w-14">
-                   <MdOutlineLibraryAdd  className="w-[24px] h-[24px] text-custom-text-color2"/>
-                  </div>
-                  <div className="w-full flex items-center justify-between pr-2">
-                    <span>Withdrawal Add</span>
-                    <svg
-                      className="w-5 h-5 text-custom-text-color2"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m9 5 7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </li>
+            <li>
+      <button
+        onClick={handleNavigation}
+        className="flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white"
+      >
+        <div className="-mt-1 w-14">
+          <MdOutlineLibraryAdd className="w-[24px] h-[24px] text-custom-text-color2" />
+        </div>
+        <div className="w-full flex items-center justify-between pr-2">
+          <span>Withdrawal Add</span>
+          <svg
+            className="w-5 h-5 text-custom-text-color2"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m9 5 7 7-7 7"
+            />
+          </svg>
+        </div>
+      </button>
+    </li>
               <li>
                 <Link
                   to="/withdrawal-request"

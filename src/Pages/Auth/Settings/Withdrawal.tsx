@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../Redux/store";
 import { fetchLpBalance } from "../../../Redux/thunks/getLpBalancethunk";
 import { fetchWithDrawallData } from "../../../Redux/thunks/widthdrawalThunk";
+import { toast, ToastContainer } from "react-toastify";
 
 interface FormData {
   lp_amount: number;
@@ -26,19 +27,6 @@ function Withdrawal() {
   useEffect(() => {
     dispatch(fetchLpBalance());
   }, [dispatch]);
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   if (name === "lp_amount") {
-  //     const amount = parseFloat(value);
-  //     setFormData({
-  //       ...formData,
-  //       lp_amount: amount,
-  //     });
-  //     const rate = amount * (parseFloat(getLPBalanceDetail.withdrawal_rate) || 0);
-  //     setCalculatedRate(rate.toFixed(2) );   
-  //   }
-  // };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -89,42 +77,22 @@ function Withdrawal() {
   
   const isButtonDisabled = Object.keys(errors).length > 0;
 
-// const validation = () => {
-  
-//   const newErrors: any = {};
-//   if(!formData.lp_amount){
-//     newErrors.lp_amount = "write some Withdrawal Amount";
-//   }
-//   if (formData.lp_amount < lpminimumvalue) {
-//     newErrors.lp_amount = `Withdrawal amount should be greater than the minimum limit of ${lpminimumvalue}`;
-//   }
-//   if (formData.lp_amount > availableLp) {
-//     newErrors.lp_amount = `Withdrawal amount exceeds the available balance of ${availableLp}`;
-//   }
-
-//   return newErrors;
-// };
-
-
-
-// const handleSubmit = (e: React.FormEvent) => {
-//   e.preventDefault();
-//   const validationErrors = validation();
-
-//   if (Object.keys(validationErrors).length === 0) {
-//   setIsConfirmationOpen(true); 
-
-// } else {
-//   setErrors(validationErrors)
-// }
-// };
-
   const handleConfirmSubmit = async () => {
-      await dispatch(fetchWithDrawallData(formData));
-      setIsConfirmationOpen(false); 
-      setFormData({ 
-        lp_amount : 0,
-      })
+    try {
+      const data = await dispatch(fetchWithDrawallData(formData));
+  
+      if (data.success) {
+        toast.success(data.message);
+        setFormData({ lp_amount: 0 });
+      } else if (data.Error) {
+        toast.error(data.Message);
+      }
+      setIsConfirmationOpen(false);
+      
+    } catch (error) {
+      console.error("Error submitting withdrawal:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
   };
   
   return (
@@ -156,7 +124,7 @@ function Withdrawal() {
             </div>
           </div>
         </header>
-
+        <ToastContainer/>
         <section className="py-20">
           <div className="container">
             <div className="p-[20px] bg-white rounded-md">
