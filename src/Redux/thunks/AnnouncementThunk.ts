@@ -9,7 +9,7 @@ export const fetchAnnouncementData = () => {
         dispatch(fetchAnnouncementRequest());
         try {
             const response = await AxioAnnouncement.get('');
-            dispatch(fetchAnnouncementSuccess(response.data.data.announcements));
+            dispatch(fetchAnnouncementSuccess(response.data.data));
         } catch (error: any) {
             dispatch(fetchAnnouncementFailure(error.message || 'Failed to fetch AnnouncementData data'));
         }

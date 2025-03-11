@@ -34,11 +34,11 @@ function SecurityPassEmail() {
       const res = await dispatch(fetchSecurityOtp(dataMail))
       const otpGet = res.data.data
       if(otpGet.success === true){
-        toast(otpGet.Message)
+        toast.success(otpGet.Message)
         setLoader(false);
         setOpen(!open);
       }else{
-        toast(otpGet.Message)
+        toast.error(otpGet.Message)
       }
     }
 
@@ -82,13 +82,15 @@ function SecurityPassEmail() {
     const res = await dispatch(fetchSecurityOtpGET(data))
     const GetOtpMethod = res.data.data
     sessionStorage.setItem("securityMemberId", GetOtpMethod.memberid);
-    if(GetOtpMethod.success === true){
-      toast(GetOtpMethod.message)
-      navigate('/securityotpconfirmation')
-    }else{
-      toast(GetOtpMethod.Message)
+    if (GetOtpMethod?.success) {
+      toast.success(GetOtpMethod?.message || 'OTP verification successful');
+      navigate('/securityotpconfirmation');
+    } else if (GetOtpMethod?.error) {
+      toast.error(GetOtpMethod?.message || 'An error occurred while getting OTP');
     }
+    
   };
+
   const emailOpenclose = ()=>{
     setOpen(false);
   }
@@ -141,7 +143,7 @@ function SecurityPassEmail() {
                 <div className="flex flex-col space-y-10">
                   <div className="flex flex-row items-center justify-between mx-auto w-full">
                     {otp.map((_, index) => (
-                  <div className="w-16 h-16" key={index}>
+                  <div className="w-11 h-11 sm:w-16 sm:h-16" key={index}>
                     <input
                       ref={el => inputRefs.current[index] = el}
                       type="text"
@@ -149,7 +151,7 @@ function SecurityPassEmail() {
                       value={otp[index]}
                       onChange={(e) => handleOTPChange(e, index)}
                       onKeyDown={(e) => handleBackspace(e, index)}
-                      className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-[#178285]"
+                      className="w-full h-full flex flex-col items-center justify-center text-center px-2 sm:px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-[#178285]"
                     />
                   </div>
                 ))}
@@ -196,7 +198,7 @@ function SecurityPassEmail() {
         </div>
       </header>
         <div className="relative flex min-h-screen flex-col justify-center overflow-hidden py-12">
-        <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+        <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl ">
           <div className="mx-auto flex w-full max-w-md flex-col space-y-14">
             <div className="flex flex-col items-center justify-center text-center space-y-2">
               <div className="font-semibold text-3xl">

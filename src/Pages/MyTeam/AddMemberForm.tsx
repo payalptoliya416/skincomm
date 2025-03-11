@@ -16,6 +16,7 @@ import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
 import imageCompression from 'browser-image-compression';
+import { IoIosCloseCircle } from 'react-icons/io';
 interface Product {
     combo_product_name: string,
     combo_product_lp: number,
@@ -55,6 +56,7 @@ const AddMemberForm = () => {
      const [errors, setErrors] = useState<any>({});
      const [stripInput ,setStripInput] = useState<any>(false);
           const [cart, setCart] = useState<any[]>([]); 
+          const [isOpen, setIsOpen] = useState<any>(null);
           const [totalPrice, setTotalPrice] = useState(0); 
     const [formData, setFormData] = useState<FormData>({
         sponsor:  upline_id || '' ,
@@ -645,6 +647,12 @@ const AddMemberForm = () => {
                                                                                         <table  id="example" className="display table-auto w-full text-sm text-left rtl:text-right text-black  ">
                                                                                             <thead className="text-xs text-white uppercase bg-[#178285]">
                                                                                                 <tr>
+                                                                                                <th className="px-6 py-3 text-center">
+                                                                   Image
+                                                                   </th>
+                                                                   <th className="px-6 py-3 text-center">
+                                                                   Code
+                                                                   </th>
                                                                                                     <th className="px-6 py-3 text-center">
                                                                                                     Name
                                                                                                     </th>
@@ -663,7 +671,32 @@ const AddMemberForm = () => {
                                                                                         {productListData.products && productListData.products.length > 0 ? (
                                                                                                     productListData.products.map((item: any, index: number) => (
                                                                                                     <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
-                                                                                                            
+                                                                                                         <td className="px-6 py-3 text-center">
+                                                                  <img src={item.combo_product_image} alt="" className='mx-auto w-[40px] h-[40px] rounded-full cursor-pointer' onClick={() => setIsOpen(item.combo_product_image)} />
+                                                                                                                                    {isOpen && (
+                                                                                                                                                                                                        <>
+                                                                                                                                                                                                         <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
+                                                                                                                                                                                                        <div className="fixed inset-0 z-20 flex items-center justify-center">
+                                                                                                                                                                                                            <section className="flex items-center justify-center relative">
+                                                                                                                                                                                                            <button
+                                                                                                                                                                                                                className="absolute top-[-2px] right-[-2px] z-30 text-white"
+                                                                                                                                                                                                                onClick={() => setIsOpen(null)}
+                                                                                                                                                                                                            >
+                                                                                                                                                                                                                <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
+                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                            <img
+                                                                                                                                                                                                                src={isOpen}
+                                                                                                                                                                                                                alt="Enlarged"
+                                                                                                                                                                                                                className="max-w-[90vw] max-h-[80vh] rounded-2xl"
+                                                                                                                                                                                                            />
+                                                                                                                                                                                                            </section>
+                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                        </>
+                                                                                                                                                                                                    )}
+                                                                   </td>
+                                                                   <td className="px-6 py-3 text-center">
+                                                                          {item.combo_product_code}
+                                                                   </td>   
                                                                                                     <td className="px-6 py-3 text-center">
                                                                                                            {item.combo_product_name}
                                                                                                     </td>

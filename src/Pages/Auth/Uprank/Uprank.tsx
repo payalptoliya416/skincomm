@@ -367,7 +367,7 @@ function Uprank() {
                                 currency : "",
                                 deliver_status:'self_collect'
                                })
-                               navigate('/successfully');
+                               navigate('/successfully', {state : { message: res.data.message } } );
                                setDisable(false);
                             }else{
                                toast.error(res.data.message)

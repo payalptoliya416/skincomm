@@ -16,6 +16,7 @@ import { fetchProductPakageList } from '../../Redux/thunks/ProductPakageThunk';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
 import imageCompression from 'browser-image-compression';
+import { IoIosCloseCircle } from 'react-icons/io';
 interface Product {
     combo_product_name: string,
     combo_product_lp: number,
@@ -46,7 +47,7 @@ const DashboardAdMember = () => {
     const elements = useElements();
     const dispatch = useDispatch<any>();
     const { productListData } = useSelector((state: RootState) => state.product);
-         const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
+    const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
     const [userId , setUserId] = useState('');
      const [fName ,setFName] = useState<any>([]);
      const [placementName ,setplacementName] = useState<any>([]);
@@ -55,7 +56,7 @@ const DashboardAdMember = () => {
      const [stripInput ,setStripInput] = useState<any>(false);
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
-
+     const [isOpen, setIsOpen] = useState<any>(null);
     const [formData, setFormData] = useState<FormData>({
         sponsor:  "",
         placement:  "",
@@ -606,6 +607,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                            <thead className="text-xs text-white uppercase bg-[#178285]">
                                                                <tr>
                                                                    <th className="px-6 py-3 text-center">
+                                                                   Image
+                                                                   </th>
+                                                                   <th className="px-6 py-3 text-center">
                                                                    Code
                                                                    </th>
                                                                    <th className="px-6 py-3 text-center">
@@ -627,6 +631,29 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                                    productListData.products.map((item: any, index: number) => (
                                                                    <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                                            
+                                                                   <td className="px-6 py-3 text-center">
+                                                                   <img src={item.combo_product_image} alt="" className='mx-auto w-[40px] h-[40px] rounded-full cursor-pointer'  onClick={() => setIsOpen(item.combo_product_image)} />
+                                                                   {isOpen && (
+                                                                    <>
+                                                                     <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
+                                                                    <div className="fixed inset-0 z-20 flex items-center justify-center">
+                                                                        <section className="flex items-center justify-center relative">
+                                                                        <button
+                                                                            className="absolute top-[-2px] right-[-2px] z-30 text-white"
+                                                                            onClick={() => setIsOpen(null)}
+                                                                        >
+                                                                            <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
+                                                                        </button>
+                                                                        <img
+                                                                            src={isOpen}
+                                                                            alt="Enlarged"
+                                                                            className="max-w-[90vw] max-h-[80vh] rounded-2xl"
+                                                                        />
+                                                                        </section>
+                                                                    </div>
+                                                                    </>
+                                                                )}
+                                                                   </td>
                                                                    <td className="px-6 py-3 text-center">
                                                                           {item.combo_product_code}
                                                                    </td>
@@ -661,6 +688,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                            )}
                                                            </tbody>
                                                        </table>
+                                                       {/* ---popup image  */}
+                                                 
                                                        </div>
                                     {errors.products_data && <p className='text-red-500 text-xs'>{errors.products_data}</p>}
                                 </div>

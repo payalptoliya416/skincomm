@@ -14,6 +14,7 @@ import { fetchReorderPost } from '../../Redux/thunks/ReorderPostThunk';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { fetchProductList } from '../../Redux/thunks/productListReducer';
 import imageCompression from 'browser-image-compression';
+import { IoIosCloseCircle } from 'react-icons/io';
 interface Product {
   id : string,
   category_name : string,
@@ -55,6 +56,7 @@ function ReorderPage(props: any) {
     const [customerRankID, setCustomerRankID] = useState<any>(null);
     const [eWallerPPText ,setEWalletPPText] = useState<any>();
     const [eWallerRPText ,setEWalletRPText] = useState<any>();
+    const [isOpen, setIsOpen] = useState<any>(null);
     const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = sessionStorage.getItem('cart');
@@ -548,7 +550,27 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                                 <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                       
                                 <td className="px-6 py-3">
-                                    <img src={item.image} alt="" className='w-[40px] h-[40px] rounded-full' />
+                                    <img src={item.image} alt="" className='w-[40px] h-[40px] rounded-full cursor-pointer' onClick={() => setIsOpen(item.image)} />
+                                    {isOpen && (
+                                                                    <>
+                                                                    <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
+                                                                    <div className="fixed inset-0 z-20 flex items-center justify-center">
+                                                                        <section className="flex items-center justify-center relative">
+                                                                        <button
+                                                                            className="absolute top-[-2px] right-[-2px] z-30 text-white"
+                                                                            onClick={() => setIsOpen(null)}
+                                                                        >
+                                                                            <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
+                                                                        </button>
+                                                                        <img
+                                                                            src={isOpen}
+                                                                            alt="Enlarged"
+                                                                            className="max-w-[90vw] max-h-[80vh] rounded-2xl"
+                                                                        />
+                                                                        </section>
+                                                                    </div>
+                                                                    </>
+                                                                )}
                                 </td>
                                 <td className="px-6 py-3">
                                     {item.product_code}
