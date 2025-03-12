@@ -37,6 +37,9 @@ const DashboardSidebar = ({ loginState }: any) => {
         sessionStorage.removeItem('customerrank');
         sessionStorage.removeItem('userLoginstate');
         sessionStorage.removeItem('refUserID');
+        sessionStorage.removeItem('dashboardAddmemberCredit');
+        sessionStorage.removeItem('myTeamAddmemberCredit');
+        
         
         window.location.href = '/';
     };

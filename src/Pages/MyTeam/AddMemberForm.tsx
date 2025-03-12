@@ -1,4 +1,4 @@
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { useElements } from "@stripe/react-stripe-js";
 import React, { useEffect, useState } from "react";
 import Layout from "../../Components/Layout";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,6 +17,8 @@ import { HiOutlineMinusSmall, HiOutlinePlusSmall } from "react-icons/hi2";
 import { BsCart } from "react-icons/bs";
 import imageCompression from "browser-image-compression";
 import { IoIosCloseCircle } from "react-icons/io";
+import { LIVE_URL } from "../../Utilities/config";
+import { fetchPaymentLink } from "../../Redux/thunks/PaymentLinkThunk";
 interface Product {
   combo_product_name: string;
   combo_product_lp: number;
@@ -35,22 +37,26 @@ interface FormData {
   sponsor_type: number;
   products_data: any[];
   country: string;
-  isFieldsDisabled?: boolean;
   payment_type: string;
-  stripeToken: string;
   deliver_status: string;
   payment_slip_image: any;
 }
 
 const AddMemberForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
   const location = useLocation();
   const { upline_id, col } = location.state || {};
   const [fName, setFName] = useState<any>([]);
   const [placementName, setplacementName] = useState<any>([]);
   const dispatch = useDispatch<any>();
   const { productListData } = useSelector((state: RootState) => state.product);
+  const comboRetailPrices = productListData && productListData.products
+  ? productListData.products.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
+    ))
+  : [];
+const comboRetailProduct= productListData && productListData.products
+  ? productListData.products.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+    ))
+  : [];
   const { UserDetailData } = useSelector(
     (state: RootState) => state.userDetail
   );
@@ -72,7 +78,6 @@ const AddMemberForm = () => {
     products_data: [],
     payment_type: "",
     country: "",
-    stripeToken: "",
     deliver_status: "self_collect",
     payment_slip_image: null,
   });
@@ -297,24 +302,7 @@ const AddMemberForm = () => {
 
   const validateForm = () => {
     const newErrors: any = {};
-    if (formData.isFieldsDisabled) {
-      if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
-      if (!formData.placement) newErrors.placement = "Placement ID is required";
-      if (!formData.matrix_side)
-        newErrors.matrix_side = "Matrix Side is required";
-      if (!formData.country) newErrors.country = "Country Name is required";
-      if (!formData.products_data || formData.products_data.length === 0) {
-        newErrors.products_data = "Package is required";
-      }
-      if (!formData.payment_type)
-        newErrors.payment_type = "Payment Type is required";
-      if (
-        formData.payment_type === "upload_payment_slip" &&
-        !formData.payment_slip_image
-      ) {
-        newErrors.upload = "Please select an image";
-      }
-    } else {
+   
       if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
       if (!formData.placement) newErrors.placement = "Placement ID is required";
       if (!formData.matrix_side)
@@ -339,7 +327,7 @@ const AddMemberForm = () => {
       ) {
         newErrors.upload = "Please select an image";
       }
-    }
+    
     return newErrors;
   };
 
@@ -384,106 +372,73 @@ const AddMemberForm = () => {
     }
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
-      if (!stripe || !elements) {
-        toast.error("Stripe or Elements not initialized.");
-        setDisable(false);
-        return;
-      }
+     
+    if(formData.payment_type === "credit_card" || formData.payment_type === "e-wallet" && stripInput || formData.payment_type === "e-wallet" ){
+                sessionStorage.setItem("myTeamAddmemberCredit" ,JSON.stringify(formData));
+                
+                const creditcardData = {
+                                    "payment_type":formData.payment_type,
+                                    "amount_type" : comboRetailPrices[0], 
+                                    "product_type" : comboRetailProduct[0], 
+                                    "products_data" :formData.products_data,
+                                    "deliver_status" : formData.deliver_status,
+                                    "success_url" :`${LIVE_URL}/addmember-payment`,
+                                    "cancel_url":`${LIVE_URL}/placement-tree`
+                                }
 
-      let paymentMethodId = null;
+                const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
+                
+                
+                 if (availableUrl?.url) {
+                        let storedData = JSON.parse(sessionStorage.getItem("myTeamAddmemberCredit") || "{}");
+                       storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+                       sessionStorage.setItem("myTeamAddmemberCredit", JSON.stringify(storedData));
+                        window.location.href = availableUrl.url;
+                    } else {
+                       toast.error("Invalid URL received:", availableUrl);
+                    }
+     }else{
+       const formDataToSend = {
+         ...formData
+       };
+     
+         const mobileDetail = {
+           action: "checkuniquemobile",
+           phone_no: formData.mobile,
+           account: formData.account_type,
+           sponsor: "",
+         };
+  
+         const response = await dispatch(fetchNumber(mobileDetail));
+         const numberData = response.data;
+  
+         if (numberData.success) {
+           const successData = await dispatch(fetchAddMember(formDataToSend));
+           if (successData) {
+             if (successData.data.data.error === true) {
+               toast.error(successData.data.data.message);
+               setDisable(false);
+             } else {
+               toast.success("Member added successfully !");
+               const successnavigate = successData.data.data;
+               if (formData.payment_type === "upload_payment_slip") {
+                 navigate("/successfully", {
+                   state: { message: successnavigate.message },
+                 });
+               } else {
+                 navigate("/successfullyPayment", {
+                   state: { successnavigate },
+                 });
+               }
+               setDisable(false);
+             }
+           }
+         } else {
+           toast.error("Mobile validation failed, form submission aborted.");
+           setDisable(false);
+         }
+     }
 
-      if (
-        formData.payment_type === "credit_card" ||
-        (formData.payment_type === "e-wallet" && stripInput)
-      ) {
-        const cardElement = elements.getElement(CardElement);
-
-        if (!cardElement) {
-          toast.error("Card Element not found.");
-          setDisable(false);
-          return;
-        }
-        try {
-          const { error, token } = await stripe.createToken(cardElement);
-          if (error) {
-            toast.error("Payment error: " + error.message);
-            setDisable(false);
-            return;
-          }
-          paymentMethodId = token?.id;
-
-          if (!paymentMethodId) {
-            toast.error("Payment method ID not found.");
-            setDisable(false);
-            return;
-          }
-        } catch (paymentError) {
-          toast.error("Payment processing error. Please try again.");
-          setDisable(false);
-          return;
-        }
-      }
-
-      const formDataToSend = {
-        ...formData,
-        stripeToken: paymentMethodId || "",
-      };
-      if (formData.isFieldsDisabled) {
-        const successData = await dispatch(fetchAddMember(formDataToSend));
-        if (successData) {
-          if (successData.data.data.error === true) {
-            toast.error(successData.data.data.message);
-            setDisable(false);
-          } else {
-            toast.success("Member added successfully !");
-            const successnavigate = successData.data.data;
-            if (formData.payment_type === "upload_payment_slip") {
-              navigate("/successfully", {
-                state: { message: successnavigate.message },
-              });
-            } else {
-              navigate("/successfullyPayment", { state: { successnavigate } });
-            }
-            setDisable(false);
-          }
-        }
-      } else {
-        const mobileDetail = {
-          action: "checkuniquemobile",
-          phone_no: formData.mobile,
-          account: formData.account_type,
-          sponsor: "",
-        };
-
-        const response = await dispatch(fetchNumber(mobileDetail));
-        const numberData = response.data;
-
-        if (numberData.success) {
-          const successData = await dispatch(fetchAddMember(formDataToSend));
-          if (successData) {
-            if (successData.data.data.error === true) {
-              toast.error(successData.data.data.message);
-              setDisable(false);
-            } else {
-              toast.success("Member added successfully !");
-              const successnavigate = successData.data.data;
-              if (formData.payment_type === "upload_payment_slip") {
-                navigate("/successfully", {
-                  state: { message: successnavigate.message },
-                });
-              } else {
-                navigate("/successfullyPayment", {
-                  state: { successnavigate },
-                });
-              }
-              setDisable(false);
-            }
-          }
-        } else {
-          toast.error("Mobile validation failed, form submission aborted.");
-          setDisable(false);
-        }
-      }
       setFormData({
         sponsor: "",
         placement: "",
@@ -496,7 +451,6 @@ const AddMemberForm = () => {
         products_data: [],
         payment_type: "",
         country: "",
-        stripeToken: "",
         deliver_status: "self_collect",
         payment_slip_image: null,
       });
@@ -607,36 +561,6 @@ const AddMemberForm = () => {
                     <p className="text-red-500 text-xs">{errors.matrix_side}</p>
                   )}
                 </div>
-                {/* <div className="mb-3">
-                                    <label  className='text-[#1e293b] text-[14px] mb-1'>Account Type</label>
-                                    <div className='mt-3'>
-                                        <div className="flex items-center">
-                                            <input
-                                                id="main-account"
-                                                type="radio"
-                                                name="account_type"
-                                                value="0"
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-                                                checked={formData.account_type === 0}
-                                                onChange={handleChange}
-                                            />
-                                            <label htmlFor="main-account" className="ms-2 text-sm font-medium text-black ">Main Account</label>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <input
-                                                id="sub-account"
-                                                type="radio"
-                                                name="account_type"
-                                                value="1"
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-                                                checked={formData.account_type === 1}
-                                                onChange={handleChange}
-                                            />
-                                            <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black">Sub Account</label>
-                                        </div>
-                                    </div>
-                                    {errors.account_type && <p className='text-red-500 text-xs'>{errors.account_type}</p>}
-                                </div> */}
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">
                     Full Name
@@ -648,11 +572,8 @@ const AddMemberForm = () => {
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
                     value={formData.f_name}
                     onChange={handleChange}
-                    disabled={formData.isFieldsDisabled}
                   />
-                  {formData.isFieldsDisabled
-                    ? ""
-                    : errors.f_name && (
+                  { errors.f_name && (
                         <p className="text-red-500 text-xs">{errors.f_name}</p>
                       )}
                 </div>
@@ -665,11 +586,8 @@ const AddMemberForm = () => {
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
                     value={formData.e_mail}
                     onChange={handleChange}
-                    disabled={formData.isFieldsDisabled}
                   />
-                  {formData.isFieldsDisabled
-                    ? ""
-                    : errors.e_mail && (
+                  { errors.e_mail && (
                         <p className="text-red-500 text-xs">{errors.e_mail}</p>
                       )}
                 </div>
@@ -682,11 +600,8 @@ const AddMemberForm = () => {
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
                     value={formData.mobile}
                     onChange={handleChange}
-                    disabled={formData.isFieldsDisabled}
                   />
-                  {formData.isFieldsDisabled
-                    ? ""
-                    : errors.mobile && (
+                  { errors.mobile && (
                         <p className="text-red-500 text-xs">{errors.mobile}</p>
                       )}
                 </div>
@@ -753,25 +668,25 @@ const AddMemberForm = () => {
                                     }
                                   />
                                   {isOpen && (
-                                                                                                     <>
-                                                                                                      <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
-                                                                                                     <div className="fixed inset-0 z-20 flex items-center justify-center">
-                                                                                                         <section className="flex items-center justify-center relative">
-                                                                                                         <button
-                                                                                                             className="absolute top-[-2px] right-[-2px] z-30 text-white"
-                                                                                                             onClick={() => setIsOpen(null)}
-                                                                                                         >
-                                                                                                             <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
-                                                                                                         </button>
-                                                                                                         <img
-                                                                                                             src={isOpen}
-                                                                                                             alt="Enlarged"
-                                                                                                             className="max-w-[90vw] max-h-[80vh] rounded-2xl"
-                                                                                                         />
-                                                                                                         </section>
-                                                                                                     </div>
-                                                                                                     </>
-                                                                                                 )}
+                                    <>
+                                      <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
+                                      <div className="fixed inset-0 z-20 flex items-center justify-center">
+                                        <section className="flex items-center justify-center relative">
+                                          <button
+                                            className="absolute top-[-2px] right-[-2px] z-30 text-white"
+                                            onClick={() => setIsOpen(null)}
+                                          >
+                                            <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
+                                          </button>
+                                          <img
+                                            src={isOpen}
+                                            alt="Enlarged"
+                                            className="max-w-[90vw] max-h-[80vh] rounded-2xl"
+                                          />
+                                        </section>
+                                      </div>
+                                    </>
+                                  )}
                                 </td>
                                 <td className="px-6 py-3 text-center">
                                   {item.combo_product_code}
@@ -874,7 +789,7 @@ const AddMemberForm = () => {
                   ) : (
                     ""
                   )}
-                  {formData.payment_type === "credit_card" ? (
+                  {/* {formData.payment_type === "credit_card" ? (
                     <div className="mt-4">
                       <CardElement
                         className="border py-2 px-3 rounded-md"
@@ -883,8 +798,8 @@ const AddMemberForm = () => {
                     </div>
                   ) : (
                     ""
-                  )}
-                  {formData.payment_type === "e-wallet" && stripInput ? (
+                  )} */}
+                  {/* {formData.payment_type === "e-wallet" && stripInput ? (
                     <div className="mt-4">
                       <CardElement
                         className="border py-2 px-3 rounded-md"
@@ -893,7 +808,7 @@ const AddMemberForm = () => {
                     </div>
                   ) : (
                     ""
-                  )}
+                  )} */}
                   {formData.payment_type === "upload_payment_slip" ? (
                     <input
                       type="file"

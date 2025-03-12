@@ -101,6 +101,7 @@ const filteredData = invoiceData?.invoices?.filter((item: any) => {
         PP,
         credit_card,
         status,
+        
     } = pdfData;
     const totalQuantity = products.reduce((acc : any, product : any) => acc + product.quantity, 0);
     // const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc * (product.shipment_costs || 1), 1);
@@ -111,7 +112,7 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                 <tr>
                     <td class='px-1 pt-0 border-t border-solid border-black text-[9px] pb-3'>${product.product_code ? product.product_code : ""}
                     </td>
-                    <td class='px-1 pt-0 border-t border-solid border-black text-[9px] pb-3'>${product.product_name ? product.product_name : ""}
+                    <td class='px-1 pt-0 border-t border-solid border-black text-[9px] pb-3'>${product.product_description ? product.product_description : ""}
                     </td>
                     <td class='px-1 pt-0 border-t border-solid border-black text-[9px] pb-3'>${product.quantity ? product.quantity : ""}</td>
                     <td class='px-1 pt-0 border-t border-solid border-black text-[9px] pb-3'>${(product.amount - product.amount * (gst_percentage / 100)).toFixed(2)}</td>

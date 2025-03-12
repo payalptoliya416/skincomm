@@ -11,10 +11,11 @@ import { fetchPaymentBy } from '../../Redux/thunks/PaymentByThunk';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchReorderPost } from '../../Redux/thunks/ReorderPostThunk';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { fetchProductList } from '../../Redux/thunks/productListReducer';
 import imageCompression from 'browser-image-compression';
 import { IoIosCloseCircle } from 'react-icons/io';
+import { fetchPaymentLink } from '../../Redux/thunks/PaymentLinkThunk';
+import { LIVE_URL } from '../../Utilities/config';
 interface Product {
   id : string,
   category_name : string,
@@ -37,9 +38,15 @@ interface productData {
 
 function ReorderPage(props: any) {
   const UserDetailData = props;
-  const stripe = useStripe(); 
-  const elements = useElements();
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
+    const comboRetailPrices = productData && productData.products
+  ? productData.products.map((item: any) => (item.product_retail_price ? "retail_price" : "associate_price"
+    ))
+  : [];
+const comboRetailProduct= productData && productData.products
+  ? productData.products.map((item: any) => ( item.product_code ? "product" : "combo_product"
+    ))
+  : [];
     const [ewalletData , setEwalletData] = useState<any>('');
     const totalBalanceOfEWallet = (Number(ewalletData.balance_rc || 0) + Number(ewalletData.balance_sp || 0)).toFixed(2);
     const [formData , setFormData] = useState<FormData>({
@@ -397,62 +404,47 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
       }else{
           if (Object.keys(errors).length === 0 ) {
               
-            if (!stripe || !elements) {
-              toast.error("Stripe or Elements not initialized.");
-              setDisable(false); 
-              return;
-            }
-            let paymentMethodId = null;
-            if (formData.currency === "credit_card" ||  (formData.currency === "e-wallet" && stripShow)) {
-              const cardElement = elements.getElement(CardElement);
-
-              if (!cardElement) {
-                toast.error("Card Element not found."); 
-                setDisable(false);
-                return;
-              }
-
-              try {
-              const { error, token } = await stripe.createToken(cardElement);
-                if (error) {
-                  toast.error("Payment error: " + error.message);  
-                  setDisable(false);
-                  return;
-                }
-                paymentMethodId = token?.id;
-                if (!paymentMethodId) {
-                  toast.error("Payment method ID not found.");
-                  setDisable(false);
-                  return;
-                }
-              } catch (paymentError) {
-                toast.error("Payment processing error. Please try again.");
-                setDisable(false);
-                return;
-              } 
-            }
-            
-            const formDataToSend = {
-              ...data,
-              stripeToken: paymentMethodId || "", 
-            };
-                 const res =  await dispatch(fetchReorderPost(formDataToSend));
-                 if(res.data.success === true){
-                     toast.success(res.data.message)
-                     sessionStorage.removeItem('cart')
-                     sessionStorage.removeItem('totalPrice')   
-                     setFormData({
-                      id: '',
-                      currency : "",
-                      deliver_status:'self_collect',
-                      payment_slip_image: null
-                     });
-                      navigate('/successfully' , {state : { message: res.data.message } } );
-                      setDisable(false);
-                  }else{
-                     toast.error(res.data.message)
-                     setDisable(false);
-                 }
+              if(formData.currency === "credit_card" || formData.currency === "e-wallet" ){
+                            sessionStorage.setItem("reorderpaymentData" ,JSON.stringify(data));
+                            const creditcardData = {
+                                "payment_type":formData.currency,
+                                "amount_type" : comboRetailPrices[0], 
+                                "product_type" : comboRetailProduct[0], 
+                                "products_data" :products_data,
+                                "deliver_status" : formData.deliver_status,
+                                "success_url" :`${LIVE_URL}/reorder-payment`,
+                                "cancel_url":`${LIVE_URL}/reorder`
+                            }
+                            const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
+                            if (availableUrl?.url) {
+                                let storedData = JSON.parse(sessionStorage.getItem("reorderpaymentData") || "{}");
+                                storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+                                sessionStorage.setItem("reorderpaymentData", JSON.stringify(storedData));
+                                window.location.href = availableUrl.url;
+                            } else {
+                                toast.error("Invalid URL received:", availableUrl);}
+                            }else{
+                              const formDataToSend = {
+                                ...data,
+                              };
+                                   const res =  await dispatch(fetchReorderPost(formDataToSend));
+                                   if(res.data.success === true){
+                                       toast.success(res.data.message)
+                                       sessionStorage.removeItem('cart')
+                                       sessionStorage.removeItem('totalPrice')   
+                                       setFormData({
+                                        id: '',
+                                        currency : "",
+                                        deliver_status:'self_collect',
+                                        payment_slip_image: null
+                                       });
+                                        navigate('/successfully' , {state : { message: res.data.message } } );
+                                        setDisable(false);
+                                    }else{
+                                       toast.error(res.data.message)
+                                       setDisable(false);
+                                   }
+                            }
           } else {
             setError(errors)
             setDisable(false);
@@ -657,19 +649,19 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                                     </>
                                 ) : ''
                              }
-                          {formData.currency === "credit_card" && (
+                          {/* {formData.currency === "credit_card" && (
                                 <div className="mt-4">
                                 <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                 </div>
-                            )} 
-                             {
+                            )}  */}
+                             {/* {
                                 formData.currency === 'e-wallet' && stripShow? (
                                     <div className="mt-4">
                                    {eWallerCreditText &&  <p className='text-sm mb-1'>{eWallerCreditText}</p>}   
                                     <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                     </div>
                                 ) : ""
-                            }
+                            } */}
                             { formData.currency === 'e-wallet' ? <input
                           type="text"
                           placeholder="balance"

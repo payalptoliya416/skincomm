@@ -9,7 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { MdError } from "react-icons/md";
 
 const MyTeam = () => {
-    const { teamsearchData } = useSelector((state: RootState) => state.myTeamSearch);
+    const { teamsearchData ,loading} = useSelector((state: RootState) => state.myTeamSearch);
     const [errorMsj , setErrorMsj] = useState('')
     const dispatch = useDispatch<any>();    
    const ID =  sessionStorage.getItem('UserID')
@@ -102,125 +102,150 @@ const MyTeam = () => {
                             </div>
                         </div>
                             </li>
-                {
-                    teamsearchData  ? (
-                        <>
-                        <li className={` ${
-                                customerRankID === '1' ? "opacity-80 " : " "
-                            }`}   onClick={handleClick}> 
-                            <Link  to='/placement-tree' state={{SearchUserID}}  className={`flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white ${
-                                customerRankID === '1' ? "pointer-events-none" : " "
-                            }`}
+               
+                        {loading ? (
+            <li>
+                <div className="flex items-center justify-center p-4 w-full bg-white rounded-md">
+                    <svg
+                        className="w-6 h-6 animate-spin text-custom-text-color2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+                        <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                        ></circle>
+                        <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 0116 0h2a10 10 0 00-20 0h2z"
+                        ></path>
+                    </svg>
+                    <span className="ml-2 text-sm text-custom-text-color">Loading...</span>
+                </div>
+            </li>
+        ) : teamsearchData ? (
+            <>
+                <li
+                    className={` ${customerRankID === '1' ? 'opacity-80' : ''}`}
+                    onClick={handleClick}
+                >
+                    <Link
+                        to="/placement-tree"
+                        state={{ SearchUserID }}
+                        className={`flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white ${
+                            customerRankID === '1' ? 'pointer-events-none' : ''
+                        }`}
+                    >
+                        <div className="-mt-1 w-14">
+                            <svg
+                                className="w-6 h-6 text-custom-text-color2"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
                             >
-                                <div className="-mt-1 w-14">
-                                    <svg
-                                        className="w-6 h-6 text-custom-text-color2"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                                        />
-                                    </svg>
-                                </div>
-                                <div
-                                    className="w-full flex items-center justify-between pr-2"
-                                >
-                                    <span> Placement Tree</span>
-                                    <svg
-                                        className="w-5 h-5 text-custom-text-color2"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="m9 5 7 7-7 7"
-                                        />
-                                    </svg>
-                                </div>
-                            </Link>
-                        </li>
-                        <li className={` ${
-                                customerRankID === '1' ? "opacity-80 " : " "
-                            }`}   onClick={handleClick}>
-                            <Link to='/sponsored-network' state={{SearchUserID}}  className={`flex items-start w-full p-3 sm:p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ${
-                                customerRankID === '1' ? "pointer-events-none" : " "
-                            }`}>
-                            <div className="-mt-1 w-14">
-                                    <svg
-                                        className="w-6 h-6 text-custom-text-color2"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                                        />
-                                    </svg>
-                                </div>
-                                <div
-                                    className="w-full flex items-center justify-between pr-2"
-                                >
-                                    <span> Referral Tree</span>
-                                    <svg
-                                        className="w-5 h-5 text-custom-text-color2"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="m9 5 7 7-7 7"
-                                        />
-                                    </svg>
-                                </div>
-                            </Link>
-                        </li>
-                   </>  
-                    ) : (
-                        <>
-                         <li> 
-                        <div  className="flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white "
-                        >
-                            <div className="-mt-1 w-14">
-                            </div>
-                            <div
-                                className="w-full flex items-center justify-between pr-2"
-                            >
-                                {errorMsj &&  <span className="text-base text-red-400 flex gap-3 items-center"> -<MdError className="text-red-400" /> {errorMsj}</span>}
-                               
-                            </div>
+                                <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                />
+                            </svg>
                         </div>
-                    </li>
-                        </>
-                   
-                    )
-                }
-                           
+                        <div className="w-full flex items-center justify-between pr-2">
+                            <span>Placement Tree</span>
+                            <svg
+                                className="w-5 h-5 text-custom-text-color2"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m9 5 7 7-7 7"
+                                />
+                            </svg>
+                        </div>
+                    </Link>
+                </li>
+                <li
+                    className={` ${customerRankID === '1' ? 'opacity-80' : ''}`}
+                    onClick={handleClick}
+                >
+                    <Link
+                        to="/sponsored-network"
+                        state={{ SearchUserID }}
+                        className={`flex items-start w-full p-3 sm:p-4 text-custom-text-color font-normal rounded-md text-xs bg-white ${
+                            customerRankID === '1' ? 'pointer-events-none' : ''
+                        }`}
+                    >
+                        <div className="-mt-1 w-14">
+                            <svg
+                                className="w-6 h-6 text-custom-text-color2"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                />
+                            </svg>
+                        </div>
+                        <div className="w-full flex items-center justify-between pr-2">
+                            <span>Referral Tree</span>
+                            <svg
+                                className="w-5 h-5 text-custom-text-color2"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m9 5 7 7-7 7"
+                                />
+                            </svg>
+                        </div>
+                    </Link>
+                </li>
+            </>
+        ) : (
+            <li>
+                <div className="flex items-start p-3 sm:p-4 w-full text-custom-text-color rounded-md font-normal text-xs bg-white">
+                    <div className="-mt-1 w-14"></div>
+                    <div className="w-full flex items-center justify-between pr-2">
+                        {errorMsj && (
+                            <span className="text-base text-red-400 flex gap-3 items-center">
+                                -<MdError className="text-red-400" /> {errorMsj}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </li>
+        )}     
                         </ul>
                     </div>
                 </section>

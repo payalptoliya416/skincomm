@@ -12,6 +12,7 @@ interface SponsoredNetworkItem {
     rank_name: string;
     joining_date: string;
     sponsored: SponsoredNetworkItem[]; 
+    matrix_side: string;
     id: number;
     account_status: string;
     expiery_date: string;
@@ -28,7 +29,7 @@ const SponsoredNetworkItem: React.FC<{
 }> = ({ item, openStates, handleOpen }) => {
     return (
         <div className='py-[12px] px-[20px] shadow-lg rounded-md mb-4'>
-            <h2 className='text-[1e293b] text-sm font-semibold'>{item.userid} : {item.f_name} - {item.rank_name}</h2>
+            <h2 className='text-[1e293b] text-sm font-semibold'>{item.userid} : {item.f_name} - {item.rank_name} - {item.matrix_side === "L" ? "Left" : item.matrix_side === "R" ? "Right" : ""}</h2>
             <h3 className='text-[1e293b] text-sm mb-1'>Date Join : {item.joining_date} </h3>
             <h3 className='text-[1e293b] text-sm mb-1'>Expiery Date : {item.expiery_date}</h3>
             <h3 className='text-[1e293b] text-sm mb-1'>Status : {item.account_status}</h3>

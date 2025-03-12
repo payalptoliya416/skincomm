@@ -8,8 +8,9 @@ import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
 import { fetchProductList } from '../../../Redux/thunks/productListReducer';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { fetchUpRankPost } from '../../../Redux/thunks/UpRankPostThunk';
+import { fetchPaymentLink } from '../../../Redux/thunks/PaymentLinkThunk';
+import { LIVE_URL } from '../../../Utilities/config';
 
 interface FormData {
     id : string,
@@ -22,17 +23,22 @@ interface CartItem {
     price: number;
   }
 function Uprank() {
-    const stripe = useStripe(); 
-    const elements = useElements();
     const dispatch = useDispatch<any>();
     const { UprankGetData } = useSelector((state: RootState) => state.uprankGetData);
+    const comboRetailPrices = UprankGetData && UprankGetData.products
+  ? UprankGetData.products.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
+    ))
+  : [];
+const comboRetailProduct= UprankGetData && UprankGetData.products
+  ? UprankGetData.products.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+    ))
+  : [];
     const currentRank = UprankGetData?.current_rank_id;
     const [formData , setFormData] = useState<FormData>({
             id: '',
             currency : "",
             deliver_status: 'self_collect'
         });
-        const navigate = useNavigate();
             const [totalPrice, setTotalPrice] = useState<any>('');
             const [stripShow , setSripShow]= useState(false);
              const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
@@ -41,7 +47,6 @@ function Uprank() {
           });
         const [eWallerPPText ,setEWalletPPText] = useState<any>();
         const [eWallerRPText ,setEWalletRPText] = useState<any>();
-        const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
         const [ewalletData , setEwalletData] = useState<any>('');
         const [error,setError]= useState<any>();
         const [maxLP ,setMaxLP] = useState<any>(0);
@@ -169,7 +174,6 @@ function Uprank() {
                   setEWalletPPText(`- PP converted to ${ValuOfBalance.currency} base on (${(formattedValue)})`)
                   setEWalletRPText(`- RP converted to ${ValuOfBalance.currency} base on (${(formattedValue)})`)
     
-                  setEWalletCreditText(`- Amount Payable: ${ValuOfBalance.currency } ${ formattedRemainingPrice}`)
                 }
               if (ValuOfBalance.balance_rc === 0 && ValuOfBalance.balance_sp === 0) {
                 toast.error(ValuOfBalance.message);
@@ -269,117 +273,189 @@ function Uprank() {
             }
           }, []);
           
-          const rankValidation = () => {
+          // const rankValidation = () => {
       
+          //   const numericCurrentRank = Number(currentRank);
+          //   const maxLPitems = Object.values(maxLP);
+          //   const maximumTotalLP = maxLPitems.reduce((total: number, item: any) => total + item.price, 0);
+          //   const matchingItem = UprankGetData.rank_data.find((i: any) => i.rank_id === numericCurrentRank);
+
+          //    if(currentRank > 3 ){
+          //   toast.error(`You cannot Up Rank anymore`);
+          //    }else if (matchingItem) {
+          //     if (matchingItem.max_lp > maximumTotalLP) {
+          //       toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
+          //       return false; 
+          //     }
+          //   } else {
+          //     toast.error("You Cannot UpRank");
+          //     return false; 
+          //   }
+          
+          //   return true; 
+          // };
+          const rankValidation = () => {
             const numericCurrentRank = Number(currentRank);
             const maxLPitems = Object.values(maxLP);
             const maximumTotalLP = maxLPitems.reduce((total: number, item: any) => total + item.price, 0);
             const matchingItem = UprankGetData.rank_data.find((i: any) => i.rank_id === numericCurrentRank);
-
-             if(currentRank > 3 ){
-            toast.error(`You cannot Up Rank anymore`);
-             }else if (matchingItem) {
+            if (currentRank > 3) {
+              toast.error("You cannot Up Rank anymore");
+              return false; 
+            } 
+            
+            if (matchingItem) {
               if (matchingItem.max_lp > maximumTotalLP) {
                 toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
-                return false; 
+                return false;
               }
             } else {
               toast.error("You Cannot UpRank");
-              return false; 
+              return false;
             }
           
-            return true; 
+            return true;
           };
            const [disable , setDisable]= useState(false);
-            const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
-              e.preventDefault();
-               setDisable(true);
+            // const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
+            //   e.preventDefault();
+            //    setDisable(true);
               
-              const data = {
-                "package_ids": products_data,
-                  "payment_type" : formData.currency,
-                  "deliver_status": formData.deliver_status
-                }  
+            //   const data = {
+            //     "package_ids": products_data,
+            //       "payment_type" : formData.currency,
+            //       "deliver_status": formData.deliver_status
+            //     }  
 
-                if (products_data.length === 0) {
-                    toast.error("Please select at least one product.");
-                    setDisable(false);
-                    return;
-                  }
+            //     if (products_data.length === 0) {
+            //         toast.error("Please select at least one product.");
+            //         setDisable(false);
+            //         return;
+            //       }
                 
-                  const isRankValid = rankValidation();
-                  if (!isRankValid) {
-                    setDisable(false);
-                    return; 
-                  }
+            //       const isRankValid = rankValidation();
+            //       if (!isRankValid) {
+            //         setDisable(false);
+            //         return; 
+            //       }
 
-              const errors = validationErrors();
-
-                    if (Object.keys(errors).length === 0 ) {
+            //   const errors = validationErrors();
+            //         if (Object.keys(errors).length === 0 ) {
                         
-                      if (!stripe || !elements) {
-                        toast.error("Stripe or Elements not initialized."); 
-                        setDisable(false);
-                        return;
-                      }
-                      let paymentMethodId = null;
-                      if (formData.currency === "credit_card" ||  (formData.currency === "e-wallet" && stripShow)) {
-                        const cardElement = elements.getElement(CardElement);
-              
-                        if (!cardElement) {
-                          toast.error("Card Element not found."); 
-                          setDisable(false);
-                          return;
-                        }
-              
-                        try {
-                        const { error, token } = await stripe.createToken(cardElement);
-                          if (error) {
-                            toast.error("Payment error: " + error.message);  
-                            setDisable(false);
-                            return;
-                          }
-                          paymentMethodId = token?.id;
-
-                          if (!paymentMethodId) {
-                            toast.error("Payment method ID not found.");
-                            setDisable(false);
-                            return;
-                          }
-                        } catch (paymentError) {
-                          toast.error("Payment processing error. Please try again.");
-                          setDisable(false);
-                          return;
-                        } 
-                      }
-                      
-                      const formDataToSend = {
-                        ...data,
-                        stripeToken: paymentMethodId || "", 
-                      };
-                           const res =  await dispatch(fetchUpRankPost(formDataToSend));
-                           if(res.data.success === true){
-                               toast.success(res.data.message)
-                               sessionStorage.removeItem('cart')
-                               sessionStorage.removeItem('totalPrice')   
-                               setFormData({
-                                id: '',
-                                currency : "",
-                                deliver_status:'self_collect'
-                               })
-                               navigate('/successfully', {state : { message: res.data.message } } );
-                               setDisable(false);
-                            }else{
-                               toast.error(res.data.message)
-                               setDisable(false); 
-                           }
-                    } else {
-                      setError(errors)
-                      setDisable(false);
-                    }
+            //           if (!stripe || !elements) {
+            //             toast.error("Stripe or Elements not initialized."); 
+            //             setDisable(false);
+            //             return;
+            //           }
+            //           if(formData.currency === "credit_card" || formData.currency === "e-wallet" ){
+            //                           sessionStorage.setItem("uprankCredit" ,JSON.stringify(formData));
+            //                           const creditcardData = {
+            //                               "payment_type":formData.currency,
+            //                               "amount_type" : comboRetailPrices[0], 
+            //                               "product_type" : comboRetailProduct[0], 
+            //                               "products_data" :products_data,
+            //                               "deliver_status" : formData.deliver_status,
+            //                               "success_url" :`${LIVE_URL}/uprank-payment`,
+            //                               "cancel_url":`${LIVE_URL}/uprank`
+            //                           }
+            //                           const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
+            //                           if (availableUrl?.url) {
+            //                               let storedData = JSON.parse(sessionStorage.getItem("uprankCredit") || "{}");
+            //                               storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+            //                               sessionStorage.setItem("uprankCredit", JSON.stringify(storedData));
+            //                               window.location.href = availableUrl.url;
+            //                           } else {
+            //                               toast.error("Invalid URL received:", availableUrl);
+            //                           }
+                                      
+            //           }else{
+            //                            const formDataToSend = {
+            //                              ...data,
+            //                            };
+            //                                 const res =  await dispatch(fetchUpRankPost(formDataToSend));
+            //                                 if(res.data.success === true){
+            //                                     toast.success(res.data.message)
+            //                                     sessionStorage.removeItem('cart')
+            //                                     sessionStorage.removeItem('totalPrice')   
+            //                                     setFormData({
+            //                                      id: '',
+            //                                      currency : "",
+            //                                      deliver_status:'self_collect'
+            //                                     })
+            //                                     navigate('/successfully', {state : { message: res.data.message } } );
+            //                                     setDisable(false);
+            //                                  }else{
+            //                                     toast.error(res.data.message)
+            //                                     setDisable(false); 
+            //                                 }
+            //           }
+            //         } else {
+            //           setError(errors)
+            //           setDisable(false);
+            //         }
                 
-            }
-        
+            // }
+            const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              setDisable(true);
+            
+              if (!products_data.length) {
+                toast.error("Please select at least one product.");
+                setDisable(false);
+                return;
+              }
+            
+              if (!rankValidation()) { 
+                setDisable(false); 
+                return;
+              }
+            
+              const errors = validationErrors();
+              if (Object.keys(errors).length > 0) {
+                setError(errors);
+                setDisable(false);
+                return;
+              }
+
+              const data = {
+                package_ids: products_data,
+                payment_type: formData.currency,
+                deliver_status: formData.deliver_status,
+              };
+            
+              try {
+                sessionStorage.setItem("uprankCredit", JSON.stringify(data));
+                const creditcardData = {
+                  payment_type: formData.currency,
+                  amount_type: comboRetailPrices[0],
+                  product_type: comboRetailProduct[0],
+                  products_data: products_data,
+                  deliver_status: formData.deliver_status,
+                  success_url: `${LIVE_URL}/uprank-payment`,
+                  cancel_url: `${LIVE_URL}/uprank`,
+                };
+            
+                try {
+                  const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
+                  if (availableUrl?.url) {
+                    const storedData = JSON.parse(sessionStorage.getItem("uprankCredit") || "{}");
+                    storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+                    sessionStorage.setItem("uprankCredit", JSON.stringify(storedData));
+                    window.location.href = availableUrl.url;
+                  } else {
+                    toast.error("Invalid URL received.");
+                    setDisable(false);
+                  }
+                } catch (error) {
+                  toast.error("Payment link request failed.");
+                  setDisable(false);
+                }
+              } catch (error) {
+                toast.error("An error occurred while processing your request.");
+              }
+            
+              setDisable(false);
+            };
   return (
     <>
       <Layout>
@@ -557,7 +633,7 @@ function Uprank() {
                                                </>
                                            ) : ''
                                        }
-                                   {formData.currency === "credit_card" && (
+                                   {/* {formData.currency === "credit_card" && (
                                            <div className="mt-4">
                                            <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                            </div>
@@ -569,7 +645,7 @@ function Uprank() {
                                                <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                                </div>
                                            ) : ""
-                                       }
+                                       } */}
                                    {error && <p className='text-red-500 text-xs mt-2'>{error.currency}</p>}
                                </div>
                                <div className="mb-3">

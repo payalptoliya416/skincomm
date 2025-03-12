@@ -49,6 +49,13 @@ import ELIbraryAdd from "../Pages/Auth/Settings/ELIbraryAdd";
 import WithdrawalPage from "../Pages/Auth/Settings/WithdrawalPage";
 import WithdrwalMain from "../Pages/Auth/Settings/WithdrwalMain";
 import { BASE_URL } from "../Utilities/config";
+import CraditCardPay from "../Pages/craditcard/CraditCardPay";
+import AddmemberCreditCard from "../Pages/AddMemberDashboard/AddmemberCreditCard";
+import AddMemCreditCard from "../Pages/MyTeam/AddMemCreditCard";
+import ReorderCreditCard from "../Pages/Reorder/ReorderCreditCard";
+import UprankCreditCard from "../Pages/Auth/Uprank/UprankCreditCard";
+import JumStartCreditCard from "../Pages/Auth/JumpStart/JumStartCreditCard";
+import RegistrationCreditCard from "../Pages/Guest/registration/RegistrationCreditCard";
 
 const BrowserRoute = () => {
   const url = new URL(window.location.href);
@@ -103,6 +110,8 @@ const BrowserRoute = () => {
           <Route path="/resetpassword" element={<ResetLogin />} />
           <Route path="/changepassword" element={<ResetChangePass />} />
           <Route path="/signup" element={<RegistrationStrip />} />
+          {/* --registration-- */}
+          <Route path="/signup-payment" element={<RegistrationCreditCard />} />
         </Route>
 
         {/* Private Routers */}
@@ -150,6 +159,20 @@ const BrowserRoute = () => {
           <Route  path="/e-library/e-library-content-add"  element={<ELIbraryAdd />} />
           <Route path="/withdrawal-request" element={<WithdrawalPage />} />
           <Route path="/withdrawal" element={<WithdrwalMain />} />
+          <Route path="/cradit-card" element={<CraditCardPay />} />
+          {/* --add member dashboard */}
+          <Route path="/addmemberuser-payment" element={<AddmemberCreditCard />} />
+          {/* ---add member my team-- */}
+          <Route path="/addmember-payment" element={<AddMemCreditCard />} />
+          {/* --reorder  */}
+          <Route path="/reorder-payment" element={<ReorderCreditCard />} />
+          {/* --uprank */}
+          <Route path="/uprank-payment" element={<UprankCreditCard />} />
+          {/* ---jumpstart-- */}
+          <Route path="/jumpstart-payment" element={<JumStartCreditCard />} />
+         
+
+
         </Route>
 
         {/* Error 404 */}

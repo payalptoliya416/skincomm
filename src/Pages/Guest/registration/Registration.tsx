@@ -1,10 +1,11 @@
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
-import { BASE_URL } from '../../../Utilities/config';
+import { BASE_URL, LIVE_URL } from '../../../Utilities/config';
+import { IoIosCloseCircle } from 'react-icons/io';
 
 interface Product {
     combo_product_name: string,
@@ -25,7 +26,6 @@ interface FormData {
     products_data: any[];
     country: string,
     payment_type : string,
-    stripeToken : string,
     deliver_status: string,
     payment_slip_image: any
 }
@@ -33,9 +33,15 @@ interface FormData {
 function Registration() {
   const navigate = useNavigate();
     const ID = sessionStorage.getItem("refUserID")
-    const stripe = useStripe(); 
-    const elements = useElements();
     const [productListSignUpData ,setProductListSignUpData] = useState<any>([]);
+    const comboRetailPrices = productListSignUpData && productListSignUpData.products
+  ? productListSignUpData.products.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
+    ))
+  : [];
+const comboRetailProduct= productListSignUpData && productListSignUpData.products
+  ? productListSignUpData.products.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+    ))
+  : [];
     const [UserDetailData , setUserDetailData] = useState<any>({});
     const [userId , setUserId] = useState('');
      const [fName ,setFName] = useState<any>([]);
@@ -43,6 +49,7 @@ function Registration() {
      const [errors, setErrors] = useState<any>({});
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
+      const [isOpen, setIsOpen] = useState<any>(null);
      const [matrixSide, setMatrixSide] = useState<any>('');
     const [formData, setFormData] = useState<FormData>({
         sponsor:  ID || "",
@@ -56,7 +63,6 @@ function Registration() {
         products_data: [],
         payment_type:'',
         country: '',
-        stripeToken : "",
         deliver_status: "self_collect",
         payment_slip_image : null,
     });
@@ -294,48 +300,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         const validationErrors = validateForm();
        
         if (Object.keys(validationErrors).length === 0) {
-          
-          if (!stripe || !elements) {
-            toast.error("Stripe or Elements not initialized."); 
-            setDisable(false);
-            return;
-          }
-          let paymentMethodId = null;
-           
-          if (formData.payment_type === "credit_card" ) {
-            const cardElement = elements.getElement(CardElement);
-            
-            if (!cardElement) {
-              toast.error("Card Element not found.");
-              setDisable(false); 
-              return;
-            }
-            try {
-            const { error, token } = await stripe.createToken(cardElement);
-              if (error) {
-                toast.error("Payment error: " + error.message); 
-                setDisable(false); 
-                return;
-              }
-              paymentMethodId = token?.id;
-
-              if (!paymentMethodId) {
-                toast.error("Payment method ID not found.");
-                setDisable(false);
-                return;
-              }
-            } catch (paymentError) {
-              toast.error("Payment processing error. Please try again.");
-              setDisable(false);
-              return;
-            } 
-          }
-          
+                    
           const formDataToSend = {
-            ...formData,
-            stripeToken: paymentMethodId || "",  
+            ...formData, 
             referral:"sponsor-user"   
           }; 
+
           const mobileDetail = {
             action: "checkuniquemobile",
             phone_no: formData.mobile,
@@ -372,10 +342,19 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             const numberData = responseData;
             setUserDetailData(numberData);
             if (numberData.success) {
-  
-              const fetchAddMember = async (formDataToSend: any) => {
+              sessionStorage.setItem("signupcredit" ,JSON.stringify(formDataToSend));
+              const creditcardData = {
+                  "payment_type":formData.payment_type,
+                  "amount_type" : comboRetailPrices[0], 
+                  "product_type" : comboRetailProduct[0], 
+                  "products_data" :formData.products_data,
+                  "deliver_status" : formData.deliver_status,
+                  "success_url" :`${LIVE_URL}/signup-payment`,
+                  "cancel_url":`${LIVE_URL}/signup`
+              }
+               const fetchPaymentLink = async (formDataToSend: any) => {
                 try {
-                  const response = await fetch(`${BASE_URL}/api/signup-public`, {
+                  const response = await fetch(`${BASE_URL}/api/get-payment-link-public`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -388,24 +367,54 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   }
               
                   const submitData = await response.json();
-                  return submitData; 
+                  return submitData.data; 
                 } catch (error) {
                   console.error("Error fetching data:", error);
                   return null; 
                 }
               };
-                const successData =await fetchAddMember(formDataToSend);
-                if(successData){
-                    if(successData.data.error === true){
-                        toast.error(successData.data.message)
-                        setDisable(false);
-                    }
-                    else{
-                        toast.success("Member added successfully !");
-                        setDisable(false);
-                        navigate('/');
-                    }
-                }
+              const availableUrl = await fetchPaymentLink(creditcardData);
+              if (availableUrl?.url) {
+                  let storedData = JSON.parse(sessionStorage.getItem("signupcredit") || "{}");
+                  storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+                  sessionStorage.setItem("signupcredit", JSON.stringify(storedData));
+                  window.location.href = availableUrl.url;
+              } else {
+                  toast.error("Invalid URL received:", availableUrl);
+              }
+              // const fetchAddMember = async (formDataToSend: any) => {
+              //   try {
+              //     const response = await fetch(`${BASE_URL}/api/get-payment-link-public`, {
+              //       method: "POST",
+              //       headers: {
+              //         "Content-Type": "application/json",
+              //       },
+              //       body: JSON.stringify(formDataToSend),
+              //     });
+              
+              //     if (!response.ok) {
+              //       throw new Error("Failed to fetch data");
+              //     }
+              
+              //     const submitData = await response.json();
+              //     return submitData; 
+              //   } catch (error) {
+              //     console.error("Error fetching data:", error);
+              //     return null; 
+              //   }
+              // };
+              //   const successData =await fetchAddMember(formDataToSend);
+              //   if(successData){
+              //       if(successData.data.error === true){
+              //           toast.error(successData.data.message)
+              //           setDisable(false);
+              //       }
+              //       else{
+              //           toast.success("Member added successfully !");
+              //           setDisable(false);
+              //           navigate('/');
+              //       }
+              //   }
             } else {
               toast.error("Mobile validation failed, form submission aborted.");
               setDisable(false);
@@ -424,7 +433,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             products_data: [],
             payment_type: '',
             country: '',
-            stripeToken: "",
             deliver_status: 'self_collect',
             payment_slip_image : null,
           });
@@ -579,6 +587,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                        <table  id="example" className="display table-auto w-full text-sm text-left rtl:text-right text-black  ">
                                                            <thead className="text-xs text-white uppercase bg-[#178285]">
                                                                <tr>
+                                                           <th className="px-6 py-3 text-center">
+                                                                   Image
+                                                                   </th>
                                                                    <th className="px-6 py-3 text-center">
                                                                    Name
                                                                    </th>
@@ -597,7 +608,29 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                        {productListSignUpData.products && productListSignUpData.products.length > 0 ? (
                                                                    productListSignUpData.products.map((item: any, index: number) => (
                                                                    <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
-                                                                           
+                                                                       <td className="px-6 py-3 text-center">
+                                                                                                                                         <img src={item.combo_product_image} alt="" className='mx-auto w-[40px] h-[40px] rounded-full cursor-pointer'  onClick={() => setIsOpen(item.combo_product_image)} />
+                                                                                                                                         {isOpen && (
+                                                                                                                                          <>
+                                                                                                                                           <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
+                                                                                                                                          <div className="fixed inset-0 z-20 flex items-center justify-center">
+                                                                                                                                              <section className="flex items-center justify-center relative">
+                                                                                                                                              <button
+                                                                                                                                                  className="absolute top-[-2px] right-[-2px] z-30 text-white"
+                                                                                                                                                  onClick={() => setIsOpen(null)}
+                                                                                                                                              >
+                                                                                                                                                  <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
+                                                                                                                                              </button>
+                                                                                                                                              <img
+                                                                                                                                                  src={isOpen}
+                                                                                                                                                  alt="Enlarged"
+                                                                                                                                                  className="max-w-[90vw] max-h-[80vh] rounded-2xl"
+                                                                                                                                              />
+                                                                                                                                              </section>
+                                                                                                                                          </div>
+                                                                                                                                          </>
+                                                                                                                                      )}
+                                                                                                                                         </td>     
                                                                    <td className="px-6 py-3 text-center">
                                                                           {item.combo_product_name}
                                                                    </td>
@@ -644,11 +677,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 </select>
 
                            
-                           {formData.payment_type === "credit_card" ? (
+                           {/* {formData.payment_type === "credit_card" ? (
                                 <div className="mt-4">
                                 <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                 </div>
-                            ): ""}
+                            ): ""} */}
                            
                         {errors?.upload && <p className="text-red-500 text-xs mt-2">{errors.upload}</p>}
                              {errors.payment_type && <p className='text-red-500 text-xs'>{errors.payment_type}</p>}

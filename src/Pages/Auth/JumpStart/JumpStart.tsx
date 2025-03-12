@@ -1,4 +1,4 @@
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { useElements } from "@stripe/react-stripe-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "../../../Components/Layout";
@@ -8,6 +8,8 @@ import imageCompression from "browser-image-compression";
 import { fetchJumpstartPackage } from "../../../Redux/thunks/JumpStartThunk";
 import { fetchJumpstartPostData } from "../../../Redux/thunks/JumpStartPostThunk";
 import { IoIosCloseCircle } from "react-icons/io";
+import { fetchPaymentLink } from "../../../Redux/thunks/PaymentLinkThunk";
+import { LIVE_URL } from "../../../Utilities/config";
 
 interface FormData {
   userId: string;
@@ -25,13 +27,19 @@ interface Package {
 
 function JumpStart() {
   const LoginUserID = sessionStorage.getItem("UserID");
-  const stripe = useStripe();
-  const elements = useElements();
   const dispatch = useDispatch<any>();
   const [errors, setErrors] = useState<any>({});
   const [disable, setDisable] = useState(false);
   const [highRankPopup, setHighRankPopup] = useState(false);
   const [packages, setPackages] = useState<Package[]>([]);
+  const comboRetailPrices = packages && packages
+  ? packages.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
+    ))
+  : [];
+const comboRetailProduct= packages && packages
+  ? packages.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+    ))
+  : [];
   const navigate = useNavigate();
   const [packageRank, setPackageRank] = useState<any>("");
   const [formData, setFormData] = useState<FormData>({
@@ -170,43 +178,33 @@ function JumpStart() {
       return;
     }
 
-    if (!stripe || !elements) {
-      toast.error("Stripe or Elements not initialized.");
-      setDisable(false);
-      return;
-    }
-
-    let paymentMethodId = "";
-    if (formData.payment_type === "credit_card") {
-      const cardElement = elements.getElement(CardElement);
-
-      if (!cardElement) {
-        toast.error("Card Element not found.");
-        setDisable(false);
-        return;
-      }
-
-      try {
-        const { error, token } = await stripe.createToken(cardElement);
-        if (error) {
-          toast.error("Payment error: " + error.message);
-          setDisable(false);
-          return;
-        }
-        paymentMethodId = token?.id || "";
-      } catch (paymentError) {
-        toast.error("Payment processing error. Please try again.");
-        setDisable(false);
-        return;
-      }
-    }
-
     const formDataToSend: any = {
       ...formData,
-      stripeToken: paymentMethodId,
     };
+
     try {
-      const successData = await dispatch(
+      if (formData.payment_type === "credit_card") {
+        sessionStorage.setItem("jumpstartCredit" ,JSON.stringify(formData));
+                                            const creditcardData = {
+                                                "payment_type":formData.payment_type,
+                                                "amount_type" : comboRetailPrices[0], 
+                                                "product_type" : comboRetailProduct[0], 
+                                                "products_data" :[{"id": formData.package ,"count": 1 }],
+                                                "deliver_status" : formData.deliver_status,
+                                                "success_url" :`${LIVE_URL}/jumpstart-payment`,
+                                                "cancel_url":`${LIVE_URL}/jumpstart`
+                                            }
+                                            const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
+                                            if (availableUrl?.url) {
+                                                let storedData = JSON.parse(sessionStorage.getItem("jumpstartCredit") || "{}");
+                                                storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+                                                sessionStorage.setItem("jumpstartCredit", JSON.stringify(storedData));
+                                                window.location.href = availableUrl.url;
+                                            } else {
+                                                toast.error("Invalid URL received:", availableUrl);
+                                            }
+    }else{
+       const successData = await dispatch(
         fetchJumpstartPostData(formDataToSend)
       );
 
@@ -226,6 +224,7 @@ function JumpStart() {
       } else {
         toast.error(successData.message || "Submission failed. Try again.");
       }
+    }
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -357,7 +356,7 @@ function JumpStart() {
                       Upload Payment Slip
                     </option>
                   </select>
-                  {formData.payment_type === "credit_card" ? (
+                  {/* {formData.payment_type === "credit_card" ? (
                     <div className="mt-4">
                       <CardElement
                         className="border py-2 px-3 rounded-md"
@@ -366,7 +365,7 @@ function JumpStart() {
                     </div>
                   ) : (
                     ""
-                  )}
+                  )} */}
 
                   {formData.payment_type === "upload_payment_slip" ? (
                     <input

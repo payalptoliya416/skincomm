@@ -1,4 +1,3 @@
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 
 import React, { useEffect, useState } from 'react';
 import Layout from '../../Components/Layout';
@@ -17,6 +16,8 @@ import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
 import imageCompression from 'browser-image-compression';
 import { IoIosCloseCircle } from 'react-icons/io';
+import { LIVE_URL } from '../../Utilities/config';
+import { fetchPaymentLink } from '../../Redux/thunks/PaymentLinkThunk';
 interface Product {
     combo_product_name: string,
     combo_product_lp: number,
@@ -35,18 +36,23 @@ interface FormData {
     sponsor_type: number,
     products_data: any[];
     country: string,
-    isFieldsDisabled?: boolean;
     payment_type : string,
-    stripeToken : string,
     deliver_status: string,
     payment_slip_image: any
 }
 
 const DashboardAdMember = () => {    
-    const stripe = useStripe(); 
-    const elements = useElements();
     const dispatch = useDispatch<any>();
     const { productListData } = useSelector((state: RootState) => state.product);
+const comboRetailPrices = productListData && productListData.products
+  ? productListData.products.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
+    ))
+  : [];
+const comboRetailProduct= productListData && productListData.products
+  ? productListData.products.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+    ))
+  : [];
+
     const { UserDetailData } = useSelector((state: RootState) => state.userDetail);
     const [userId , setUserId] = useState('');
      const [fName ,setFName] = useState<any>([]);
@@ -69,7 +75,6 @@ const DashboardAdMember = () => {
         products_data: [],
         payment_type:'',
         country: '',
-        stripeToken : "",
         deliver_status: "self_collect",
         payment_slip_image : null,
     });
@@ -255,19 +260,7 @@ const DashboardAdMember = () => {
 
     const validateForm = () => {
         const newErrors: any = {};
-        if(formData.isFieldsDisabled){
-        if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
-            if (!formData.placement) newErrors.placement = "Placement ID is required";
-            if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
-            if (!formData.country) newErrors.country = "Country Name is required";
-            if (!formData.products_data || formData.products_data.length === 0) {
-                newErrors.products_data = "Package is required";
-            }
-                if (!formData.payment_type) newErrors.payment_type = "Payment Type is required";
-                if (formData.payment_type === 'upload_payment_slip' && !formData.payment_slip_image) {
-                    newErrors.upload = "Please select an image";
-                  }
-        }else{
+      
             if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
             if (!formData.placement) newErrors.placement = "Placement ID is required";
             if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
@@ -284,7 +277,7 @@ const DashboardAdMember = () => {
         if (formData.payment_type === 'upload_payment_slip' && !formData.payment_slip_image) {
             newErrors.upload = "Please select an image";
           }
-        }
+        
         return newErrors;
     };
     const navigate = useNavigate();
@@ -333,101 +326,67 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         }
         if (Object.keys(validationErrors).length === 0) {
           
-          if (!stripe || !elements) {
-            toast.error("Stripe or Elements not initialized."); 
-            setDisable(false);
-            return;
-          }
-          let paymentMethodId = null;
-           
-          if (formData.payment_type === "credit_card" || formData.payment_type === "e-wallet" && stripInput ) {
-            const cardElement = elements.getElement(CardElement);
-            
-            if (!cardElement) {
-              toast.error("Card Element not found.");
-              setDisable(false); 
-              return;
-            }
-            try {
-            const { error, token } = await stripe.createToken(cardElement);
-              if (error) {
-                toast.error("Payment error: " + error.message); 
-                setDisable(false); 
-                return;
-              }
-              paymentMethodId = token?.id;
-
-              if (!paymentMethodId) {
-                toast.error("Payment method ID not found.");
-                setDisable(false);
-                return;
-              }
-            } catch (paymentError) {
-              toast.error("Payment processing error. Please try again.");
-              setDisable(false);
-              return;
-            } 
-          }
+          if(formData.payment_type === "credit_card" || formData.payment_type === "e-wallet" && stripInput || formData.payment_type === "e-wallet" ){
+                sessionStorage.setItem("dashboardAddmemberCredit" ,JSON.stringify(formData));
+                const creditcardData = {
+                    "payment_type":formData.payment_type,
+                    "amount_type" : comboRetailPrices[0], 
+                    "product_type" : comboRetailProduct[0], 
+                    "products_data" :formData.products_data,
+                    "deliver_status" : formData.deliver_status,
+                    "success_url" :`${LIVE_URL}/addmemberuser-payment`,
+                    "cancel_url":`${LIVE_URL}/addmemberUser`
+                }
+                const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
+                if (availableUrl?.url) {
+                    let storedData = JSON.parse(sessionStorage.getItem("dashboardAddmemberCredit") || "{}");
+                    storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
+                    sessionStorage.setItem("dashboardAddmemberCredit", JSON.stringify(storedData));
+                    window.location.href = availableUrl.url;
+                } else {
+                    toast.error("Invalid URL received:", availableUrl);
+                }
+                
+               }else{
+                 const formDataToSend = {
+                   ...formData,   
+                 }; 
+                 
+                   const mobileDetail = {
+                     action: "checkuniquemobile",
+                     phone_no: formData.mobile,
+                     account: formData.account_type,
+                     sponsor: '',
+                   };
+             
+                   const response = await dispatch(fetchNumber(mobileDetail));
+                   const numberData = response.data;
+             
+                   if (numberData.success) {
+                       const successData =await dispatch(fetchAddMember(formDataToSend));
+                       if(successData){
+                           if(successData.data.data.error === true){
+                               toast.error(successData.data.data.message)
+                               setDisable(false);
+                           }
+                           else{
+                               toast.success("Member added successfully !");
+                               const successnavigate = successData.data.data
+                               if (formData.payment_type === 'upload_payment_slip') {
+                                   navigate('/successfully' , {state : { message: successnavigate.message } } );
+                                 }else{
+                                     navigate('/successfullyPayment', { state: {successnavigate},});
+                                 }
+                               setDisable(false);
+                           }
+                       }
+                   } else {
+                     toast.error("Mobile validation failed, form submission aborted.");
+                     setDisable(false);
+                   }
+             }
           
-          const formDataToSend = {
-            ...formData,
-            stripeToken: paymentMethodId || "",     
-          }; 
-          
-          if (formData.isFieldsDisabled) {
-            const successData = await dispatch(fetchAddMember(formDataToSend));
-            toast.error(successData.error);
-            if(successData){
-                if(successData.data.data.error === true){
-                    toast.error(successData.data.data.message)
-                    setDisable(false);
-                }
-                else{
-                    toast.success("Member added successfully !");
-                    const successnavigate = successData.data.data
-                    if (formData.payment_type === 'upload_payment_slip') {
-                        navigate('/successfully' , {state : { message: successnavigate.message } } );
-                      }else{
-                          navigate('/successfullyPayment', { state: {successnavigate},});
-                      }
-                    setDisable(false);
-                }
-            }
-          } else {
-            const mobileDetail = {
-              action: "checkuniquemobile",
-              phone_no: formData.mobile,
-              account: formData.account_type,
-              sponsor: '',
-            };
-      
-            const response = await dispatch(fetchNumber(mobileDetail));
-            const numberData = response.data;
-      
-            if (numberData.success) {
-                const successData =await dispatch(fetchAddMember(formDataToSend));
-                if(successData){
-                    if(successData.data.data.error === true){
-                        toast.error(successData.data.data.message)
-                        setDisable(false);
-                    }
-                    else{
-                        toast.success("Member added successfully !");
-                        const successnavigate = successData.data.data
-                        if (formData.payment_type === 'upload_payment_slip') {
-                            navigate('/successfully' , {state : { message: successnavigate.message } } );
-                          }else{
-                              navigate('/successfullyPayment', { state: {successnavigate},});
-                          }
-                        setDisable(false);
-                    }
-                }
-            } else {
-              toast.error("Mobile validation failed, form submission aborted.");
-              setDisable(false);
-            }
-          }
-      
+         
           setFormData({
             sponsor: "",
             placement: "",
@@ -440,7 +399,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             products_data: [],
             payment_type: '',
             country: '',
-            stripeToken: "",
             deliver_status: 'self_collect',
             payment_slip_image : null,
           });
@@ -534,10 +492,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
                                         value={formData.f_name}
                                         onChange={handleChange}
-                                        disabled={formData.isFieldsDisabled}
                                     />
                                     {
-                                        formData.isFieldsDisabled ? "" : (   errors.f_name && <p className='text-red-500 text-xs'>{errors.f_name}</p>)
+                                            errors.f_name && <p className='text-red-500 text-xs'>{errors.f_name}</p>
                                     }
                                  
                                 </div>
@@ -550,10 +507,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
                                         value={formData.e_mail}
                                         onChange={handleChange}
-                                        disabled={formData.isFieldsDisabled}
                                     />
                                     {
-                                        formData.isFieldsDisabled ? "" : (errors.e_mail && <p className='text-red-500 text-xs'>{errors.e_mail}</p>)
+                                       errors.e_mail && <p className='text-red-500 text-xs'>{errors.e_mail}</p>
                                     }
                                 </div>
                                 <div className='mb-3'>
@@ -565,10 +521,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
                                         value={formData.mobile}
                                         onChange={handleChange}
-                                        disabled={formData.isFieldsDisabled}
                                     />
                                     {
-                                        formData.isFieldsDisabled ? "" : (errors.mobile && <p className='text-red-500 text-xs'>{errors.mobile}</p>)
+                                        errors.mobile && <p className='text-red-500 text-xs'>{errors.mobile}</p>
                                     }
                                 </div>
                          
@@ -719,18 +674,18 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     </>
                                 ) : ''
                              }
-                           {formData.payment_type === "credit_card" ? (
+                           {/* {formData.payment_type === "credit_card" ? (
                                 <div className="mt-4">
                                 <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                 </div>
-                            ): ""}
-                            {
+                            ): ""} */}
+                            {/* {
                                 formData.payment_type === 'e-wallet' && stripInput ? (
                                     <div className="mt-4">
                                     <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
                                     </div>
                                 ) : ""
-                            }
+                            } */}
                             {
                           formData.payment_type === 'upload_payment_slip' ? (
                             <input
