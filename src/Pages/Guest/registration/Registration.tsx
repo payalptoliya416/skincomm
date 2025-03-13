@@ -591,6 +591,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                                    Image
                                                                    </th>
                                                                    <th className="px-6 py-3 text-center">
+                                                                 Code
+                                                                   </th>
+                                                                   <th className="px-6 py-3 text-center">
                                                                    Name
                                                                    </th>
                                                                    <th className="px-6 py-3">
@@ -630,7 +633,10 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                                                                                                           </div>
                                                                                                                                           </>
                                                                                                                                       )}
-                                                                                                                                         </td>     
+                                                                                                                                         </td>    
+                                                                                                                                         <td className="px-6 py-3 text-center">
+                                                                          {item.combo_product_code}
+                                                                   </td> 
                                                                    <td className="px-6 py-3 text-center">
                                                                           {item.combo_product_name}
                                                                    </td>

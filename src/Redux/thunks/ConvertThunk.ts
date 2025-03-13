@@ -9,8 +9,8 @@ export const fetchConvertDetail = (formData : any) => {
         dispatch(fetchBConvertRequest());
         try {
             const response = await AxioInConverData.post('',formData);
-            dispatch(fetchConvertSuccess(response.data.data));
-            return {data : response.data.data}
+            dispatch(fetchConvertSuccess(response.data));
+            return  response.data
         } catch (error: any) {
             dispatch(fetchConvertFailure(error.message || 'Failed to fetch convert data'));
         }

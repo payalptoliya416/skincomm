@@ -8,13 +8,12 @@ import { fetchConvertDetail } from '../../../Redux/thunks/ConvertThunk';
 import { toast, ToastContainer } from 'react-toastify';
 
 interface FormData{
-    amount : number
+    amount : number,
+    security_password: string
 }
 function ConverPage() {
     const dispatch = useDispatch<any>();
-    const { getLPBalanceDetail } = useSelector(
-      (state: RootState) => state.lpbalance
-    );
+    const { getLPBalanceDetail } = useSelector((state: RootState) => state.lpbalance);
     useEffect(() => {
         dispatch(fetchLpBalance());
       }, [dispatch]);
@@ -22,6 +21,7 @@ function ConverPage() {
       const [errors, setErrors] = useState<any>({});
       const [formData, setFormData] = useState<FormData>({
         amount: 0,
+        security_password:""
        });
        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -30,20 +30,19 @@ function ConverPage() {
         });
       };
        const availableLp = getLPBalanceDetail.available_lp;
-      //  const lpminimumvalue = getLPBalanceDetail.min_withdrawal_limit
       const validation = () => {
         
         const newErrors: any = {};
         if(!formData.amount){
           newErrors.amount = "write some Convert  Amount";
         }
-        // if (formData.amount < lpminimumvalue) {
-        //   newErrors.amount = `Convert amount should be greater than the minimum limit of ${lpminimumvalue}`;
-        // }
         if (formData.amount > availableLp) {
           newErrors.amount = `Convert amount exceeds the available balance of ${availableLp}`;
         }
-      
+        if(!formData.security_password && getLPBalanceDetail?.withdrawalVal === true){
+          newErrors.security_password = `Security Password is required when transfer is enabled.`;
+        }
+        
         return newErrors;
       };
 
@@ -53,16 +52,17 @@ function ConverPage() {
       
         if (Object.keys(validationErrors).length === 0) {
         const resData = await  dispatch(fetchConvertDetail(formData));
-   
-        if(resData.data.success === true){
-            const message = resData?.data.message || ''
-            toast.success(message)
-            window.location.reload();
-        }
-        if(resData.data.error === true){
-            const message = resData?.data.message || ''
-            toast.success(message)
-        }
+        if (resData?.data?.success) {
+          const message = resData?.data?.message || 'Success';
+          toast.success(message);
+          window.location.reload();
+      } else if (resData?.data?.error) {
+          const message = resData?.data?.message || 'Something went wrong';
+          toast.error(message);
+      } else if (resData?.error) {
+          const message = resData?.message || 'Request failed';
+          toast.error(message);
+      }
       } else {
         setErrors(validationErrors)
       }
@@ -124,6 +124,23 @@ function ConverPage() {
                     />
                      {errors.amount && <p className='text-red-500 text-xs'>{errors.amount}</p>}
                   </div>
+                  {getLPBalanceDetail?.convertVal === true && (
+                  <div className="mb-3">
+                    <label className="text-[#1e293b] text-[14px]">Security Password</label>
+                    <input
+                      type="text"
+                      name="security_password"
+                      step="0.01"
+                      placeholder="Security Password"
+                      className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
+                      value={formData.security_password}
+                      onChange={handleInputChange}
+                    />
+                    {errors.security_password && (
+                      <p className="text-red-500 text-xs">{errors.security_password}</p>
+                    )}
+                  </div>
+                )}
                   <div>
                     <button
                       type="submit"
@@ -134,7 +151,6 @@ function ConverPage() {
                   </div>
                 </form>
               </div>
-
               </div>
               </div>
               </section>

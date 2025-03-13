@@ -15,21 +15,23 @@ import { ToastContainer } from 'react-toastify';
 
 function Invoice() {
     const { invoiceData} = useSelector((state: RootState) => state.invoicelist);
-    const tableRef = useRef(null);
-    const dispatch = useDispatch<any>();
+    const tableRef = useRef<HTMLTableElement | null>(null);
+const dispatch = useDispatch<any>();
 
-    useEffect(() => {
-        if (tableRef.current) {
-            const dataTable = new DataTable(tableRef.current,{
-                searching: false,
-            });
-            return () => {
-                if (dataTable) {
-                    dataTable.destroy(true);
-                }
-            };
-        }
-    }, []);
+useEffect(() => {
+    if (tableRef.current) {
+        const dataTable = new DataTable(tableRef.current, {
+            searching: false,
+            paging: true,
+            pageLength: 10,
+            destroy: true, 
+        });
+
+        return () => {
+            dataTable.destroy(true);
+        };
+    }
+}, []);
 
     const [searchDate, setSearchDate] = useState("");
 
@@ -306,7 +308,7 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                     </div>
                 </header>
                 <ToastContainer/>
-                <section className="py-20  ">
+                <section className="py-20">
                     <div className="container">
                     <div className="bg-white p-4 border rounded-md">
                         <form onSubmit={ formik.handleSubmit }>
@@ -315,10 +317,10 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                             <div className="flex gap-5 md:gap-20">
                             <select  {...formik.getFieldProps('search_year')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs py-2">  
                             {years.map((year) => (
-                    <option key={year} value={year}>
-                        {year}
-                    </option>
-                ))}
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
                             </select>
                             </div>
                            </div>
@@ -375,7 +377,6 @@ const totalDeliveryCharge = products.reduce((acc: number, product: any) => acc +
                     </div>
                     </div>
                 </section>
-                     
             </Layout>
     </>
   )

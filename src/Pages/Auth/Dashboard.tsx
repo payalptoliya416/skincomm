@@ -84,18 +84,6 @@ const isRead = !AnnouncependingtData || !AnnouncependingtData.read
         </>
      ):""}
     
-
-      {/* {loading && (
-        <div className="fixed inset-0 z-20 flex items-center justify-center">
-          <div className="text-center text-lg">Loading...</div>
-        </div>
-      )} */}
-{/* 
-      {isDataEmpty && !loading && (
-        <div className="fixed inset-0 z-20 flex items-center justify-center">
-          <div className="text-center text-lg">No announcements available.</div>
-        </div>
-      )} */}
     </Layout>
   );
 };

@@ -39,12 +39,9 @@ interface productData {
 function ReorderPage(props: any) {
   const UserDetailData = props;
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
-    const comboRetailPrices = productData && productData.products
-  ? productData.products.map((item: any) => (item.product_retail_price ? "retail_price" : "associate_price"
-    ))
-  : [];
-const comboRetailProduct= productData && productData.products
-  ? productData.products.map((item: any) => ( item.product_code ? "product" : "combo_product"
+
+const comboRetailProduct= productData && productData
+  ? productData.map((item: any) => ( item.product_code ? "product" : "combo_product"
     ))
   : [];
     const [ewalletData , setEwalletData] = useState<any>('');
@@ -64,7 +61,6 @@ const comboRetailProduct= productData && productData.products
     const [eWallerPPText ,setEWalletPPText] = useState<any>();
     const [eWallerRPText ,setEWalletRPText] = useState<any>();
     const [isOpen, setIsOpen] = useState<any>(null);
-    const [eWallerCreditText ,setEWalletCreditText] = useState<any>();
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = sessionStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : {};
@@ -107,7 +103,9 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                    setCustomerRankID(parsedData.rank)
                  }
        }, []);
-
+       const comboRetailPrices = productData?.map((item: any) => 
+        customerRankID === '1' && item.product_retail_price ? "retail_price" : "associate_price"
+      ) || [];
     const updateCart = async (productId: string, price: number, delta: number) => {
       setCart((prevCart) => {
         const existingItem = prevCart[productId] || { count: 0, price: 0 };
@@ -237,7 +235,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
               setEWalletPPText(`- PP converted to ${ValuOfBalance.currency} base on (${(formattedValue)})`)
               setEWalletRPText(`- RP converted to ${ValuOfBalance.currency} base on (${(formattedValue)})`)
 
-              setEWalletCreditText(`- Amount Payable: ${ValuOfBalance.currency } ${ formattedRemainingPrice}`)
             }
           if (ValuOfBalance.balance_rc === 0 && ValuOfBalance.balance_sp === 0) {
             toast.error(ValuOfBalance.message);

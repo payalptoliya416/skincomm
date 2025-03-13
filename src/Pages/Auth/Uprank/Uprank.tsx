@@ -25,12 +25,12 @@ interface CartItem {
 function Uprank() {
     const dispatch = useDispatch<any>();
     const { UprankGetData } = useSelector((state: RootState) => state.uprankGetData);
-    const comboRetailPrices = UprankGetData && UprankGetData.products
-  ? UprankGetData.products.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
+    const comboRetailPrices = UprankGetData && UprankGetData.packages
+  ? UprankGetData.packages.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
     ))
   : [];
-const comboRetailProduct= UprankGetData && UprankGetData.products
-  ? UprankGetData.products.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+const comboRetailProduct= UprankGetData && UprankGetData.packages
+  ? UprankGetData.packages.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
     ))
   : [];
     const currentRank = UprankGetData?.current_rank_id;
@@ -530,7 +530,7 @@ const comboRetailProduct= UprankGetData && UprankGetData.products
                                    <tbody>
                                    {UprankGetData && UprankGetData.packages && UprankGetData.packages.length > 0 ? (
                                  UprankGetData.packages.map((item: any, index: number) => (
-                                           <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
+                                      <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                                  
                                            <td className="px-6 py-3">
                                                {item.combo_product_code}

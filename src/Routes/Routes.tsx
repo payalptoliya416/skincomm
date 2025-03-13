@@ -170,9 +170,6 @@ const BrowserRoute = () => {
           <Route path="/uprank-payment" element={<UprankCreditCard />} />
           {/* ---jumpstart-- */}
           <Route path="/jumpstart-payment" element={<JumStartCreditCard />} />
-         
-
-
         </Route>
 
         {/* Error 404 */}

@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 
 interface FormData {
   lp_amount: number;
+  security_password:string;
 }
 
 function Withdrawal() {
@@ -20,6 +21,7 @@ function Withdrawal() {
   const [calculatedRate, setCalculatedRate] = useState<string | number>("");
   const [formData, setFormData] = useState<FormData>({
      lp_amount: 0,
+     security_password:''
     });
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [errors, setErrors] = useState<any>({});
@@ -30,10 +32,11 @@ function Withdrawal() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let updatedFormData = { ...formData, [name]: value };
     if (name === "lp_amount") {
       const amount = parseFloat(value);
-      const updatedFormData = {
-        ...formData,
+      updatedFormData = {
+        ...updatedFormData,
         lp_amount: amount,
       };
   
@@ -41,15 +44,18 @@ function Withdrawal() {
   
       const rate = amount * (parseFloat(getLPBalanceDetail.withdrawal_rate) || 0);
       setCalculatedRate(rate.toFixed(2));
-  
-      const validationErrors = validation(updatedFormData);
-      setErrors(validationErrors);
+    } else if (name === "security_password") {
+      setFormData(updatedFormData);
     }
+    const validationErrors = validation(updatedFormData);
+    delete validationErrors.security_password;
+    setErrors(validationErrors);
   };
+
   const lpminimumvalue = getLPBalanceDetail.min_limit
   const availableLp = getLPBalanceDetail.available_lp
 
-  const validation = (updatedFormData = formData) => {
+  const validation = (updatedFormData = formData, isSubmit = false) => {
     const newErrors: any = {};
   
     if (!updatedFormData.lp_amount) {
@@ -60,6 +66,9 @@ function Withdrawal() {
     }
     if (updatedFormData.lp_amount > availableLp) {
       newErrors.lp_amount = `Withdrawal amount exceeds the available balance of ${availableLp}`;
+    }
+    if(isSubmit && !updatedFormData.security_password && getLPBalanceDetail?.withdrawalVal === true){
+      newErrors.security_password = `Security Password is required when transfer is enabled.`;
     }
   
     return newErrors;
@@ -80,13 +89,15 @@ function Withdrawal() {
   const handleConfirmSubmit = async () => {
     try {
       const data = await dispatch(fetchWithDrawallData(formData));
-  
-      if (data.success) {
-        toast.success(data.message);
-        setFormData({ lp_amount: 0 });
-      } else if (data.Error) {
-        toast.error(data.Message);
-      }
+
+      if (data?.data?.success) {
+        toast.success(data.data.message); 
+        setFormData({ lp_amount: 0, security_password: "" });
+    } else if (data?.Error) {
+        toast.error(data.Error);  
+    } else if (data?.error) {
+        toast.error(data.message); 
+    }
       setIsConfirmationOpen(false);
       
     } catch (error) {
@@ -169,6 +180,23 @@ function Withdrawal() {
                      calculatedRate === 'NaN' ? " ": calculatedRate
                   }
                 </div>
+                {getLPBalanceDetail?.withdrawalVal === true && (
+                  <div className="mb-3">
+                    <label className="text-[#1e293b] text-[14px]">Security Password</label>
+                    <input
+                      type="text"
+                      name="security_password"
+                      step="0.01"
+                      placeholder="Security Password"
+                      className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
+                      value={formData.security_password}
+                      onChange={handleInputChange}
+                    />
+                    {errors.security_password && (
+                      <p className="text-red-500 text-xs">{errors.security_password}</p>
+                    )}
+                  </div>
+                )}
                   <div>
                   <button
                   type="submit"

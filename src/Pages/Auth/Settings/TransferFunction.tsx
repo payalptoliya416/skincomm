@@ -12,12 +12,12 @@ interface FormData {
   to_user: string;
   amount: string;
   currency: string;
+  security_password: string
 }
 function TransferFunction() {
   const dispatch = useDispatch<any>();
 
-  const { balanceData } = useSelector((state: RootState) => state.balance);
-
+  const { balanceData  } = useSelector((state: RootState) => state.balance);
   useEffect(() => {
     dispatch(fetchBalance());
   }, [dispatch]);
@@ -26,6 +26,7 @@ function TransferFunction() {
     to_user: "",
     amount: "",
     currency: "",
+    security_password:""
   });
   const [errors, setErrors] = useState<any>({});
 const [fName ,setFName] = useState<any>("");
@@ -36,6 +37,9 @@ const validateForm = () => {
   if (!formData.to_user) {
     newErrors.to_user = "User ID is required";
   }
+  if (!formData.security_password && balanceData?.transferVal === true) {
+    newErrors.security_password = "Security Password is required when transfer is enabled.";
+  }  
 
   if (!formData.amount) {
     newErrors.amount = "Amount is required";
@@ -66,37 +70,13 @@ const validateForm = () => {
   return newErrors;
 };
 
-// const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-//   const { name, value } = e.target;
-//   if (name === "to_user" && value) {
-//     try {
-//       const memberlineID = await dispatch(fetchMemberLine(value));
-//       setFName(memberlineID.data); 
-//     } catch (error) {
-//       console.error("Error fetching member line:", error);
-//     }
-//   }
-
-//   if (name === "amount") {
-//     const sanitizedValue = value.replace(/[^0-9.]/g, ""); 
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: sanitizedValue,
-//     }));
-//   } else {
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   }
-// };
 const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
   const { name, value } = e.target;
 
   if (name === "to_user") {
     setFormData((prev) => ({
       ...prev,
-      [name]: value, // Update immediately
+      [name]: value, 
     }));
 
     if (value) {
@@ -113,7 +93,7 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
       ...prev,
       [name]: sanitizedValue,
     }));
-  } else {
+  } else{
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -136,23 +116,26 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
         return; 
       }
     } catch (error) {
-      console.error("Error validating userId:", error);
       toast.error("An error occurred while validating userId.");
       return;
     }
     try {
      const successTransfer = await dispatch(fetchAddTransfer(formData));
-     if(successTransfer.data.success === true){
-       toast.success(successTransfer.data.message);
-       await dispatch(fetchBalance());
-
-       setFormData({
+     if (successTransfer?.data?.error) {
+      toast.error(successTransfer.data.message);
+    } else if (successTransfer?.data?.success) {
+      toast.success(successTransfer.data.message);
+      await dispatch(fetchBalance());
+    
+      setFormData({
         to_user: "",
         amount: "",
         currency: "",
-      })
-      setFName("")
-     }
+        security_password: ""
+      });
+      setFName("");
+    }
+    
     } catch (error) {
       console.error("Error Transfer details:", error);
       toast.error("An error occurred during the transfer.");
@@ -219,7 +202,6 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                     <p className="text-red-500 text-xs">{errors.to_user}</p>
                   )}
                 </div>
-
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">
                     Select Currency
@@ -253,6 +235,21 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                     <p className="text-red-500 text-xs">{errors.amount}</p>
                   )}
                 </div>
+                {balanceData?.transferVal === true &&(<div className="mb-3">
+                    <label className="text-[#1e293b] text-[14px]">Security Password</label>
+                    <input
+                      type="text"
+                      name="security_password"
+                      step="0.01"
+                      placeholder="Security Password"
+                      className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
+                      value={formData.security_password}
+                      onChange={handleChange}
+                    />
+                    {errors.security_password && (
+                      <p className="text-red-500 text-xs">{errors.security_password}</p>
+                    )}
+                  </div>)}
                 <div>
                   <button
                     type="submit"

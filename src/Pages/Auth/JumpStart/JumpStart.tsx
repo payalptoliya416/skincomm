@@ -37,7 +37,7 @@ function JumpStart() {
     ))
   : [];
 const comboRetailProduct= packages && packages
-  ? packages.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
+  ? packages.map((item: any) => ( item.combo_product_name ? "combo_product" : "product"
     ))
   : [];
   const navigate = useNavigate();
