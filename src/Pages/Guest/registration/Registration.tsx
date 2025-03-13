@@ -38,6 +38,7 @@ function Registration() {
   ? productListSignUpData.products.map((item: any) => (item.combo_product_retail_price ? "retail_price" : "associate_price"
     ))
   : [];
+  
 const comboRetailProduct= productListSignUpData && productListSignUpData.products
   ? productListSignUpData.products.map((item: any) => ( item.combo_product_code ? "combo_product" : "product"
     ))

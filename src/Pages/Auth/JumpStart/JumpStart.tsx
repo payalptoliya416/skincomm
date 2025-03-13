@@ -39,7 +39,7 @@ function JumpStart() {
 const comboRetailProduct= packages && packages
   ? packages.map((item: any) => ( item.combo_product_name ? "combo_product" : "product"
     ))
-  : [];
+  : []; 
   const navigate = useNavigate();
   const [packageRank, setPackageRank] = useState<any>("");
   const [formData, setFormData] = useState<FormData>({
