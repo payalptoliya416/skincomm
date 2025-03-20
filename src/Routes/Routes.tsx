@@ -152,7 +152,7 @@ const BrowserRoute = () => {
           <Route path="/deliveryorder" element={<DeliveryOrder />} />
           <Route path="/uprank" element={<UprankStrip />} />
           <Route path="/jumpstart" element={<JumpStartStipe />} />
-          <Route path="/addcustomer" element={<AddCustomerStrip />} />
+          {/* <Route path="/addcustomer" element={<AddCustomerStrip />} /> */}
           <Route path="/viewcommission" element={<ViewCommissions />} />
           <Route path="/matrix-side" element={<MatrixSide />} />
           <Route path="/e-library" element={<ELibrary />} />
