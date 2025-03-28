@@ -56,7 +56,7 @@ const Share = () => {
                 <section className="h-screen flex items-center justify-center">
                         <div className="max-w-lg sm:mx-auto w-full mx-3">
                         <ul className="flex flex-col gap-7 bg-white rounded-2xl px-6 py-6 ">
-                            <li className="mx-auto">
+                            {/* <li className="mx-auto">
                                 <div style={{height: "auto", margin: "0 auto", maxWidth: 400, width: "100%"}} >
                                     <QRCode
                                         size={200}
@@ -65,7 +65,7 @@ const Share = () => {
                                         viewBox={`0 0 256 256`}
                                     />
                                 </div>
-                            </li>
+                            </li> */}
                             <li className="flex flex-col gap-4">
                             <div className="relative mt-2 w-full">
                         <input

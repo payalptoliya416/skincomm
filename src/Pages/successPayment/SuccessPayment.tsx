@@ -27,7 +27,6 @@ function SuccessPayment() {
                 <li className='text-sm xl:text-base font-semibold leading-[18px] mb-1'>Package Name :</li>
             </ul>
             <ul>
-               
                 {
                     memberDetail &&  (
                         <>

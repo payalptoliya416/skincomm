@@ -55,7 +55,10 @@ const Login = () => {
                             </div>
                             <div className="text-center">
                                 <h2 className="text-xl text-black font-semibold">Member Login</h2>
-                                <h2 className="text-danger-color m-0">{ loginState?.message }</h2>
+                                <h2 className="text-danger-color m-0">
+                          {loginState?.message ? "Something went wrong. Please try again." : ""}
+                        </h2>
+
                             </div>
                         </div>
  

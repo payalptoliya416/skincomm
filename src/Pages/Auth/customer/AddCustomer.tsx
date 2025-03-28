@@ -17,7 +17,7 @@ interface Product {
     combo_product_lp: number,
     combo_product_retail_price: string,
     id: number,
-    full_name : string
+    country_name : string
 }
 interface FormData {
     sponsor: string,
@@ -498,7 +498,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     {cutomerGetData.countries && cutomerGetData.countries.length > 0 ?
                                     (  cutomerGetData.countries.map((country: Product) => (
                                             <option key={country.id} value={country.id}>
-                                                {country.full_name}
+                                                {country.country_name}
                                             </option>
                                         ))
                                     ) : (

@@ -17,21 +17,20 @@ function DeliveryOrder() {
   const dispatch = useDispatch<any>();
 
   const { DeliveryOrder } = useSelector((state: RootState) => state.diliveryorder);
-  const tableRef = useRef(null);
+     const tableRef = useRef<HTMLTableElement | null>(null);
+  // useEffect(() => {
+  //   if (tableRef.current) {
+  //     const dataTable = new DataTable(tableRef.current, {
+  //       searching: false,
+  //     });
 
-  useEffect(() => {
-    if (tableRef.current) {
-      const dataTable = new DataTable(tableRef.current, {
-        searching: false,
-      });
-
-      return () => {
-        if (dataTable) {
-          dataTable.destroy(true);
-        }
-      };
-    }
-  }, []);
+  //     return () => {
+  //       if (dataTable) {
+  //         dataTable.destroy(true);
+  //       }
+  //     };
+  //   }
+  // }, []);
 
   useEffect(() => {
     dispatch(fetchDeliveryOrder());
@@ -56,7 +55,25 @@ function DeliveryOrder() {
       status.includes(searchTerm)
     );
   });
-  
+    const [loading, setLoading] = useState(true);
+      let dataTable: any = null;
+  useEffect(() => {
+    if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
+        setLoading(false);
+        dataTable = new DataTable(tableRef.current, {
+            searching: true,
+            paging: true,
+            pageLength: 10,
+            destroy: true,
+        });
+    }
+
+    return () => {
+        if (dataTable) {
+            dataTable.destroy();
+        }
+    };
+}, [filteredData]);
 
   return (
     <>
@@ -91,7 +108,7 @@ function DeliveryOrder() {
           <div className="container">
             <div className="bg-white p-4 border rounded-md">
               <div className="relative overflow-x-auto mt-5 border rounded-md">
-              <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
+              {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
                     <label className="mt-1 text-sm ms:text-base ">Search :</label>
             <input
             type="text"
@@ -100,7 +117,11 @@ function DeliveryOrder() {
             onChange={handleSearchChange}
             className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
           />
-                </div>
+                </div> */}
+                    {loading &&  (
+                <div className="flex justify-center items-center h-10">
+                    <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                </div>)}
                 <table
                   ref={tableRef}
                   style={{ width: "100%" }}

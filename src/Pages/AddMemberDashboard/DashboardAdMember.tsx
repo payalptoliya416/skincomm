@@ -23,7 +23,7 @@ interface Product {
     combo_product_lp: number,
     combo_product_retail_price: string,
     id: number,
-    full_name : string
+    country_name : string
 }
 interface FormData {
     sponsor: string,
@@ -34,7 +34,7 @@ interface FormData {
     e_mail: string,
     mobile: string,
     sponsor_type: number,
-    products_data: any[];
+    products_data:  any[] | string;
     country: string,
     payment_type : string,
     deliver_status: string,
@@ -165,22 +165,48 @@ const comboRetailProduct= productListData && productListData.products
         const ewalletDataValue = await dispatch(fetchProductPakageList(WlaletData));
         const ValuOfBalance = ewalletDataValue.data;
         setCart((prevCart) => {
-          const currentCart = Array.isArray(prevCart) ? prevCart : [];
+        //   const currentCart = Array.isArray(prevCart) ? prevCart : [];
     
-          const existingProduct = currentCart.find((item) => item.id === productId) || { id: productId, count: 0 };
-          const newCount = existingProduct.count + delta;
+        //   const existingProduct = currentCart.find((item) => item.id === productId) || { id: productId, count: 0 };
+        //   const newCount = existingProduct.count + delta;
     
-          if (newCount < 0) return currentCart;
+        //   if (newCount < 0) return currentCart;
     
-          const updatedCart = currentCart.map((item) =>
-            item.id === productId ? { ...item, count: newCount } : item
-          );
+        //   const updatedCart = currentCart.map((item) =>
+        //     item.id === productId ? { ...item, count: newCount } : item
+        //   );
     
-          if (!currentCart.some((item) => item.id === productId)) {
-            updatedCart.push({ id: productId, count: newCount });
+        //   if (!currentCart.some((item) => item.id === productId)) {
+        //     updatedCart.push({ id: productId, count: newCount });
+        //   }
+        //   const total = updatedCart.reduce((acc, item) => acc + item.count * price, 0);
+        //   setTotalPrice(total);
+        const currentCart = Array.isArray(prevCart) ? prevCart : [];
+        const existingProductIndex = currentCart.findIndex((item) => item.id === productId);
+      
+        let updatedCart = [...currentCart];
+        let newCount = 0;
+      
+        if (existingProductIndex !== -1) {
+          newCount = currentCart[existingProductIndex].count + delta;
+      
+          if (newCount <= 0) {
+            updatedCart.splice(existingProductIndex, 1);
+          } else {
+            updatedCart[existingProductIndex] = { ...currentCart[existingProductIndex], count: newCount };
           }
-          const total = updatedCart.reduce((acc, item) => acc + item.count * price, 0);
-          setTotalPrice(total);
+        } else {
+          if (delta > 0) {
+            updatedCart.push({ id: productId, count: delta, price: price }); 
+            newCount = delta;
+          } else {
+            return currentCart;
+          }
+        }
+      
+        const total = updatedCart.reduce((acc, item) => acc + item.count * item.price, 0);
+        setTotalPrice(total);
+        const simplifiedCart = updatedCart.map((item) => ({ id: item.id, count: item.count }));
           const currentTotalRcSp =
           ValuOfBalance.currency.trim() !== 'USD'
               ? ValuOfBalance.deposite_rate * ValuOfBalance.balance_rc +
@@ -193,7 +219,7 @@ const comboRetailProduct= productListData && productListData.products
             }
           setFormData((prev: FormData) => ({
             ...prev,
-            products_data: updatedCart,
+            products_data: JSON.stringify(simplifiedCart),
           }));
           return updatedCart;
         });
@@ -361,9 +387,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
              
                    const response = await dispatch(fetchNumber(mobileDetail));
                    const numberData = response.data;
-             
                    if (numberData.success) {
                        const successData =await dispatch(fetchAddMember(formDataToSend));
+                       
                        if(successData){
                            if(successData.data.data.error === true){
                                toast.error(successData.data.data.message)
@@ -385,7 +411,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                      setDisable(false);
                    }
              }
-          
          
           setFormData({
             sponsor: "",
@@ -539,7 +564,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         {productListData.countries && productListData.countries.length > 0 ?
                                         (  productListData.countries.map((country: Product) => (
                                                 <option key={country.id} value={country.id}>
-                                                    {country.full_name}
+                                                    {country.country_name}
                                                 </option>
                                             ))
                                         ) : (

@@ -45,7 +45,7 @@ const DashboardTop = () => {
                         <li className={`text-center w-1/4 ${
                                 customerRankID === '1' ? "opacity-80 " : " "
                             }`}   onClick={handleClick}>
-                            <Link to='/addmemberUser'className={`inline-block ${
+                            <Link to='/placement-tree' className={`inline-block ${
                                 customerRankID === '1' ? "pointer-events-none" : " "
                             }`}  >
                                 <div

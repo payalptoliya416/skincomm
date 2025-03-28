@@ -10,7 +10,7 @@ import DataTable from 'datatables.net-dt';
 function ViewCommissions() {
         const location = useLocation();
         const {  bonus , period } = location.state || {};
-        const tableRef = useRef<any>(null);
+       const tableRef = useRef<HTMLTableElement | null>(null);
         const dispatch = useDispatch<any>();   
 
      useEffect(() => {
@@ -45,6 +45,26 @@ function ViewCommissions() {
             
               return typeName.includes(searchTerm);
             });
+            const [loadingsta, setLoadingSta] = useState(true);
+    let dataTable: any = null;
+
+    useEffect(() => {
+        if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
+            setLoadingSta(false);
+            dataTable = new DataTable(tableRef.current, {
+                searching: true,
+                paging: true,
+                pageLength: 10,
+                destroy: true,
+            });
+        }
+
+        return () => {
+            if (dataTable) {
+                dataTable.destroy();
+            }
+        };
+    }, [filteredData]);
   return (
     <>
       <Layout>
@@ -77,7 +97,7 @@ function ViewCommissions() {
                 <section className="py-20">
                     <div className="border rounded-lg p-5 border-[#DCDCE9] bg-white mb-7">
                 <div className="relative overflow-x-auto mt-5 border rounded-md p-2">
-                            <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
+                            {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
                                 <label className="mt-1 text-sm ms:text-base ">Search :</label>
                                             <input
                                         type="text"
@@ -86,7 +106,11 @@ function ViewCommissions() {
                                         onChange={handleSearchChange}
                                         className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
                                     />
-                            </div>
+                            </div> */}
+                            {loadingsta &&  (
+                <div className="flex justify-center items-center h-10">
+                    <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                </div>)}
                             <table ref={tableRef}  style={{ width: "100%" }}  className="display  table-auto  w-full text-sm text-left rtl:text-right text-black ">
                               <thead className="text-xs text-white uppercase bg-[#178285]">
                                     <tr>

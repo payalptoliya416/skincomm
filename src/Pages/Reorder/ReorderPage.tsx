@@ -39,7 +39,6 @@ interface productData {
 function ReorderPage(props: any) {
   const UserDetailData = props;
     const { categoryData ,productData  } = useSelector((state: RootState) => state.categorylist);
-console.log("productData",productData);
 const comboRetailProduct= productData && productData
   ? productData.map((item: any) => ( item.product_code ? "product" : "combo_product"
     ))

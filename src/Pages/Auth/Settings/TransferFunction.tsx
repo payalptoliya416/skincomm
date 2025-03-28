@@ -238,7 +238,7 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                 {balanceData?.transferVal === true &&(<div className="mb-3">
                     <label className="text-[#1e293b] text-[14px]">Security Password</label>
                     <input
-                      type="text"
+                      type="password"
                       name="security_password"
                       step="0.01"
                       placeholder="Security Password"
