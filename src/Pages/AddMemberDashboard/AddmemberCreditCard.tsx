@@ -38,14 +38,16 @@ function AddmemberCreditCard() {
         }
 
         const successData = await dispatch(fetchAddMember(submittedData));
-        if (successData?.data?.data?.error) {
-          setError(successData.data.data.message);
-          sessionStorage.removeItem('dashboardAddmemberCredit');
-        } else {
-          toast.success('Member added successfully!');
-          navigate('/successfullyPayment', { state: { successnavigate: successData.data.data } });
-          sessionStorage.removeItem('dashboardAddmemberCredit');
-        }
+        if (successData?.data?.data?.success === true)  {
+                  toast.success(successData.message);
+                  navigate('/successfullyPayment', { state: { successnavigate: successData.data.data } });
+                  sessionStorage.removeItem('myTeamAddmemberCredit');
+                } else if (successData?.data?.data?.error) {
+                  setError(successData.data.data.message);
+                  sessionStorage.removeItem('myTeamAddmemberCredit');
+                } else {
+                  setError('An error occurred while processing the request.');
+                }
       } catch (error) {
         setError('An error occurred while processing the request.');
       } finally {

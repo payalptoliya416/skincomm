@@ -282,6 +282,11 @@ const comboRetailProduct= productListData && productListData.products
         ...prev,
         payment_slip_image: baseImage,
       }));
+
+      setErrors((prev : any) => ({
+        ...prev,
+        upload: "", // Clear the error
+      }));
     } catch (error) {
       console.error("Error compressing the image:", error);
       toast.error("Failed to upload the image.");
@@ -416,25 +421,25 @@ const comboRetailProduct= productListData && productListData.products
          const numberData = response.data;
          if (numberData.success) {
            const successData = await dispatch(fetchAddMember(formDataToSend));
+        
            if (successData) {
-             if (successData.data.data.error === true) {
-               toast.error(successData.data.data.message);
-               setDisable(false);
-             } else {
-               toast.success("Member added successfully !");
-               const successnavigate = successData.data.data;
-               if (formData.payment_type === "upload_payment_slip") {
-                 navigate("/successfully", {
-                   state: { message: successnavigate.message },
-                 });
-               } else {
-                 navigate("/successfullyPayment", {
-                   state: { successnavigate },
-                 });
-               }
-               setDisable(false);
-             }
-           }
+            const successnavigate = successData.data.data;
+          
+            if (successnavigate.success === true) {
+              toast.success(successnavigate.message || "Member added successfully!");
+          
+              if (formData.payment_type === "upload_payment_slip") {
+                navigate("/successfully", { state: { message: successnavigate.message } });
+              } else {
+                navigate("/successfullyPayment", { state: { successnavigate } });
+              }
+          
+              setDisable(false);
+            } else if (successnavigate.error === true) { 
+              toast.error(successnavigate.message);
+              setDisable(false);
+            }
+          }
          } else {
            toast.error("Mobile validation failed, form submission aborted.");
            setDisable(false);

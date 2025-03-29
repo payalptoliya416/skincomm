@@ -29,7 +29,6 @@ function AddMemberFormStript() {
       setStripePromise(stripe);
     }
   }, [UserDetailData]);
-
   if (!stripePromise) {
     return (
       <div className="flex justify-center items-center h-screen w-screen">

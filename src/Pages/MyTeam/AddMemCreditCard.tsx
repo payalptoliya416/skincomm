@@ -38,17 +38,23 @@ function AddMemCreditCard() {
            }
    
            const successData = await dispatch(fetchAddMember(submittedData));
-           if (successData?.data?.data?.error) {
-             setError(successData.data.data.message);
-             sessionStorage.removeItem('myTeamAddmemberCredit');
-           } else {
-             toast.success('Member added successfully!');
-             navigate('/successfullyPayment', { state: { successnavigate: successData.data.data } });
-             sessionStorage.removeItem('myTeamAddmemberCredit');
-           }
+           console.log("successData",successData)
+           console.log("successData?.data?.data?.success',",successData?.data?.data?.success)
+           if (successData?.data?.data?.success === true) {
+            toast.success(successData.message);
+            navigate('/successfullyPayment', { state: { successnavigate: successData.data.data } });
+            sessionStorage.removeItem('myTeamAddmemberCredit');
+          } else if (successData?.data?.data?.error) {
+            console.log("successData?.data?.data?.error',",successData?.data?.data?.error)
+            console.log("successData?.data?.data?.message',",successData?.data?.data?.message)
+            setError(successData.data.data.message);
+            sessionStorage.removeItem('myTeamAddmemberCredit');
+          } else {
+            setError(successData.data.data.message || 'An error occurred while processing the request.');
+          }
          } catch (error) {
            setError('An error occurred while processing the request.');
-         } finally {
+         } finally {  
            setLoading(false);
          }
        };
