@@ -38,15 +38,11 @@ function AddMemCreditCard() {
            }
    
            const successData = await dispatch(fetchAddMember(submittedData));
-           console.log("successData",successData)
-           console.log("successData?.data?.data?.success',",successData?.data?.data?.success)
            if (successData?.data?.data?.success === true) {
             toast.success(successData.message);
             navigate('/successfullyPayment', { state: { successnavigate: successData.data.data } });
             sessionStorage.removeItem('myTeamAddmemberCredit');
           } else if (successData?.data?.data?.error) {
-            console.log("successData?.data?.data?.error',",successData?.data?.data?.error)
-            console.log("successData?.data?.data?.message',",successData?.data?.data?.message)
             setError(successData.data.data.message);
             sessionStorage.removeItem('myTeamAddmemberCredit');
           } else {
