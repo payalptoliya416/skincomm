@@ -18,26 +18,9 @@ function ViewCommissions() {
       }, [dispatch]);
 
       const { singleearningData ,loading  } = useSelector((state: RootState) => state.singleEarningData);
-      useEffect(() => {
-        if (tableRef.current) {
-          const dataTable = new DataTable(tableRef.current, {
-            searching: false,
-          });
-    
-          return () => {
-            if (dataTable) {
-              dataTable.destroy(true);
-            }
-          };
-        }
-      }, []);
 
            // --search input
             const [searchDate, setSearchDate] = useState("");
-        
-            const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-              setSearchDate(e.target.value);
-            };
           
             const filteredData = singleearningData?.filter((item: any) => {
               const typeName = item.type ? item.type.toString().toLowerCase() : '';
