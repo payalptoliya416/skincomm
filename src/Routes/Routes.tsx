@@ -39,13 +39,11 @@ import Successfull from "../Pages/Reorder/Successfull";
 import TransferFunction from "../Pages/Auth/Settings/TransferFunction";
 import DeliveryOrder from "../Pages/DeliveryOrder/DeliveryOrder";
 import UprankStrip from "../Pages/Auth/Uprank/UprankStrip";
-import AddCustomerStrip from "../Pages/Auth/customer/AddCustomerStrip";
 import ViewCommissions from "../Pages/Reports/ReportsData/ViewCommissions";
 import JumpStartStipe from "../Pages/Auth/JumpStart/JumpStartStipe";
 import RegistrationStrip from "../Pages/Guest/registration/RegistrationStrip";
 import MatrixSide from "../Pages/Auth/Settings/MatrixSide";
 import ELibrary from "../Pages/Auth/Settings/ELibrary";
-import ELIbraryAdd from "../Pages/Auth/Settings/ELIbraryAdd";
 import WithdrawalPage from "../Pages/Auth/Settings/WithdrawalPage";
 import WithdrwalMain from "../Pages/Auth/Settings/WithdrwalMain";
 import { BASE_URL } from "../Utilities/config";
@@ -56,6 +54,7 @@ import ReorderCreditCard from "../Pages/Reorder/ReorderCreditCard";
 import UprankCreditCard from "../Pages/Auth/Uprank/UprankCreditCard";
 import JumStartCreditCard from "../Pages/Auth/JumpStart/JumStartCreditCard";
 import RegistrationCreditCard from "../Pages/Guest/registration/RegistrationCreditCard";
+import ELibrarySubCat from "../Pages/Auth/Settings/ELibrarySubCat";
 
 const BrowserRoute = () => {
   const url = new URL(window.location.href);
@@ -83,7 +82,7 @@ const BrowserRoute = () => {
       });
   
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Failed to fetch Login User ID");
       }
   
       const data = await response.json();
@@ -152,11 +151,10 @@ const BrowserRoute = () => {
           <Route path="/deliveryorder" element={<DeliveryOrder />} />
           <Route path="/uprank" element={<UprankStrip />} />
           <Route path="/jumpstart" element={<JumpStartStipe />} />
-          {/* <Route path="/addcustomer" element={<AddCustomerStrip />} /> */}
           <Route path="/viewcommission" element={<ViewCommissions />} />
           <Route path="/matrix-side" element={<MatrixSide />} />
           <Route path="/e-library" element={<ELibrary />} />
-          <Route  path="/e-library/e-library-content-add"  element={<ELIbraryAdd />} />
+          <Route path="/e-library/sub-category" element={<ELibrarySubCat />} />
           <Route path="/withdrawal-request" element={<WithdrawalPage />} />
           <Route path="/withdrawal" element={<WithdrwalMain />} />
           <Route path="/cradit-card" element={<CraditCardPay />} />

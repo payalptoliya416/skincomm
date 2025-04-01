@@ -19,20 +19,11 @@ function ViewCommissions() {
 
       const { singleearningData ,loading  } = useSelector((state: RootState) => state.singleEarningData);
 
-           // --search input
-            const [searchDate, setSearchDate] = useState("");
-          
-            const filteredData = singleearningData?.filter((item: any) => {
-              const typeName = item.type ? item.type.toString().toLowerCase() : '';
-              const searchTerm = searchDate.toLowerCase();
-            
-              return typeName.includes(searchTerm);
-            });
             const [loadingsta, setLoadingSta] = useState(true);
     let dataTable: any = null;
 
     useEffect(() => {
-        if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
+        if (tableRef.current && Array.isArray(singleearningData) && singleearningData.length > 0) {
             setLoadingSta(false);
             dataTable = new DataTable(tableRef.current, {
                 searching: true,
@@ -47,7 +38,7 @@ function ViewCommissions() {
                 dataTable.destroy();
             }
         };
-    }, [filteredData]);
+    }, [singleearningData]);
   return (
     <>
       <Layout>
@@ -80,16 +71,7 @@ function ViewCommissions() {
                 <section className="py-20">
                     <div className="border rounded-lg p-5 border-[#DCDCE9] bg-white mb-7">
                 <div className="relative overflow-x-auto mt-5 border rounded-md p-2">
-                            {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
-                                <label className="mt-1 text-sm ms:text-base ">Search :</label>
-                                            <input
-                                        type="text"
-                                        placeholder="Search"
-                                        value={searchDate}
-                                        onChange={handleSearchChange}
-                                        className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
-                                    />
-                            </div> */}
+                          
                             {loadingsta &&  (
                 <div className="flex justify-center items-center h-10">
                     <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -111,8 +93,8 @@ function ViewCommissions() {
                                 {loading ? (
                                     
                                     ''
-                                ) : filteredData && filteredData.length > 0 ? (
-                                    filteredData.map((item: any, index: number) => (
+                                ) : singleearningData && singleearningData.length > 0 ? (
+                                    singleearningData.map((item: any, index: number) => (
                                         <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                             <td className="px-6 py-4 text-black">{item.currency}</td>
                                             <td className="px-6 py-4 text-black">{item.trans_no}</td>

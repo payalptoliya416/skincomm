@@ -11,20 +11,6 @@ function WithdrawalPage() {
 
     const { WhithdrawalPageData  } = useSelector((state: RootState) => state.withdrwalrequest);
         const tableRef = useRef<HTMLTableElement | null>(null);
-  
-    // useEffect(() => {
-    //   if (tableRef.current) {
-    //     const dataTable = new DataTable(tableRef.current, {
-    //       searching: false,
-    //     });
-  
-    //     return () => {
-    //       if (dataTable) {
-    //         dataTable.destroy(true);
-    //       }
-    //     };
-    //   }
-    // }, []);
 
     useEffect(() => {
       
@@ -32,27 +18,11 @@ function WithdrawalPage() {
        useEffect(() => {
         dispatch(fetchWithDrawalPageData());
         }, [dispatch]);
-          // --search input
-          const [searchDate, setSearchDate] = useState("");
-        
-          const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setSearchDate(e.target.value);
-          };  
-          const filteredData = WhithdrawalPageData?.withdrawals?.filter((item: any) => {
-            const searchTerm = searchDate.toLowerCase();
-          
-            return (
-              item.lp_amount?.toLowerCase().includes(searchTerm) ||
-              item.status?.toLowerCase().includes(searchTerm) ||
-              item.member_bank?.bank_acount_no?.toLowerCase().includes(searchTerm) ||
-              item.bank?.bank_name?.toLowerCase().includes(searchTerm) ||
-              item.created_at?.toLowerCase().includes(searchTerm)
-            );
-          });          
+               
           const [loading, setLoading] = useState(true);
           let dataTable: any = null;
       useEffect(() => {
-        if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
+        if (tableRef.current && Array.isArray(WhithdrawalPageData?.withdrawals) && WhithdrawalPageData?.withdrawals?.length > 0) {
             setLoading(false);
             dataTable = new DataTable(tableRef.current, {
                 searching: true,
@@ -67,7 +37,7 @@ function WithdrawalPage() {
                 dataTable.destroy();
             }
         };
-    }, [filteredData]);
+    }, [WhithdrawalPageData?.withdrawals]);
   return (
     <>
         <Layout>
@@ -104,16 +74,7 @@ function WithdrawalPage() {
                     <button className="px-4 bg-[#178285] text-xs text-white rounded-md py-2" onClick={()=>handleNavigate()}>Add Content</button>
                         </div> */}
                       <div className="relative overflow-x-auto mt-5 border rounded-md">
-                      {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
-                            <label className="mt-1 text-sm ms:text-base ">Search :</label>
-                    <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchDate}
-                    onChange={handleSearchChange}
-                    className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
-                  />
-                        </div> */}
+                   
                          {loading &&  (
                 <div className="flex justify-center items-center h-10">
                     <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -133,8 +94,8 @@ function WithdrawalPage() {
                             </tr>
                           </thead>
                           <tbody>
-                          {filteredData?.length > 0 ? (
-                    filteredData.map((item: any, index: number) => (
+                          {WhithdrawalPageData?.withdrawals?.length > 0 ? (
+                    WhithdrawalPageData?.withdrawals?.map((item: any, index: number) => (
                           <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                             <td className="px-6 py-2 text-black">
                               {WhithdrawalPageData.associate_data.f_name}

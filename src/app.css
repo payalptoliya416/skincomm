@@ -76,6 +76,9 @@ div.dt-container select.dt-input{
     color: #fff;
     background-color: #DC3545;
 }
+.custom-thead {
+    text-align: start !important;
+  }
 @media (max-width:768px){
     .dt-info ,.dt-length .dt-input,.dt-length label{
         font-size: 14px;

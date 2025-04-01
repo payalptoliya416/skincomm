@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_CUSTOMER_GETDATA, ADD_CUSTOMER_POSTDATA, ADD_TRANSFER, ANNOUNCE_PENDING_POPUP, ANNOUNCE_READ_POPUP, ANNOUNCEMENT, ANNOUNCEMENT_EDIT, API_URL, BALANCE_URLL, CHANGE_LOGIN_PASSWORD, CHANGE_SECURITY_PASSWORD, CONCERT_DATA, DASHBOARD_DETAILS, DELIVERY_ORDERS, E_LIBRARY_GET_SUB_CATEGORY, E_LIBRARY_LIST, E_LIBRARY_POST, E_LIBRARY_SHOW_CATEGORY, EARNING_REPORT_URL, EWALATE_REPORT_URL, GET_LPBALANCE_URL, GET_PAYMENT_LINK, GET_SECURITY_EMAIL, INVOICE_LIST, INVOICE_PDF_LIST, JUMP_START_AJAX, JUMP_START_POST, MATRIX_SIDE, MATRIX_SIDE_GETSIDE, MEMBER_LINE, NEW_SECURITY_PASSWORD, PAYMENT_BY, PAYMENT_POST, PRPFILE_DATA, PRPFILE_DATA_GET, REORDER_CATEGORY,RESET_LOGIN_PASSSWORD, SEARCH_MY_TEAM, SECURITY_OTP, SECURITY_PASSWORD_BOOLEAN, SEND_LOGIN_OTP, SEND_SECURITY_OTP, SINGALEARNING_REPORT_URL, SPONSORED_NETWORK_URL, SPONSORED_TREE_URL, SUB_ACCOUNT_LOGIN_URL, SUB_ACCOUNT_URL, SUB_ADDBANK_URL, SUB_ADDMEMBER_URL, SUB_BANKLIST_URL, SUB_GETBANKDETAIL_URL, SUB_MOBILENUMBER_URL, SUB_PRODUCTLIST_URL, SUB_PRODUCTLIST_URL_SIGN_UP, SUB_USERDETAIL_URL, UPRANK_GETDATA, UPRANK_POST_DATA, VERIFY_LOGIN_OTP, WITHDRAWAL_REQUEST, WITHDRWAL_REQUEST } from './config';
+import { ADD_TRANSFER, ANNOUNCE_PENDING_POPUP, ANNOUNCE_READ_POPUP, ANNOUNCEMENT, ANNOUNCEMENT_EDIT, API_URL, BALANCE_URLL, CHANGE_LOGIN_PASSWORD, CHANGE_SECURITY_PASSWORD, CONCERT_DATA, DASHBOARD_DETAILS, DELIVERY_ORDERS, E_LIBRARY_LIST,   EARNING_REPORT_URL, EWALATE_REPORT_URL, GET_LPBALANCE_URL, GET_PAYMENT_LINK, GET_SECURITY_EMAIL, INVOICE_LIST, INVOICE_PDF_LIST, JUMP_START_AJAX, JUMP_START_POST, MATRIX_SIDE, MATRIX_SIDE_GETSIDE, MEMBER_LINE, NEW_SECURITY_PASSWORD, PAYMENT_BY, PAYMENT_POST, PRPFILE_DATA, PRPFILE_DATA_GET, REORDER_CATEGORY,RESET_LOGIN_PASSSWORD, SEARCH_MY_TEAM, SECURITY_OTP, SECURITY_PASSWORD_BOOLEAN, SEND_LOGIN_OTP, SEND_SECURITY_OTP, SINGALEARNING_REPORT_URL, SPONSORED_NETWORK_URL, SPONSORED_TREE_URL, SUB_ACCOUNT_LOGIN_URL, SUB_ACCOUNT_URL, SUB_ADDBANK_URL, SUB_ADDMEMBER_URL, SUB_BANKLIST_URL, SUB_GETBANKDETAIL_URL, SUB_MOBILENUMBER_URL, SUB_PRODUCTLIST_URL, SUB_PRODUCTLIST_URL_SIGN_UP, SUB_USERDETAIL_URL, UPRANK_GETDATA, UPRANK_POST_DATA, VERIFY_LOGIN_OTP, WITHDRAWAL_REQUEST, WITHDRWAL_REQUEST } from './config';
 import { store } from "../Redux/store";
 
 // AxiosWithOutAuthInstance
@@ -117,16 +117,11 @@ const AxioInTransfer = createAxiosInstance(ADD_TRANSFER);
 const AxioInDeliveryOrder = createAxiosInstance(DELIVERY_ORDERS);
 const AxiosUPRankGetData = createAxiosInstance(UPRANK_GETDATA);
 const AxiosUPRankPostData = createAxiosInstance(UPRANK_POST_DATA);
-const AxiosGetCutomerProduct = createAxiosInstance(ADD_CUSTOMER_GETDATA);
-const AxiosPostCutomerProduct = createAxiosInstance(ADD_CUSTOMER_POSTDATA);
 const AxiosJumpStart = createAxiosInstance(JUMP_START_AJAX);
 const AxiosJumpStartPOST = createAxiosInstance(JUMP_START_POST);
 const AxiosMatrixside = createAxiosInstance(MATRIX_SIDE);
 const AxiosMatrixsideGetSide = createAxiosInstance(MATRIX_SIDE_GETSIDE);
 const AxiosELibraryList = createAxiosInstance(E_LIBRARY_LIST);
-const AxiosELibraryShowCategory = createAxiosInstance(E_LIBRARY_SHOW_CATEGORY);
-const AxiosELibraryGetSubCategory = createAxiosInstance(E_LIBRARY_GET_SUB_CATEGORY);
-const AxiosELibraryPost = createAxiosInstance(E_LIBRARY_POST);
 const AxiosWithdrwalRequest = createAxiosInstance(WITHDRWAL_REQUEST);
 const AxiosgetPaymentLink = createAxiosInstance(GET_PAYMENT_LINK);
 
@@ -151,25 +146,4 @@ const AxiosProductListSignup = axios.create({
     headers: {'Accept': 'application/json'}
 });
 
-// const AxiosAuthBalance = axios.create({
-//     baseURL: BALANCE_URLL,
-//     timeout: 24000,
-//     headers
-// });
-// AxiosAuthBalance.interceptors.request.use(
-//     (config) => {
-//         config.headers["Accept"] = 'application/json';
-//         config.headers["Authorization"] = `Bearer ${sessionStorage.getItem("token") }`;
-//         return config;
-//     },
-//     (error) => {
-//         if (error?.response?.status === 401) {
-//             store.dispatch({
-//                 type: "LOG_OUT",
-//             });
-//         }
-//         return Promise.reject(error);
-//     }
-// );
-
-export { AxiosWithOutAuthInstance, AxiosAuthInstance, AxiosAuthBalance,AxiosEWalletReport, AxiosEarningReport ,AxiosSponsoredTree , AxiosSingleEarningReport ,AxiosSponsoredNetwork ,AxiosSubAccountLogin ,AxiosSubAccountUserLogin ,AxiosProductList,AxiosMobileNum , AxiosUserDetail,AxiosAddMember ,AxiosAddBank , AxiosGetBankDetail, AxiosBankListDetail,AxiosGetLPBalance,AxiosWithdrawal,AxiosLoginPassword,AxiosSecurityPassword,AxiosSendLoginOtp,AxiosVerifyLogin,AxiosResetLogin,AxiosGetEmail,AxioSendSecurityOtp,AxioSecurityOtp,AxioSecurityNewPassword,AxioAnnouncement,AxiosAnnouncementEdit,AxiosReorderCategory,AxiosPaymentBy,AxioPaymentByPost,AxioInvoiceList,AxioInvoiceListPDF ,AxioInMyTeamSearch ,AxioInMyAnnounceReading,AxioInMyAnnouncePending ,AxioInProfile,AxioInProfileGet ,AxioInSecurityBoolean,AxioInDashboardDetails, AxioInConverData ,AxioInMemberLIne,AxioInTransfer ,AxioInDeliveryOrder,AxiosUPRankGetData,AxiosUPRankPostData ,AxiosGetCutomerProduct ,AxiosPostCutomerProduct , AxiosJumpStart, AxiosJumpStartPOST, AxiosProductListSignup, AxiosMatrixside,AxiosMatrixsideGetSide ,AxiosELibraryList ,AxiosELibraryShowCategory,AxiosELibraryGetSubCategory,AxiosELibraryPost,AxiosWithdrwalRequest,AxiosgetPaymentLink};
+export { AxiosWithOutAuthInstance, AxiosAuthInstance, AxiosAuthBalance,AxiosEWalletReport, AxiosEarningReport ,AxiosSponsoredTree , AxiosSingleEarningReport ,AxiosSponsoredNetwork ,AxiosSubAccountLogin ,AxiosSubAccountUserLogin ,AxiosProductList,AxiosMobileNum , AxiosUserDetail,AxiosAddMember ,AxiosAddBank , AxiosGetBankDetail, AxiosBankListDetail,AxiosGetLPBalance,AxiosWithdrawal,AxiosLoginPassword,AxiosSecurityPassword,AxiosSendLoginOtp,AxiosVerifyLogin,AxiosResetLogin,AxiosGetEmail,AxioSendSecurityOtp,AxioSecurityOtp,AxioSecurityNewPassword,AxioAnnouncement,AxiosAnnouncementEdit,AxiosReorderCategory,AxiosPaymentBy,AxioPaymentByPost,AxioInvoiceList,AxioInvoiceListPDF ,AxioInMyTeamSearch ,AxioInMyAnnounceReading,AxioInMyAnnouncePending ,AxioInProfile,AxioInProfileGet ,AxioInSecurityBoolean,AxioInDashboardDetails, AxioInConverData ,AxioInMemberLIne,AxioInTransfer ,AxioInDeliveryOrder,AxiosUPRankGetData,AxiosUPRankPostData , AxiosJumpStart, AxiosJumpStartPOST, AxiosProductListSignup, AxiosMatrixside,AxiosMatrixsideGetSide ,AxiosELibraryList ,AxiosWithdrwalRequest,AxiosgetPaymentLink};

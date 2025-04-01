@@ -1,78 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../../../Components/Layout'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Redux/store';
 import DataTable from 'datatables.net-dt';
 import { fetchELibraryList } from '../../../Redux/thunks/ELibraryListThunk';
-import { FaEye } from "react-icons/fa6";
 
 function ELibrary() {
     const dispatch = useDispatch<any>();
 
     const { eLibraryListData  } = useSelector((state: RootState) => state.elibrary);
       const tableRef = useRef<HTMLTableElement | null>(null);
-  
-    // useEffect(() => {
-    //   if (tableRef.current) {
-    //     const dataTable = new DataTable(tableRef.current, {
-    //       searching: false,
-    //     });
-  
-    //     return () => {
-    //       if (dataTable) {
-    //         dataTable.destroy(true);
-    //       }
-    //     };
-    //   }
-    // }, []);
+  const navigate = useNavigate();
 
     useEffect(() => {
       
     }, [dispatch]);
        useEffect(() => {
             const action = {
-                action:'get-e-library'
+                action:'get-category'
         }   
         dispatch(fetchELibraryList(action));
         }, [dispatch]);
-          // --search input
-          const [searchDate, setSearchDate] = useState("");
-        
-          const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setSearchDate(e.target.value);
-          };
-          
-          const filteredData = eLibraryListData?.filter((item: any) => {
-            const searchTerm = searchDate.toLowerCase();
-          
-            return (
-              item.cat_name?.toLowerCase().includes(searchTerm) ||
-              item.subcat_name?.toLowerCase().includes(searchTerm) ||
-              item.content_type?.toLowerCase().includes(searchTerm) ||
-              item.content_title?.toLowerCase().includes(searchTerm) ||
-              item.language?.toLowerCase().includes(searchTerm)
-            );
-          });
+      
           const [loading, setLoading] = useState(true);
       let dataTable: any = null;
-  useEffect(() => {
-    if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
-        setLoading(false);
-        dataTable = new DataTable(tableRef.current, {
-            searching: true,
-            paging: true,
-            pageLength: 10,
-            destroy: true,
-        });
-    }
-
-    return () => {
-        if (dataTable) {
-            dataTable.destroy();
+      useEffect(() => {
+        if (tableRef.current && Array.isArray(eLibraryListData) && eLibraryListData.length > 0) {
+            setLoading(false);
+            dataTable = new DataTable(tableRef.current, {
+                searching: true,
+                paging: true,
+                pageLength: 10,
+                destroy: true,
+            });
         }
-    };
-}, [filteredData]);
+
+        return () => {
+            if (dataTable) {
+                dataTable.destroy();
+            }
+        };
+    }, [eLibraryListData]);
+
   return (
     <>
       <Layout>
@@ -107,20 +77,8 @@ function ELibrary() {
         <section className="py-20 pb-20">
           <div className="container">
             <div className="bg-white p-4 border rounded-md">
-                {/* <div className="text-end">
-            <button className="px-4 bg-[#178285] text-xs text-white rounded-md py-2" onClick={()=>handleNavigate()}>Add Content</button>
-                </div> */}
+               
               <div className="relative overflow-x-auto mt-5 border rounded-md">
-              {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
-                    <label className="mt-1 text-sm ms:text-base ">Search :</label>
-            <input
-            type="text"
-            placeholder="Search"
-            value={searchDate}
-            onChange={handleSearchChange}
-            className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
-          />
-                </div> */}
                   {loading &&  (
                 <div className="flex justify-center items-center h-10">
                     <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -132,44 +90,25 @@ function ELibrary() {
                 >
                   <thead className="text-xs text-white uppercase  bg-[#178285]">
                     <tr>
-                      <th className="px-6 py-3">#</th>
-                      <th className="px-6 py-3">Category</th>
-                      <th className="px-6 py-3">Sub Category</th>
-                      <th className="px-6 py-3">Contect Type</th>
-                      <th className="px-6 py-3">Contect Title</th>
-                      <th className="px-6 py-3">Language</th>
-                      <th className="px-6 py-3">Content</th>
+                      <th className="px-6 py-3 ">#</th>
+                      <th className="px-6 py-3 ">Category</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData && filteredData.length > 0
-                      ? filteredData.map((item: any, index: number) => (
+                    {eLibraryListData && eLibraryListData.length > 0
+                      ? eLibraryListData.map((item: any, index: number) => (
                           <tr
                             key={index}
                             className={
-                              index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"
+                              index % 2 === 0 ? "bg-white cursor-pointer" : "bg-[#efeff1] cursor-pointer" 
                             }
+                            onClick={() => navigate('/e-library/sub-category', { state: { ID: item.cat_id } })}
                           >
-                            <td className="px-6 py-2 text-black">
+                            <td className="px-6 py-2 text-black ">
                               {index + 1}
                             </td>
-                            <td className="px-6 py-2 text-black">
+                            <td className="px-6 py-2 text-black  ">
                             {item.cat_name}
-                            </td>
-                            <td className="px-6 py-2 text-black">
-                           {item.subcat_name}
-                            </td>
-                            <td className="px-6 py-2 text-black">
-                                {item.content_type}
-                            </td>
-                            <td className="px-6 py-2 text-black">
-                                {item.content_title}
-                            </td>
-                            <td className="px-6 py-2 text-black">
-                                {item.language}
-                            </td>
-                            <td className="px-6 py-2 text-black">
-                                <a href={item.content} target='_blank'><FaEye /></a>
                             </td>
                           </tr>
                         ))

@@ -18,47 +18,15 @@ function DeliveryOrder() {
 
   const { DeliveryOrder } = useSelector((state: RootState) => state.diliveryorder);
      const tableRef = useRef<HTMLTableElement | null>(null);
-  // useEffect(() => {
-  //   if (tableRef.current) {
-  //     const dataTable = new DataTable(tableRef.current, {
-  //       searching: false,
-  //     });
-
-  //     return () => {
-  //       if (dataTable) {
-  //         dataTable.destroy(true);
-  //       }
-  //     };
-  //   }
-  // }, []);
 
   useEffect(() => {
     dispatch(fetchDeliveryOrder());
   }, [dispatch]);
 
-  // --search input
-  const [searchDate, setSearchDate] = useState("");
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchDate(e.target.value);
-  };
-
-  const filteredData = DeliveryOrder?.filter((item: any) => {
-    const invoiceNo = item.invoice_no ? item.invoice_no.toString().toLowerCase() : "";
-    const shippingNo = item.shipping_no ? item.shipping_no.toString().toLowerCase() : "";
-    const status = item.status ? item.status.toString().toLowerCase() : "";
-    const searchTerm = searchDate.toLowerCase();
-  
-    return (
-      invoiceNo.includes(searchTerm) ||
-      shippingNo.includes(searchTerm) ||
-      status.includes(searchTerm)
-    );
-  });
     const [loading, setLoading] = useState(true);
       let dataTable: any = null;
   useEffect(() => {
-    if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
+    if (tableRef.current && Array.isArray(DeliveryOrder) && DeliveryOrder.length > 0) {
         setLoading(false);
         dataTable = new DataTable(tableRef.current, {
             searching: true,
@@ -73,7 +41,7 @@ function DeliveryOrder() {
             dataTable.destroy();
         }
     };
-}, [filteredData]);
+}, [DeliveryOrder]);
 
   return (
     <>
@@ -108,16 +76,7 @@ function DeliveryOrder() {
           <div className="container">
             <div className="bg-white p-4 border rounded-md">
               <div className="relative overflow-x-auto mt-5 border rounded-md">
-              {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
-                    <label className="mt-1 text-sm ms:text-base ">Search :</label>
-            <input
-            type="text"
-            placeholder="Search"
-            value={searchDate}
-            onChange={handleSearchChange}
-            className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
-          />
-                </div> */}
+            
                     {loading &&  (
                 <div className="flex justify-center items-center h-10">
                     <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -136,8 +95,8 @@ function DeliveryOrder() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData && filteredData.length > 0
-                      ? filteredData.map((item: DataTransfer, index: number) => (
+                    {DeliveryOrder && DeliveryOrder.length > 0
+                      ? DeliveryOrder.map((item: DataTransfer, index: number) => (
                           <tr
                             key={index}
                             className={

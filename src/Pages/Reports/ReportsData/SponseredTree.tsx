@@ -14,27 +14,10 @@ const SponseredTree = () => {
  const tableRef = useRef<HTMLTableElement | null>(null);
     const [loading, setLoading] = useState(true);
 
-       // --search input
-    const [searchDate, setSearchDate] = useState("");
-
-    // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //   setSearchDate(e.target.value);
-    // };
-
-    const filteredData = reportData
-  ? reportData.filter((item: any) => {
-      const transNo = item.trans_no ? item.trans_no.toString().toLowerCase() : "";
-      const description = item.description ? item.description.toString().toLowerCase() : "";
-      const searchTerm = searchDate.toLowerCase();
-
-      return transNo.includes(searchTerm) || description.includes(searchTerm);
-    })
-  : [];
-
   let dataTable: any = null;
 
   useEffect(() => {
-      if (tableRef.current && Array.isArray(filteredData) && filteredData.length > 0) {
+      if (tableRef.current && Array.isArray(reportData) && reportData.length > 0) {
           setLoading(false);
           dataTable = new DataTable(tableRef.current, {
               searching: true,
@@ -49,7 +32,7 @@ const SponseredTree = () => {
               dataTable.destroy();
           }
       };
-  }, [filteredData]);
+  }, [reportData]);
 
     const dispatch = useDispatch<any>();
 
@@ -180,16 +163,7 @@ const SponseredTree = () => {
                            </div>
                         </form>
             <div className="relative overflow-x-auto mt-5 border rounded-md">
-            {/* <div className="flex justify-center tablet:justify-end tablet:mb-[-50px] items-center gap-2 z-[1] relative sm:absolute right-0 top-[3px]">
-                    <label className="mt-1 text-sm ms:text-base ">Search :</label>
-            <input
-        type="text"
-        placeholder="Search"
-        value={searchDate}
-        onChange={handleSearchChange}
-        className="py-1 sm:py-2 px-2 border rounded mt-2 sm:me-2 text-xs placeholder:text-sm"
-      />
-                </div> */}
+          
                 {loading &&  (
                 <div className="flex justify-center items-center h-10">
                     <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -218,8 +192,8 @@ const SponseredTree = () => {
                         </tr>
                     </thead>
                     <tbody>
-                   {filteredData && filteredData.length > 0 ? (
-                                            filteredData.map((item: any, index: number) => (
+                   {reportData && reportData.length > 0 ? (
+                                            reportData.map((item: any, index: number) => (
                                                 <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                     <td className="px-6 py-2 text-black">{item.trans_no}</td>
                                                     <td className="px-6 py-2 text-black">
