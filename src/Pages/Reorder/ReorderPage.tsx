@@ -16,6 +16,7 @@ import imageCompression from 'browser-image-compression';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { fetchPaymentLink } from '../../Redux/thunks/PaymentLinkThunk';
 import { LIVE_URL } from '../../Utilities/config';
+import { fetchSingapure } from '../../Redux/thunks/SingapureThunk';
 interface Product {
   id : string,
   category_name : string,
@@ -51,6 +52,7 @@ const comboRetailProduct= productData && productData
         deliver_status: 'self_collect',
         payment_slip_image : null,
     });
+    const dispatch = useDispatch<any>();
       const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState<any>('');
     const [stripShow , setSripShow]= useState(false);
@@ -60,6 +62,8 @@ const comboRetailProduct= productData && productData
     const [eWallerPPText ,setEWalletPPText] = useState<any>();
     const [eWallerRPText ,setEWalletRPText] = useState<any>();
     const [isOpen, setIsOpen] = useState<any>(null);
+    const [disable , setDisable] = useState<any>(false);
+    const [singapure , setSingapure] = useState<boolean>(false);
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = sessionStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : {};
@@ -72,7 +76,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
     }
    },[]);
   
-    const dispatch = useDispatch<any>();
+  
     useEffect(()=>{
         dispatch(fetchCategoryList())
     },[dispatch])
@@ -348,7 +352,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
     count: item.count
   }));
     const [bizData, setBizData] = useState<any>({});
-  
     const validateFormBiz = () => {
       const newErrors: any = {};
       if (!bizData.dob) newErrors.dob = "Date of Birth is required.";
@@ -359,22 +362,33 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
       
       return Object.keys(newErrors).length === 0; 
     };
-  
     useEffect(() => {
-      const BizPathdata = sessionStorage.getItem("user");
-      if (BizPathdata) {
-        const parsedData = JSON.parse(BizPathdata);
-        setBizData({
-          dob: parsedData.dob,
-          mobile: parsedData.mobile,
-          address: parsedData.address,
-          zip: parsedData.zip,
-          email: parsedData.email,
-        });
-      }
+      const fetchData = async () => {
+        const BizPathdata = sessionStorage.getItem("user");
+        if (BizPathdata) {
+          const parsedData = JSON.parse(BizPathdata);
+          setBizData({
+            dob: parsedData.dob,
+            mobile: parsedData.mobile,
+            address: parsedData.address,
+            zip: parsedData.zip,
+            email: parsedData.email,
+          });
+    
+          try {
+            const availableCountry = await dispatch(fetchSingapure(parsedData.userid));
+            setSingapure(availableCountry.CountryName === "Singapore" ? true : false);
+          } catch (error) {
+            console.error("Error fetching country data:", error);
+          }
+        }
+      };
+    
+      fetchData();
     }, []);
+    
 
-  const [disable , setDisable] = useState<any>(false);
+
   const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
     e.preventDefault();
     setDisable(true);
@@ -684,7 +698,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                     </div>
                     <div className="mb-3">
                 <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
-                <div className="mt-3 flex gap-20 justify-around">
+                <div className={` mt-3 flex gap-20  ${singapure ? "justify-around":"justify-start ps-1 md:ps-5"}`}>
                   <div className="flex items-center cursor-pointer">
                     <input
                       id="main-account"
@@ -699,6 +713,8 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                       Self Collect
                     </label>
                   </div>
+                  {
+                    singapure &&
                   <div className="flex items-center cursor-pointer">
                     <input
                       id="sub-account"
@@ -713,6 +729,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                       Delivery
                     </label>
                   </div>  
+                  }
                 </div>
                     </div>
                      <div className='text-end flex justify-end mb-3 '>

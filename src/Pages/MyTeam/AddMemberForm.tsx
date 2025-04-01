@@ -66,6 +66,7 @@ const comboRetailProduct= productListData && productListData.products
   const [cart, setCart] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<any>(null);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [countrysinga , setCountrySinga] = useState<any>(false);
   const [formData, setFormData] = useState<FormData>({
     sponsor: upline_id || "", 
     placement: upline_id || "",
@@ -187,7 +188,15 @@ const comboRetailProduct= productListData && productListData.products
       }
 
       setFormData((prev) => ({ ...prev, [name]: value }));
-    } else {
+    } else if(name === "country" ){      
+      const selectedCountry = productListData.countries.find((country: any) => Number(country.id) === Number(value));
+      if (selectedCountry.country_name === "Singapore") {
+        setCountrySinga(true)
+      } else {
+        setCountrySinga(false);
+      }
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }else{
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
@@ -620,7 +629,7 @@ const comboRetailProduct= productListData && productListData.products
                     className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
                     value={formData.country}
                     onChange={handleChange}
-                  >
+                  > 
                     <option value="">Select Country</option>
                     {productListData.countries &&
                     productListData.countries.length > 0 ? (
@@ -850,7 +859,7 @@ const comboRetailProduct= productListData && productListData.products
                   <label className="text-[#1e293b] text-[14px] mb-1">
                     Deliver Status
                   </label>
-                  <div className="mt-3 flex gap-20 justify-around">
+                  <div className={` mt-3 flex gap-20  ${countrysinga ? "justify-around":"justify-start ps-1 md:ps-5"}`}>
                     <div className="flex items-center cursor-pointer">
                       <input
                         id="main-account"
@@ -868,6 +877,8 @@ const comboRetailProduct= productListData && productListData.products
                         Self Collect
                       </label>
                     </div>
+                    {
+                      countrysinga &&
                     <div className="flex items-center cursor-pointer">
                       <input
                         id="sub-account"
@@ -885,8 +896,10 @@ const comboRetailProduct= productListData && productListData.products
                         Delivery
                       </label>
                     </div>
+                    }
                   </div>
                 </div>
+               
                 <div className="text-end flex justify-end">
                   <button
                     type="submit"
