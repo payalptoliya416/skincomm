@@ -22,7 +22,7 @@ function DashboardAdMemStrip() {
     };
     dispatch(fetchUserDetailData(userdatad));
   }, [dispatch, ID]);
-
+  
   useEffect(() => {
     if (UserDetailData?.stripe_key) {
       const key = UserDetailData.stripe_key;

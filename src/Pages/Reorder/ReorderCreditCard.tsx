@@ -42,10 +42,10 @@ function ReorderCreditCard() {
   return (
     <>
          <div className="flex items-center justify-center min-h-screen bg-gray-100">
-                 <div className="bg-white shadow-lg rounded-lg p-2 sm:p-6 w-96 text-center">
+                 <div className="bg-white shadow-lg rounded-lg p-2 sm:p-6 w-96 text-center mx-3">
                    <ToastContainer />
                    {loading ? (
-                     <p className="text-base sm:text-lg font-semibold text-blue-500 animate-pulse">Processing your request...</p>
+                     <p className="text-sm sm:text-lg font-semibold text-blue-500 animate-pulse">Processing your request...</p>
                    ) : error ? (
                      <>
                      <p className="text-base sm:text-lg font-semibold text-red-500">{error}</p>
