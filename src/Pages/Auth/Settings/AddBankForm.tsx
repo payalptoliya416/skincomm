@@ -72,24 +72,19 @@ const [formData, setFormData] = useState<FormData>({
   };
 
 const navigate = useNavigate();
-  const [disable , setDisable] = useState<any>(false)
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
-    setDisable(true); 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
       try {
         await dispatch(fetchBankData(formData));       
         await dispatch(fetchBankList());
         navigate('/addbankpage'); 
-        setDisable(false); 
       } catch (error) {
         console.error("Error updating bank details:", error);
-        setDisable(false); 
       }
     } else {
       setErrors(validationErrors);
-      setDisable(false); 
     }
     
   };
