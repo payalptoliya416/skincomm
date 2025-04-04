@@ -356,17 +356,6 @@ const comboRetailProduct= packages && packages
                       Upload Payment Slip
                     </option>
                   </select>
-                  {/* {formData.payment_type === "credit_card" ? (
-                    <div className="mt-4">
-                      <CardElement
-                        className="border py-2 px-3 rounded-md"
-                        options={{ hidePostalCode: true }}
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )} */}
-
                   {formData.payment_type === "upload_payment_slip" ? (
                     <input
                       type="file"

@@ -33,7 +33,6 @@ function RegistrationCreditCard() {
             }
     
             const result = await response.json();
-    
             if (result?.error) {
               setError(result.message);
               sessionStorage.removeItem("signupcredit");

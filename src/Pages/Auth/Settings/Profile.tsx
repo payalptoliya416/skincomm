@@ -168,17 +168,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       value={formData.mobile}
       onChange={handleInputChange}
     />
-                    {/* <PhoneInput
-                  inputProps={{
-                      name: "phone",
-                      className: `border w-full py-2 rounded-lg pe-2 ps-11 ${errors.phone && 'border-red-500'}`,
-                  }}
-                  country={"in"} 
-                  value={formData.mobile}
-                  onChange={(mobile) => setFormData({ ...formData, mobile })}
-              /> */}
-    
-    {/* <span className="absolute top-[10px] left-[2px] bg-gray-100 px-3 py-[6px] rounded-md w-ma text-sm">{ProfileGetData.sort_code}</span> */}
       </div>
         {errors.mobile && (
           <p className="text-red-500 text-xs">{errors.mobile}</p>
