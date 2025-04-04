@@ -9,7 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 const Share = () => {
         const userid = sessionStorage.getItem("UserID");
         const inputRef = useRef<HTMLInputElement | null>(null);
-
+        const referralUrl = `${LIVE_URL}/${userid}`;
         const handleCopyClick = () => {
           if (inputRef.current) {
             navigator.clipboard.writeText(inputRef.current.value)
@@ -56,22 +56,23 @@ const Share = () => {
                 <section className="h-screen flex items-center justify-center">
                         <div className="max-w-lg sm:mx-auto w-full mx-3">
                         <ul className="flex flex-col gap-7 bg-white rounded-2xl px-6 py-6 ">
-                            {/* <li className="mx-auto">
+                            <li className="mx-auto">
                                 <div style={{height: "auto", margin: "0 auto", maxWidth: 400, width: "100%"}} >
                                     <QRCode
                                         size={200}
                                         style={{height: "auto", maxWidth: "200", width: "100%"}}
-                                        value={'hello'}
+                                        value={referralUrl} 
                                         viewBox={`0 0 256 256`}
                                     />
+                              
                                 </div>
-                            </li> */}
+                            </li>
                             <li className="flex flex-col gap-4">
                             <div className="relative mt-2 w-full">
                         <input
                             type="text"
                             ref={inputRef}
-                            value={`${LIVE_URL}/${userid}`}
+                            value={referralUrl}
                             className="w-full text-[14px] placeholder:text-[14px] border py-2 pr-10 pl-3 rounded-md placeholder:text-black cursor-pointer"
                             disabled
                             onClick={handleCopyClick}

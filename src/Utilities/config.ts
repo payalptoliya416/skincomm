@@ -1,12 +1,12 @@
 const ENV: string = 'Live';
 
-// const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'http://192.168.1.19:8080';
+const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'http://192.168.1.19:8080';
 // const BASE_URL: string = ENV === 'development' ?  'http://127.0.0.1:8000' : 'http://192.168.1.22:8005';
-const BASE_URL: string = ENV === 'development' ?  'http://192.168.1.19:8080' : 'https://staging.acp.sgcoders.net';
+// const BASE_URL: string = ENV === 'development' ?  'http://192.168.1.19:8080' : 'https://staging.acp.sgcoders.net';
 // const BASE_URL: string = ENV === 'development' ?  'http://192.168.1.19:8080' : 'https://acp.skincomm.com';
 
-// export const LIVE_URL: string = 'localhost:3000/#';
-export const LIVE_URL: string = 'https://staging.m.sgcoders.net/#';
+export const LIVE_URL: string = 'localhost:3000/#';
+// export const LIVE_URL: string = 'https://staging.m.sgcoders.net/#';
 // export const LIVE_URL: string = 'https://m.skincomm.com/#';
 
 const API_URL: string = BASE_URL + '/api/'; 

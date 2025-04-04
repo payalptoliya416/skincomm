@@ -267,8 +267,8 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
          
           setFormData((prev: FormData) => ({
             ...prev,
-            products_data:updatedCart ,
-            // products_data:JSON.stringify(updatedCart) ,
+            // products_data:updatedCart ,
+            products_data:JSON.stringify(updatedCart) ,
           }));
           return updatedCart;
         });
