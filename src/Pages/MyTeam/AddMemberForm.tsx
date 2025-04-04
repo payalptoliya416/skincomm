@@ -404,8 +404,8 @@ const comboRetailProduct= productListData && productListData.products
                                     "success_url" :`${LIVE_URL}/addmember-payment`,
                                     "cancel_url":`${LIVE_URL}/placement-tree`
                                 }
+                              
                 const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
-                
                  if (availableUrl?.url) {
                         let storedData = JSON.parse(sessionStorage.getItem("myTeamAddmemberCredit") || "{}");
                        storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;

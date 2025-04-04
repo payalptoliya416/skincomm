@@ -23,7 +23,7 @@ interface FormData {
     e_mail: string,
     mobile: string,
     sponsor_type: number,
-    products_data: any[];
+    products_data: any[] | string;
     country: string,
     payment_type : string,
     deliver_status: string,
@@ -267,7 +267,8 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
          
           setFormData((prev: FormData) => ({
             ...prev,
-            products_data: updatedCart,
+            products_data:updatedCart ,
+            // products_data:JSON.stringify(updatedCart) ,
           }));
           return updatedCart;
         });
@@ -275,9 +276,6 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
 
     const validateForm = () => {
         const newErrors: any = {};
-            if (!formData.sponsor) newErrors.sponsor = "Sponsor ID is required";
-            // if (!formData.placement) newErrors.placement = "Placement ID is required";
-            // if (!formData.matrix_side) newErrors.matrix_side = "Matrix Side is required";
              if (!formData.f_name) newErrors.f_name = "Full Name is required";
         if (!formData.country) newErrors.country = "Country Name is required";
         if (!fName.member) newErrors.sponsor = `${fName.message}`;
@@ -338,7 +336,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           };
           
           const responseData = await fetchNumber(mobileDetail);
-          
           if (responseData) {
             const numberData = responseData;
             setUserDetailData(numberData);
@@ -353,6 +350,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   "success_url" :`${LIVE_URL}/signup-payment`,
                   "cancel_url":`${LIVE_URL}/signup`
               }
+
                const fetchPaymentLink = async (formDataToSend: any) => {
                 try {
                   const response = await fetch(`${BASE_URL}/api/get-payment-link-public`, {
@@ -383,39 +381,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               } else {
                   toast.error("Invalid URL received:", availableUrl);
               }
-              // const fetchAddMember = async (formDataToSend: any) => {
-              //   try {
-              //     const response = await fetch(`${BASE_URL}/api/get-payment-link-public`, {
-              //       method: "POST",
-              //       headers: {
-              //         "Content-Type": "application/json",
-              //       },
-              //       body: JSON.stringify(formDataToSend),
-              //     });
               
-              //     if (!response.ok) {
-              //       throw new Error("Failed to fetch data");
-              //     }
-              
-              //     const submitData = await response.json();
-              //     return submitData; 
-              //   } catch (error) {
-              //     console.error("Error fetching data:", error);
-              //     return null; 
-              //   }
-              // };
-              //   const successData =await fetchAddMember(formDataToSend);
-              //   if(successData){
-              //       if(successData.data.error === true){
-              //           toast.error(successData.data.message)
-              //           setDisable(false);
-              //       }
-              //       else{
-              //           toast.success("Member added successfully !");
-              //           setDisable(false);
-              //           navigate('/');
-              //       }
-              //   }
             } else {
               toast.error("Mobile validation failed, form submission aborted.");
               setDisable(false);
@@ -490,33 +456,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}
                                  </h4> :""}
                                 </div>
-                                {/* <div className='mb-3'>
-                                    <label className='text-[#1e293b] text-[14px]'>Placement ID</label>
-                                    <input
-                                        type="text"
-                                        name="placement"
-                                        placeholder='Placement'
-                                        className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
-                                        value={formData.placement}
-                                        onChange={handleFnameSearch}
-                                    />
-                                    {errors.placement && <p className='text-red-500 text-xs'>{errors.placement}</p>}
-                                    {placementName.member && placementName.member ? <h4 className='text-sm pt-2'> {placementName.member && placementName.member.f_name}</h4> :""}
-                                </div> */}
-                                {/* <div className='mb-3'>
-                                    <label className='text-[#1e293b] text-[14px]'>Matrix Side</label>
-                                    <select
-                                        name="matrix_side"
-                                        className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
-                                        value={formData.matrix_side}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" disabled>Auto</option>
-                                        <option value="R">Right</option>
-                                        <option value="L">Left</option>
-                                    </select>
-                                    {errors.matrix_side && <p className='text-red-500 text-xs'>{errors.matrix_side}</p>}
-                                </div> */}
                                 <div className='mb-3'>
                                     <label className='text-[#1e293b] text-[14px]'>Full Name</label>
                                     <input
@@ -682,14 +621,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 <option defaultValue={''}>Select</option>
                                 <option value="credit_card">Credit Card</option>
                                 </select>
-
-                           
-                           {/* {formData.payment_type === "credit_card" ? (
-                                <div className="mt-4">
-                                <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
-                                </div>
-                            ): ""} */}
-                           
                         {errors?.upload && <p className="text-red-500 text-xs mt-2">{errors.upload}</p>}
                              {errors.payment_type && <p className='text-red-500 text-xs'>{errors.payment_type}</p>}
                                     </div>

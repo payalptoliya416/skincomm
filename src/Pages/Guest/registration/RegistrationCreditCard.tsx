@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../Utilities/config';
 
@@ -14,7 +13,6 @@ function RegistrationCreditCard() {
           setError('');
     
           const data = sessionStorage.getItem("signupcredit");
-    
           if (!data) {
             setError("No data available for submission.");
             setLoading(false);
