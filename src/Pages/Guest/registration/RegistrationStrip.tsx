@@ -8,7 +8,6 @@ import { toast, ToastContainer } from "react-toastify";
 function RegistrationStrip() {
   const [stripePromise, setStripePromise] = useState<Promise<any> | null>(null);
   const [stripeKey, setStripeKey] = useState<any>("");
-  
   const ID = sessionStorage.getItem("refUserID")
   const fetchData = async (ID: any) => {
     try {

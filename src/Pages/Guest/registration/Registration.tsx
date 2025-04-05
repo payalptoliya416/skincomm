@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from 'react-icons/hi2';
 import { BsCart } from 'react-icons/bs';
@@ -31,7 +31,6 @@ interface FormData {
 }
 
 function Registration() {
-  const navigate = useNavigate();
     const ID = sessionStorage.getItem("refUserID")
     const [productListSignUpData ,setProductListSignUpData] = useState<any>([]);
     const comboRetailPrices = productListSignUpData && productListSignUpData.products
@@ -248,27 +247,36 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
      const updateCart = async (productId: string, price: number, delta: number) => {
 
         setCart((prevCart) => {
+          
           const currentCart = Array.isArray(prevCart) ? prevCart : [];
-    
-          const existingProduct = currentCart.find((item) => item.id === productId) || { id: productId, count: 0 };
-          const newCount = existingProduct.count + delta;
-    
-          if (newCount < 0) return currentCart;
-    
-          const updatedCart = currentCart.map((item) =>
-            item.id === productId ? { ...item, count: newCount } : item
-          );
-    
-          if (!currentCart.some((item) => item.id === productId)) {
-            updatedCart.push({ id: productId, count: newCount });
+          const existingProductIndex = currentCart.findIndex((item) => item.id === productId);
+        
+          let updatedCart = [...currentCart];
+          let newCount = 0;
+          if (existingProductIndex !== -1) {
+            newCount = currentCart[existingProductIndex].count + delta;
+        
+            if (newCount <= 0) {
+              updatedCart.splice(existingProductIndex, 1);
+            } else {
+              updatedCart[existingProductIndex] = { ...currentCart[existingProductIndex], count: newCount };
+            }
+          } else {
+            if (delta > 0) {
+              updatedCart.push({ id: productId, count: delta, price: price }); 
+              newCount = delta;
+            } else {
+              return currentCart;
+            }
           }
-          const total = updatedCart.reduce((acc, item) => acc + item.count * price, 0);
+        
+          const total = updatedCart.reduce((acc, item) => acc + item.count * item.price, 0);
+
           setTotalPrice(total);
-         
+          const simplifiedCart = updatedCart.map((item) => ({ id: item.id, count: item.count }));
           setFormData((prev: FormData) => ({
             ...prev,
-            // products_data:updatedCart ,
-            products_data:JSON.stringify(updatedCart) ,
+            products_data: simplifiedCart ,
           }));
           return updatedCart;
         });
@@ -350,7 +358,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   "success_url" :`${LIVE_URL}/signup-payment`,
                   "cancel_url":`${LIVE_URL}/signup`
               }
-
                const fetchPaymentLink = async (formDataToSend: any) => {
                 try {
                   const response = await fetch(`${BASE_URL}/api/get-payment-link-public`, {
@@ -552,29 +559,29 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                                                    productListSignUpData.products.map((item: any, index: number) => (
                                                                    <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
                                                                        <td className="px-6 py-3 text-center">
-                                                                                                                                         <img src={item.combo_product_image} alt="" className='mx-auto w-[40px] h-[40px] rounded-full cursor-pointer'  onClick={() => setIsOpen(item.combo_product_image)} />
-                                                                                                                                         {isOpen && (
-                                                                                                                                          <>
-                                                                                                                                           <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
-                                                                                                                                          <div className="fixed inset-0 z-20 flex items-center justify-center">
-                                                                                                                                              <section className="flex items-center justify-center relative">
-                                                                                                                                              <button
-                                                                                                                                                  className="absolute top-[-2px] right-[-2px] z-30 text-white"
-                                                                                                                                                  onClick={() => setIsOpen(null)}
-                                                                                                                                              >
-                                                                                                                                                  <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
-                                                                                                                                              </button>
-                                                                                                                                              <img
-                                                                                                                                                  src={isOpen}
-                                                                                                                                                  alt="Enlarged"
-                                                                                                                                                  className="max-w-[90vw] max-h-[80vh] rounded-2xl"
-                                                                                                                                              />
-                                                                                                                                              </section>
-                                                                                                                                          </div>
-                                                                                                                                          </>
-                                                                                                                                      )}
-                                                                                                                                         </td>    
-                                                                                                                                         <td className="px-6 py-3 text-center">
+                                                                       <img src={item.combo_product_image} alt="" className='mx-auto w-[40px] h-[40px] rounded-full cursor-pointer'  onClick={() => setIsOpen(item.combo_product_image)} />
+                                                                             {isOpen && (
+                                                                              <>
+                                                                               <div className="fixed inset-0 bg-black opacity-5 z-10"></div>
+                                                                              <div className="fixed inset-0 z-20 flex items-center justify-center">
+                                                                                  <section className="flex items-center justify-center relative">
+                                                                                  <button
+                                                                                      className="absolute top-[-2px] right-[-2px] z-30 text-white"
+                                                                                      onClick={() => setIsOpen(null)}
+                                                                                  >
+                                                                                      <IoIosCloseCircle className="text-3xl text-white cursor-pointer" />
+                                                                                  </button>
+                                                                                  <img
+                                                                                      src={isOpen}
+                                                                                      alt="Enlarged"
+                                                                                      className="max-w-[90vw] max-h-[80vh] rounded-2xl"
+                                                                                  />
+                                                                            </section>
+                                                                        </div>
+                                                                        </>
+                                                                    )}
+                                                                        </td>    
+                                                                        <td className="px-6 py-3 text-center">
                                                                           {item.combo_product_code}
                                                                    </td> 
                                                                    <td className="px-6 py-3 text-center">
