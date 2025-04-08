@@ -9,7 +9,6 @@ export const fetchEWalletReport = (reportParams: any) => {
         dispatch(fetchewalletreportRequest());
         try {
             const response = await AxiosEWalletReport.post('', reportParams);
-            console.log("response",response)
             dispatch(fetchewalletreportSuccess(response.data.data.records));
         } catch (error: any) {
             dispatch(fetchewalletreportFailure(error.message || 'Failed to fetch EwalletReport data'));

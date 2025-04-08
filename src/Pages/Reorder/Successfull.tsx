@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 function Successfull() {
   const location = useLocation();
   const successMsj = location.state?.message || '';
-console.log("successMsj",successMsj)
   return (
     <>
         <div className="bg-gray-100 h-screen flex justify-center items-center">

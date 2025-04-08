@@ -1,9 +1,15 @@
 import { CommonTypes, LoginTypes } from "../types";
 import { AxiosWithOutAuthInstance } from "../../Utilities/axios";
+
 export const setLoginToken = (token: string) => ({
     type: "SET_LOGIN_TOKEN",
     payload: token,
   });
+
+  export const clearLoginError = () => ({
+    type: LoginTypes.LOGIN_CLEAR_ERROR,
+  });
+
 export const loginAction = (formData: any) => async (dispatch: any) => {
     dispatch({
         type: CommonTypes.ACTION_START,
@@ -11,6 +17,7 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
 
     try {
         const response = await AxiosWithOutAuthInstance.post(`/member_login`, formData);
+
         sessionStorage.setItem("token", response.data.token);
         sessionStorage.setItem("rankNameofMember", response.data.member_rank);
         sessionStorage.setItem("loginUser", response.data.user.username);
@@ -28,7 +35,7 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
             token: response.data.token,
         });
     } catch (error: any) {
-        const errorMsg = error?.response?.data?.message || "Something went wrong";
+        const errorMsg = error?.response?.data || "Something went wrong";
         dispatch({
             type: LoginTypes.LOGIN_FAILED,
             payload: errorMsg,

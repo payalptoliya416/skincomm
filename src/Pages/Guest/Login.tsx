@@ -2,14 +2,15 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { loginAction } from "../../Redux/actions/loginAction";
+import { clearLoginError, loginAction } from "../../Redux/actions/loginAction";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from "react-router-dom";
 
 const Login = () => {
     
-    const loginState = useSelector((state: any) => state?.loginState?.error?.response?.data);
+    // const loginState = useSelector((state: any) => state?.loginState?.error?.response?.data);
+    const loginError = useSelector((state: any) => state?.loginState?.error);
     const dispatch = useDispatch() as any;
   
     const initialValues = {
@@ -37,13 +38,14 @@ const Login = () => {
       onSubmit: formSubmit,
       validationSchema,
     }) as any;
-  
-    useEffect(() => {
-      if (loginState?.error) {
-        toast.error(loginState.error);
-      }
-    }, [loginState]);
 
+    useEffect(() => {
+      if (loginError) {
+        toast.error(loginError?.message || loginError.error);
+        dispatch(clearLoginError()); 
+      }
+    }, [loginError]);
+    
     return (
         <>
             <section className="h-screen flex items-center justify-center">
@@ -56,9 +58,8 @@ const Login = () => {
                             <div className="text-center">
                                 <h2 className="text-xl text-black font-semibold">Member Login</h2>
                                 <h2 className="text-danger-color m-0">
-                          {loginState?.message ? "Something went wrong. Please try again." : ""}
+                          {loginError?.message ? loginError.message || loginError.error : ""}
                         </h2>
-
                             </div>
                         </div>
  

@@ -22,8 +22,6 @@ function ReorderCreditCard() {
   
         try {
           const successData = await dispatch(fetchReorderPost(submittedData));
-          console.log("successData",successData)
-          console.log("successDatasasas",successData.data.message)
           if (successData?.data?.success) {
             navigate('/successfully', { state: { message: successData.data.message } });
             sessionStorage.removeItem('reorderpaymentData');
