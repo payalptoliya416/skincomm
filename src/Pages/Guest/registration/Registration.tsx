@@ -458,6 +458,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                         className='mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black'
                                         value={formData.sponsor}
                                         onChange={handleFnameSearch}
+                                        disabled
                                     />
                                     {errors.sponsor && <p className='text-red-500 text-xs'>{errors.sponsor}</p>}
                                     {fName.member && fName.member ? <h4 className='text-sm pt-2'> {fName && fName.member.f_name}

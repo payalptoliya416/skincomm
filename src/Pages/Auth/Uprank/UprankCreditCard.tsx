@@ -26,7 +26,7 @@ function UprankCreditCard() {
             setError(successData.data.message);
             sessionStorage.removeItem('uprankCredit');
           } else {
-            navigate('/successfully', { state: { successnavigate: successData.data.message } });
+            navigate('/successfully', { state: { message: successData.data.message } });
             sessionStorage.removeItem('uprankCredit');
           }
         } catch (error) {

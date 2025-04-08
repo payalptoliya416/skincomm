@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import storage from 'redux-persist/lib/storage';
 import { fetchBalance } from "../../Redux/thunks/balanceThunks";
 import { RootState } from "../../Redux/store";
+import storageSession from 'redux-persist/lib/storage/session';
 
 const DashboardSidebar = ({ loginState }: any) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -20,8 +21,8 @@ const DashboardSidebar = ({ loginState }: any) => {
     };
 
     const handleLogout = async () => {
-        await storage.removeItem("persist:user_root");
-        await storage.removeItem("token");
+        await storageSession.removeItem("persist:user_root");
+        await storageSession.removeItem("token");
         sessionStorage.removeItem("user_data")
         sessionStorage.removeItem("securityMemberId");
         sessionStorage.removeItem('loginUser')

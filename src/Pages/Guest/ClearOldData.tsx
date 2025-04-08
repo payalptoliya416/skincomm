@@ -1,4 +1,5 @@
-import storage from 'redux-persist/lib/storage';
+
+import storageSession from 'redux-persist/lib/storage/session';
 export const  clearStorage =async () => {
     const keysToRemove = [
       "persist:user_root",
@@ -20,6 +21,6 @@ export const  clearStorage =async () => {
     ];
   
     keysToRemove.forEach((key) => sessionStorage.removeItem(key));
-    await storage.removeItem("persist:user_root");
-  await storage.removeItem("token");
+    await storageSession.removeItem("persist:user_root");
+  await storageSession.removeItem("token");
   };

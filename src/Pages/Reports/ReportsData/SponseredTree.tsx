@@ -10,47 +10,65 @@ import DataTable from 'datatables.net-dt';
 
 const SponseredTree = () => {
     const { reportData } = useSelector((state: RootState) => state.ewalletReport);
-    
- const tableRef = useRef<HTMLTableElement | null>(null);
+    const tableRef = useRef<HTMLTableElement | null>(null);
     const [loading, setLoading] = useState(true);
+    const dataTableRef = useRef<any>(null);
 
-  let dataTable: any = null;
-
-  useEffect(() => {
-      if (tableRef.current && Array.isArray(reportData) && reportData.length > 0) {
-          setLoading(false);
-          dataTable = new DataTable(tableRef.current, {
-              searching: true,
-              paging: true,
-              pageLength: 10,
-              destroy: true,
-          });
-      }
-
-      return () => {
-          if (dataTable) {
-              dataTable.destroy();
-          }
-      };
-  }, [reportData]);
-
+    useEffect(() => {
+        if (Array.isArray(reportData)) {
+            setLoading(false);
+    
+            // Delay DataTable init until DOM is ready
+            setTimeout(() => {
+                if (tableRef.current) {
+                    if (dataTableRef.current) {
+                        dataTableRef.current.destroy(); // Remove old instance
+                        dataTableRef.current = null;
+                    }
+    
+                    // Re-initialize with new data
+                    dataTableRef.current = new DataTable(tableRef.current, {
+                        searching: true,
+                        paging: true,
+                        pageLength: 10, // Can change to 25 or more if needed
+                        destroy: true,
+                    });
+                }
+            }, 0);
+        }
+    
+        return () => {
+            if (dataTableRef.current) {
+                dataTableRef.current.destroy();
+                dataTableRef.current = null;
+            }
+        };
+    }, [reportData]);
     const dispatch = useDispatch<any>();
-
-    const initialReport = {
-        currency: "",
-        from_year: "",
-        from_month: "",
-        to_year: "",
-        to_month: ""
-    };
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 4 }, (_, i) => currentYear - i);
 
-    useEffect(() => {
-        dispatch(fetchEWalletReport(initialReport));
-    }, [dispatch]);
+    const currentDate = new Date();
+const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Make sure it's '01', '02', etc.
+
+const initialReport = {
+    currency: "",     
+    from_year: currentYear.toString(),
+    from_month: currentMonth,
+    to_year: currentYear.toString(),
+    to_month: currentMonth
+};
+
+useEffect(() => {
+    dispatch(fetchEWalletReport(initialReport));
+}, [dispatch]);
 
     const formSubmit = (values: any) => {
+        setLoading(true);
+        if (dataTableRef.current) {
+            dataTableRef.current.destroy();
+            dataTableRef.current = null;
+        }
         dispatch(fetchEWalletReport(values));
     };
 
@@ -96,7 +114,8 @@ const SponseredTree = () => {
                             <div className="mb-3">
                             <label className="text-xs text-[#000]">e-Wallet</label>
                                 <select {...formik.getFieldProps('currency')} className="text-[#5b5968] w-full border-b border-[#a8a1a7] text-xs">
-                                    <option selected value="LP">LP</option>
+                                    <option selected value="">e-Wallet</option>
+                                    <option value="LP">LP</option>
                                     <option value="PP">PP</option>
                                 </select>
                             </div>
@@ -168,7 +187,7 @@ const SponseredTree = () => {
                 <div className="flex justify-center items-center h-10">
                     <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
                 </div>)}
-            <table ref={tableRef}  style={{ width: "100%" }}   className="display table-auto w-full text-sm text-left rtl:text-right text-black" >
+            <table ref={tableRef} style={{ width: "100%" }}  className="display table-auto w-full text-sm text-left rtl:text-right text-black" >
                     <thead className="text-xs text-white uppercase  bg-[#178285]">
                         <tr>
                             <th className="px-6 py-3">
@@ -207,6 +226,21 @@ const SponseredTree = () => {
                                                 </tr>
                                             ))
                     ):"" }
+                    {/* {reportData && reportData.length > 0 ? (
+    [...reportData].reverse().map((item: any, index: number) => (
+        <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
+            <td className="px-6 py-2 text-black">{item.trans_no}</td>
+            <td className="px-6 py-2 text-black">
+                {item.period}
+            </td>
+            <td className="px-6 py-2 text-black">{item.description}</td>
+            <td className="px-6 py-2 text-black">{item.credit}</td>
+            <td className="px-6 py-2 text-black">{item.debit}</td>
+            <td className="px-6 py-2 text-black">{item.balance}</td>
+        </tr>
+    ))
+) : ""} */}
+
                     </tbody>
                 </table>
             </div>

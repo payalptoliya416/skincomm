@@ -22,11 +22,13 @@ function ReorderCreditCard() {
   
         try {
           const successData = await dispatch(fetchReorderPost(submittedData));
-          if (successData?.data?.data?.error) {
-            setError(successData.data.data.message);
+          console.log("successData",successData)
+          console.log("successDatasasas",successData.data.message)
+          if (successData?.data?.success) {
+            navigate('/successfully', { state: { message: successData.data.message } });
             sessionStorage.removeItem('reorderpaymentData');
           } else {
-            navigate('/successfully', { state: { successnavigate: successData.data.data } });
+            setError(successData.data.data.message);
             sessionStorage.removeItem('reorderpaymentData');
           }
         } catch (error) {

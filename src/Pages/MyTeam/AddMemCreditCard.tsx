@@ -15,6 +15,7 @@ function AddMemCreditCard() {
        const submitPayment = async () => {
          const data = sessionStorage.getItem('myTeamAddmemberCredit');
          const submittedData = data ? JSON.parse(data) : null;
+
          if (!submittedData) {
            setError('No data available for submission.');
            setLoading(false);
@@ -22,21 +23,6 @@ function AddMemCreditCard() {
          }
    
          try {
-           const mobileDetail = {
-             action: 'checkuniquemobile',
-             phone_no: submittedData.mobile,
-             account: submittedData.account_type,
-             sponsor: '',
-           };
-   
-           const response = await dispatch(fetchNumber(mobileDetail));
-           const numberData = response.data;
-           if (!numberData.success) {
-             setError('Mobile validation failed, form submission aborted.');
-             setLoading(false);
-             return;
-           }
-   
            const successData = await dispatch(fetchAddMember(submittedData));
            if (successData?.data?.data?.success === true) {
             toast.success(successData.message);

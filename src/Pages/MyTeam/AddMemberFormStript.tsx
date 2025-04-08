@@ -22,6 +22,7 @@ function AddMemberFormStript() {
     };
     dispatch(fetchUserDetailData(userdatad));
   }, [dispatch, ID]);
+
   useEffect(() => {
     if (UserDetailData?.stripe_key) {
       const key = UserDetailData.stripe_key;
@@ -36,6 +37,7 @@ function AddMemberFormStript() {
       </div>
     );
   }
+
   return (
     <>
       <Elements stripe={stripePromise}>

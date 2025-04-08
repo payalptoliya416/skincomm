@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import { PrivateRouter, CheckAuthRouter } from "./PrivateRouter";
 import Login from "../Pages/Guest/Login";
@@ -59,12 +60,7 @@ import ELibrarySubCat from "../Pages/Auth/Settings/ELibrarySubCat";
 const BrowserRoute = () => {
   const url = new URL(window.location.href);
   const hash = url.hash;
-
   const refValue :any = hash.startsWith("#/") ? hash.substring(2) : null;
-
-//   if (refValue) {
-//     sessionStorage.setItem("refUserID", refValue);
-//   }
 
 //   const urlSegments = window.location.pathname.split("/");
 //   const refValue = urlSegments[urlSegments.length - 1];
@@ -72,36 +68,41 @@ const BrowserRoute = () => {
 //   if (refValue) {
 //     sessionStorage.setItem("refUserID", refValue);
 //   }
-  const fetchLoginuserId = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/check-user/${refValue}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to fetch Login User ID");
-      }
-  
-      const data = await response.json();
-  
-      if (data.exists) {
-        sessionStorage.setItem("refUserID", refValue);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  
-  useEffect(() => {
-    fetchLoginuserId();
-  }, []);
-  
 
+const RefHandler = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLoginuserId = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/check-user/${refValue}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch Login User ID");
+
+        const data = await response.json();
+        if (data.exists) {
+          sessionStorage.setItem("refUserID", refValue);
+        
+          navigate("/signup");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (refValue) fetchLoginuserId();
+  }, [navigate]);
+
+  return null; 
+};
   return (
     <Router>
+         <RefHandler />
       <Routes>
         {/* Guest Routers */}
         <Route element={<CheckAuthRouter />}>

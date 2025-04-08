@@ -394,7 +394,20 @@ const comboRetailProduct= productListData && productListData.products
      
     if(formData.payment_type === "credit_card" || formData.payment_type === "e-wallet" && stripInput || formData.payment_type === "e-wallet" ){
                 sessionStorage.setItem("myTeamAddmemberCredit" ,JSON.stringify(formData));
-                
+                const mobileDetail = {
+                  action: "checkuniquemobile",
+                  phone_no: formData.mobile,
+                  account: formData.account_type,
+                  sponsor: "",
+                };
+   
+           const response = await dispatch(fetchNumber(mobileDetail));
+           const numberData = response.data;
+           if (!numberData.success) {
+            toast.error("Mobile validation failed, form submission aborted.");
+            setDisable(false);
+             return;
+           }
                 const creditcardData = {
                                     "payment_type":formData.payment_type,
                                     "amount_type" : comboRetailPrices[0], 

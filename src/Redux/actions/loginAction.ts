@@ -28,9 +28,10 @@ export const loginAction = (formData: any) => async (dispatch: any) => {
             token: response.data.token,
         });
     } catch (error: any) {
+        const errorMsg = error?.response?.data?.message || "Something went wrong";
         dispatch({
             type: LoginTypes.LOGIN_FAILED,
-            payload: error,
+            payload: errorMsg,
         });
     } finally {
         dispatch({

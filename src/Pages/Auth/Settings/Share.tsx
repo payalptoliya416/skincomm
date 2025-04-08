@@ -5,6 +5,7 @@ import QRCode from "react-qr-code";
 import {   LIVE_URL } from "../../../Utilities/config";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
+import html2canvas from "html2canvas";
 
 const Share = () => {
         const userid = sessionStorage.getItem("UserID");
@@ -22,6 +23,22 @@ const Share = () => {
           }
         };
 
+        const downloadQR = () => {
+            const qrCodeElement = document.getElementById('qr-code');
+            
+            if (qrCodeElement) {
+                html2canvas(qrCodeElement).then((canvas) => {
+                    const imageUrl = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = imageUrl;
+                    link.download = 'QRCode.png'; 
+                    link.click();
+                });
+            } else {
+                console.error('QR code element not found');
+            }
+        };
+    
     return (
         <>
        
@@ -57,14 +74,13 @@ const Share = () => {
                         <div className="max-w-lg sm:mx-auto w-full mx-3">
                         <ul className="flex flex-col gap-7 bg-white rounded-2xl px-6 py-6 ">
                             <li className="mx-auto">
-                                <div style={{height: "auto", margin: "0 auto", maxWidth: 400, width: "100%"}} >
+                                <div style={{height: "auto", margin: "0 auto", maxWidth: 400, width: "100%"}}   id="qr-code">
                                     <QRCode
                                         size={200}
                                         style={{height: "auto", maxWidth: "200", width: "100%"}}
                                         value={referralUrl} 
                                         viewBox={`0 0 256 256`}
                                     />
-                              
                                 </div>
                             </li>
                             <li className="flex flex-col gap-4">
@@ -82,8 +98,8 @@ const Share = () => {
                             onClick={handleCopyClick}
                         />
                         </div>
-                                <button className="bg-[#148585] py-2 rounded-lg w-full text-sm text-white">
-                                    Download
+                                <button className="bg-[#148585] py-2 rounded-lg w-full text-sm text-white" onClick={downloadQR}>
+                                    Download 
                                 </button>
                             </li>
                         </ul>

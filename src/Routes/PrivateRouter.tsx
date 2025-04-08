@@ -13,6 +13,7 @@ const PrivateRouter = () => {
 const CheckAuthRouter = () => {
   const loginState = useSelector((state: any) => state.loginState);
   const isAuthenticated = loginState?.data?.token !== undefined;
+
   const dispatch = useDispatch() as any;
   const url = new URL(window.location.href);
   
@@ -67,7 +68,7 @@ const CheckAuthRouter = () => {
     };
 
     handleLoginWithUserId();
-  }, [dispatch, userIdFromUrl, loginState?.data?.token]);  
+  }, [dispatch, userIdFromUrl, loginState?.data?.token]); 
 
   if (isAuthenticated) {
     const newUrl = `${window.location.origin}/#/dashboard`;

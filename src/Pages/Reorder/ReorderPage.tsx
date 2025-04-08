@@ -295,7 +295,10 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
               ...prev,
               payment_slip_image: baseImage, 
             }));
-        
+            setError((prev) => ({
+              ...prev,
+              currency: '', 
+            }));
           } catch (error) {
             console.error('Error compressing the image:', error);
             toast.error('Failed to upload the image.');
@@ -329,7 +332,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
         newErrors.currency = "Currency field is required";
     }
     if (formData.currency === 'upload_payment_slip' && !formData.payment_slip_image) {
-      newErrors.upload = "Please select an image";
+      newErrors.currency = "Please select an image";
     }
     if (formData.currency === 'e-wallet' && !stripShow) {
       if (totalPrice > totalBalanceOfEWallet) {
@@ -343,7 +346,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
     return newErrors;
   }
 
-  const [error,setError]= useState<any>();
+  const [error, setError] = useState<{ [key: string]: string }>({});
 
   const products_data = Object.values(cart)
   .filter(item => item.count > 0) 
@@ -692,7 +695,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                             ''
                           )
                         }
-                     {error?.upload && <p className="text-red-500 text-xs mt-2">{error.upload}</p>}
                    {error?.currency && <p className="text-red-500 text-xs mt-2">{error.currency}</p>}
 
                     </div>

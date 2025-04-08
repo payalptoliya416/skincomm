@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 
 import storage from 'redux-persist/lib/storage';
-
+import storageSession from 'redux-persist/lib/storage/session';
 import loginReducer from "./reducers/loginReducer";
 import { persistReducer } from "redux-persist";
 import { balanceReducer } from "./reducers/balanceReducer";
@@ -42,9 +42,10 @@ import { MatrixSideGetReducer } from "./reducers/MetrixSideGetReducer";
 import { eLibraryListReducer } from "./reducers/ELibraryListReducer";
 import { withDReducer } from "./reducers/WithDReducer";
 import { eLibrarySubCatReducer } from "./reducers/ELibrarySubCatReducer";
+
 const userPersistConfig = {
     key: 'user_root',
-    storage,
+    storage: storageSession, 
 }
 
 const appReducer = combineReducers({
@@ -93,7 +94,7 @@ const appReducer = combineReducers({
 const rootReducer = (state: any, action: any) => {
     if (action.type === "LOG_OUT") {
         storage
-            .removeItem("persist:user_root")
+        .removeItem("persist:user_root")
             .then(() => storage.removeItem("token"))
             .then(() => {
                 state = undefined; 
