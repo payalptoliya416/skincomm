@@ -97,36 +97,52 @@ const comboRetailProduct= productListData && productListData.products
     dispatch(fetchUserDetailData(userdatad));
   }, [dispatch]);
 
+
   const handleFnameSearch = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
+  
     if (name === "sponsor") {
       try {
         const data = await dispatch(fetchSearchTeamData(value));
-        setFName(data);
+        if (data?.error) {
+          setFName({ error: true, message: data.message });
+        } else {
+          setFName({ member: data.member });
+        }
       } catch (error) {
+        setFName({ error: true, message: "Error fetching sponsor data." });
         console.error("Error fetching sponsor data:", error);
       }
-    } else if (name === "placement") {
+    }
+  
+    if (name === "placement") {
       try {
         const placementData = await dispatch(fetchSearchTeamData(value));
-        setplacementName(placementData);
+  
+        if (placementData?.error) {
+          setplacementName({ error: true, message: placementData.message });
+        } else {
+          setplacementName({ member: placementData.member });
+        }
       } catch (error) {
+        setplacementName({ error: true, message: "Error fetching placement data." });
         console.error("Error fetching placement data:", error);
       }
     }
   };
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await dispatch(fetchSearchTeamData(upline_id));
-        setFName(data);
+        // setFName(data);
+        setFName({ member: data.member });
         const placementName = await dispatch(fetchSearchTeamData(upline_id));
-        setplacementName(placementName);
+        // setplacementName(placementName);
+        setplacementName({ member: placementName.member });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -534,17 +550,15 @@ const comboRetailProduct= productListData && productListData.products
                     value={formData.sponsor}
                     onChange={handleFnameSearch}
                   />
-                  {errors.sponsor && (
-                    <p className="text-red-500 text-xs">{errors.sponsor}</p>
-                  )}
-                  {fName.member && fName.member ? (
-                    <h4 className="text-sm pt-2">
-                      {" "}
-                      {fName && fName.member.f_name}
-                    </h4>
-                  ) : (
-                    ""
-                  )}
+                 {errors.sponsor ? (
+                <p className="text-red-500 text-xs pt-2">{errors.sponsor}</p>
+              ) : fName?.error ? (
+                <p className="text-red-500 text-xs pt-2">{fName.message || "Sponsor not found."}</p>
+              ) : null}
+
+                {fName?.member && (
+                  <h4 className="text-sm pt-2">{fName.member.f_name}</h4>
+                )}
                 </div>
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">
@@ -558,17 +572,18 @@ const comboRetailProduct= productListData && productListData.products
                     value={formData.placement}
                     onChange={handleFnameSearch}
                   />
-                  {errors.placement && (
-                    <p className="text-red-500 text-xs">{errors.placement}</p>
-                  )}
-                  {placementName.member && placementName.member ? (
-                    <h4 className="text-sm pt-2">
-                      {" "}
-                      {placementName.member && placementName.member.f_name}
-                    </h4>
-                  ) : (
-                    ""
-                  )}
+                  {errors.placement ? (
+                <p className="text-red-500 text-xs pt-2">{errors.placement}</p>
+              ) : placementName?.error ? (
+                <p className="text-red-500 text-xs pt-2">
+                  {placementName.message || "Placement not found."}
+                </p>
+              ) : null}
+
+
+                {placementName?.member && (
+                  <h4 className="text-sm pt-2">{placementName.member.f_name}</h4>
+                )}
                 </div>
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">
