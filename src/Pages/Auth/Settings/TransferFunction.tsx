@@ -198,6 +198,7 @@ const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
                     onChange={handleChange}
                   />
                   <p className="text-[#1e293b] text-[14px] mt-1">{fName && fName ? fName.f_name : ""}</p>
+                  <p  className="text-red-500 text-xs">{fName && fName.error ? fName.message : ""}</p>
                   {errors.to_user && (
                     <p className="text-red-500 text-xs">{errors.to_user}</p>
                   )}

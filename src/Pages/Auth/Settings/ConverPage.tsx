@@ -24,11 +24,14 @@ function ConverPage() {
         security_password:""
        });
        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-          ...formData,
-          [e.target.name]: parseFloat(e.target.value),
-        });
+        const { name, value } = e.target;
+      
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [name]: name === 'security_password' ? value : parseFloat(value),
+        }));
       };
+      
        const availableLp = getLPBalanceDetail.available_lp;
       const validation = () => {
         
@@ -55,7 +58,11 @@ function ConverPage() {
         if (resData?.data?.success) {
           const message = resData?.data?.message || 'Success';
           toast.success(message);
-          window.location.reload();
+          dispatch(fetchLpBalance());
+          setFormData({
+            amount: 0,
+            security_password:""
+           })
       } else if (resData?.data?.error) {
           const message = resData?.data?.message || 'Something went wrong';
           toast.error(message);
@@ -130,10 +137,9 @@ function ConverPage() {
                     <input
                       type="password"
                       name="security_password"
-                      step="0.01"
                       placeholder="Security Password"
                       className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black"
-                      value={formData.security_password}
+                      value={formData.security_password || ''}
                       onChange={handleInputChange}
                     />
                     {errors.security_password && (
