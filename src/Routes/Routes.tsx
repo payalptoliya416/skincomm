@@ -56,6 +56,7 @@ import UprankCreditCard from "../Pages/Auth/Uprank/UprankCreditCard";
 import JumStartCreditCard from "../Pages/Auth/JumpStart/JumStartCreditCard";
 import RegistrationCreditCard from "../Pages/Guest/registration/RegistrationCreditCard";
 import ELibrarySubCat from "../Pages/Auth/Settings/ELibrarySubCat";
+import PaymentSuccess from "../Pages/Guest/registration/PaymentSuccess";
 
 const BrowserRoute = () => {
   const url = new URL(window.location.href);
@@ -112,6 +113,7 @@ const RefHandler = () => {
           <Route path="/signup" element={<RegistrationStrip />} />
           {/* --registration-- */}
           <Route path="/signup-payment" element={<RegistrationCreditCard />} />
+          <Route path="/signupSuccessfullyPayment" element={<PaymentSuccess />} />
         </Route>
 
         {/* Private Routers */}

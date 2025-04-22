@@ -207,7 +207,7 @@ const Setting = () => {
                   </div>
                 </Link>
               </li>
-          
+
               <li className={`${customerRankID === "1" ? "hidden" : ""}`}>
                 <Link
                   to="/transfer"
@@ -301,7 +301,7 @@ const Setting = () => {
                             </svg>
                         </div>
                     </Link>
-                </li> */}   
+                </li> */}
               {joinDate && (
                 <>
                   {expiredTime ? (
@@ -471,7 +471,7 @@ const Setting = () => {
                   className="flex items-start w-full text-custom-text-color font-normal text-xs"
                 >
                   <div className="-mt-1 w-14">
-                  <PiArrowsLeftRightBold className="w-[24px] h-[24px] text-custom-text-color2"  />
+                    <PiArrowsLeftRightBold className="w-[24px] h-[24px] text-custom-text-color2" />
                   </div>
                   <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
                     <span>Placement Setting</span>
@@ -544,16 +544,17 @@ const Setting = () => {
                   </div>
                 </Link>
               </li>
-             
+
               <li className={`${customerRankID === "1" ? "hidden" : ""}`}>
                 <Link
-                  to={`/e-library`}
+                  to="https://linktr.ee/skincomm.library"
+                  target="_blank"
                   className={`flex items-start w-full text-custom-text-color font-normal text-xs ${
                     customerRankID === "1" ? "pointer-events-none" : " "
                   }`}
                 >
                   <div className="-mt-1 w-14">
-                   <BsCameraVideo className="w-[24px] h-[24px] text-custom-text-color2" />
+                    <BsCameraVideo className="w-[24px] h-[24px] text-custom-text-color2" />
                   </div>
                   <div className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border">
                     <span>e-Library</span>
@@ -577,7 +578,7 @@ const Setting = () => {
                   </div>
                 </Link>
               </li>
-             
+
               <LanguageSwitcher />
             </ul>
           </div>
