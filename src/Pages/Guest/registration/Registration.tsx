@@ -69,9 +69,10 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
 
     useEffect(() => {
         const userdatad = {
-        action : "checkuserdetail",
-        userid : userId
-    }   
+          action: "checkuserdetail",
+          userid: userId,
+          loggedInId: sessionStorage.getItem("refUserID"),
+        };    
     fetchSignUpProductList();
     fetchUserDetailData(userdatad); 
     fetchPlcamentTreeData(ID)
@@ -111,7 +112,7 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userdatad), 
+          body: JSON.stringify(userdatad),
         });
     
         if (!response.ok) {
@@ -373,6 +374,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   }
               
                   const submitData = await response.json();
+                  console.log(submitData)
                   return submitData.data; 
                 } catch (error) {
                   console.error("Error fetching data:", error);
