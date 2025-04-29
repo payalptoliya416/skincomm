@@ -125,7 +125,7 @@ function MatrixSide() {
                     value={formData.referral_user_matrix_side}
                     onChange={handleChange}
                   >
-                    <option value="" disabled>Auto</option>
+                    <option value="" hidden></option>
                     <option value="R">Right</option>
                     <option value="L">Left</option>
                   </select>
