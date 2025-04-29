@@ -82,9 +82,10 @@ interface SponsoredTreeItem {
             levelData.map((item, index) => (
               <React.Fragment key={index}>
                 {item.type === 'person' ? (
-                  <div  className={`py-7 cursor-pointer text-cenetr  flex ${data === '5' ? "" : "border-after"} justify-center ${ item.sponser_id === userID ? item.referral_user_matrix_side === "L" ? "left-after" : item.referral_user_matrix_side === "R" ? "right-after" : "" :
+                  <div  className={`py-7 cursor-pointer text-center  flex ${data === '5' ? "" : "border-after"} justify-center ${item.col === "L" ? "left-after" : item.col === "R" ? "right-after" : ""  }`} >
+                  {/* <div  className={`py-7 cursor-pointer text-center  flex ${data === '5' ? "" : "border-after"} justify-center ${ item.sponser_id === userID ? item.referral_user_matrix_side === "L" ? "left-after" : item.referral_user_matrix_side === "R" ? "right-after" : "" :
                     item.col === "L" ? "left-after" : item.col === "R" ? "right-after" : ""
-                  }`} >
+                  }`} > */}
                    <div className='transition-all duration-500 relative w-full max-w-[140px] bg-gray-200 flex justify-center flex-col items-center py-2 px-2 rounded-md mx-2' onClick={() =>handlePersonCall(item.userid)}>
                     <LuUser className='mb-2 inline' />
                    <h3 className='text-[10px] text-black'>
@@ -98,10 +99,9 @@ interface SponsoredTreeItem {
                     </h3>
                     <h3 className='text-[10px] text-black'>{item.userid}</h3>
                     <h3 className='text-[10px] text-black'>
-                      L : {item.data.accu_left_node || 0} | R : {item.data.accu_right_node || 0}
-                    <h3>Today Balance</h3>
-                    <h3>{item.data.bleft_node || 0} | {item.data.bright_node || 0}</h3>
-                    </h3>
+                      L : {item.data.accu_left_node || 0} | R : {item.data.accu_right_node || 0}</h3>
+                    <h3 className='text-[10px] text-black'>Today Balance</h3>
+                    <h3 className='text-[10px] text-black'>{item.data.bleft_node || 0} | {item.data.bright_node || 0}</h3>
                    </div>
                    <div className='group relative max-h-max'>
                    <AiOutlineInfoCircle className='' />
@@ -135,9 +135,6 @@ interface SponsoredTreeItem {
                         item.col === "L" ? "left-after" : item.col === "R" ? "right-after" : ""
                       }`}>
                  <div className='mx-auto py-2 px-10 rounded-md group' >
-                      {/* <div onClick={() => handleNavigate(item.col , item.upline_id)}>
-                    <FaRegPlusSquare className='cursor-pointer mx-auto ' />
-                    </div> */}
                     <div onClick={() => setSelectedIndex(index)}>
                         <FaRegPlusSquare className="cursor-pointer mx-auto" />
                       </div>
@@ -152,12 +149,6 @@ interface SponsoredTreeItem {
               >
                 Add Member
               </button>
-              {/* <button
-                className="w-full text-[16px] sm:text-[18px] mb-[2px]"
-                onClick={() => handleNavigate('/addcustomer', item.col, item.upline_id)}
-              >
-                Add Customer
-              </button> */}
               </div>
                </div>
             </div>

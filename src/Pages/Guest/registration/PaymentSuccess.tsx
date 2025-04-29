@@ -5,6 +5,7 @@ function PaymentSuccess() {
   const location = useLocation();
   const { successnavigate } = location.state || {};
   const memberDetail = successnavigate?.member_detail;
+  
   return (
     <>
       <div className="bg-gray-100 h-screen flex justify-center items-center">
@@ -74,7 +75,7 @@ function PaymentSuccess() {
             </div>
             <div className="py-10 text-center">
               <Link
-                to="/"
+                to="/" 
                 className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
               >
                 Redirect to Login

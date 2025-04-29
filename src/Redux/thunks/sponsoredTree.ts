@@ -13,7 +13,7 @@ export const fetchSponsoredTree = (earningParams: any) => {
             return {data : response.data.data}
         } catch (error: any) {
             dispatch(fetchSposoredTreeGailure(error.message || 'Failed to fetch Sponsored TreeReport data'));            
-            return  ;
+            return  error;
         }
     };
 };

@@ -273,35 +273,7 @@ const Setting = () => {
                   </div>
                 </Link>
               </li>
-              {/* <li className={`${customerRankID === '1' ? "hidden" : ""}`}>
-                    <Link to="/addcustomer" className="flex items-start w-full text-custom-text-color font-normal text-xs">
-                        <div className="-mt-1 w-14">
-                            <HiUserPlus className="w-[20px] h-[20px] text-custom-text-color2 mt-1" />
-                        </div>
-                        <div
-                            className="w-full flex items-center justify-between pb-3 sm:pb-5 pr-2 border-b border-custom-border"
-                        >
-                            <span>Add Customer</span>
-                            <svg
-                                className="w-5 h-5 text-custom-text-color2"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m9 5 7 7-7 7"
-                                />
-                            </svg>
-                        </div>
-                    </Link>
-                </li> */}
+             
               {joinDate && (
                 <>
                   {expiredTime ? (

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../../Components/Layout";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMatrixThunk } from "../../../Redux/thunks/MatrixThunk";
 import { toast, ToastContainer } from "react-toastify";
 import { fetchMatrixGetThunk } from "../../../Redux/thunks/MatrixSideGetThunk";
 import { RootState } from "../../../Redux/store";
-import { BASE_URL } from "../../../Utilities/config";
 
 interface FormData {
   userid: string;
@@ -49,7 +48,6 @@ function MatrixSide() {
       newErrors.referral_user_matrix_side = "Matrix Side is required";
     return newErrors;
   };
-  const navigate = useNavigate();
   const [disable, setDisable] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

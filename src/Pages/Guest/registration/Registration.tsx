@@ -50,10 +50,10 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
       const [isOpen, setIsOpen] = useState<any>(null);
-     const [matrixSide, setMatrixSide] = useState<any>('');
-    const [formData, setFormData] = useState<FormData>({
+      const [matrixside , setMatrixSide] = useState('');
+          const [formData, setFormData] = useState<FormData>({
         sponsor:  ID || "",
-        placement:  ID || "",
+        placement:   "",
         matrix_side: "",
         account_type: 0,
         f_name: "",
@@ -173,22 +173,62 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
        const blankCols = placementTree.data.level5
       .filter((item: any) => item.type === "blank")
       .map((item: any) => item.col);
-      setMatrixSide(blankCols)
+      // setMatrixSide(blankCols)
     return { placementTree, blankCols };
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    useEffect(() => {
-      if (matrixSide.length > 0) {
-          const firstCol = matrixSide[0]; // Get the first value
-          setFormData(prev => ({
-              ...prev,
-              matrix_side: firstCol === "L" ? "R" : "L" 
-          }));
-      }
-  }, [matrixSide]);
+    
+  //   useEffect(() => {
+  //     if (matrixSide.length > 0) {
+  //         const firstCol = matrixSide[0];
+  //         setFormData(prev => ({
+  //             ...prev,
+  //             matrix_side: firstCol === "L" ? "R" : "L" 
+  //         }));
+  //     }
+  // }, [matrixSide]);
+  
+  useEffect(() => {
+    if (matrixside) {
+      setFormData((prevState) => ({
+        ...prevState,
+        matrix_side: matrixside,
+      }));
+    }
+  }, [matrixside]);
 
+      
+
+      const fetchMetrixSide = async (ID: any) => {
+        try {
+          const response = await fetch(
+            `${BASE_URL}/api/get-referral-users-matrix-side-public/${ID}`, 
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+      
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+      
+          const metrixSide = await response.json(); 
+          setMatrixSide(metrixSide.data.referral_user_matrix_side);
+          return metrixSide;
+      
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      useEffect(()=>{
+        fetchMetrixSide(ID);
+      },[ID]);
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -202,7 +242,7 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
     
         fetchData();
       }, [ID]);
-
+      
     const handleFnameSearch =async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -374,7 +414,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   }
               
                   const submitData = await response.json();
-                  console.log(submitData)
                   return submitData.data; 
                 } catch (error) {
                   console.error("Error fetching data:", error);
@@ -399,8 +438,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
           setFormData({
             sponsor: ID || "",
-            placement: ID || "",
-            matrix_side: "",
+            placement: "",
+            matrix_side:"",
             account_type: 0,
             f_name: "",
             e_mail: "",

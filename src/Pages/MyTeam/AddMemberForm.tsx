@@ -138,10 +138,8 @@ const comboRetailProduct= productListData && productListData.products
     const fetchData = async () => {
       try {
         const data = await dispatch(fetchSearchTeamData(upline_id));
-        // setFName(data);
         setFName({ member: data.member });
         const placementName = await dispatch(fetchSearchTeamData(upline_id));
-        // setplacementName(placementName);
         setplacementName({ member: placementName.member });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -555,7 +553,6 @@ const comboRetailProduct= productListData && productListData.products
               ) : fName?.error ? (
                 <p className="text-red-500 text-xs pt-2">{fName.message || "Sponsor not found."}</p>
               ) : null}
-
                 {fName?.member && (
                   <h4 className="text-sm pt-2">{fName.member.f_name}</h4>
                 )}
@@ -649,7 +646,6 @@ const comboRetailProduct= productListData && productListData.products
                         <p className="text-red-500 text-xs">{errors.mobile}</p>
                       )}
                 </div>
-
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">Country</label>
                   <select
@@ -793,7 +789,6 @@ const comboRetailProduct= productListData && productListData.products
                     <p className="text-red-500 text-xs">{errors.package_id}</p>
                   )}
                 </div>
-
                 <div className="mb-3">
                   <label className="text-[#1e293b] text-[14px]">Payment</label>
                   <select
@@ -927,7 +922,6 @@ const comboRetailProduct= productListData && productListData.products
                     }
                   </div>
                 </div>
-               
                 <div className="text-end flex justify-end">
                   <button
                     type="submit"
