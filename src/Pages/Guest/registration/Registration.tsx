@@ -49,6 +49,7 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
      const [errors, setErrors] = useState<any>({});
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
+     const [countrysinga , setCountrySinga] = useState<any>(false);
       const [isOpen, setIsOpen] = useState<any>(null);
       const [matrixside , setMatrixSide] = useState('');
           const [formData, setFormData] = useState<FormData>({
@@ -280,6 +281,14 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
             }
             setFormData((prev) => ({ ...prev, [name]: value }));
         
+        } else if(name === "country" ){      
+          const selectedCountry = productListSignUpData.countries.find((country: any) => Number(country.id) === Number(value));
+          if (selectedCountry.country_name === "Singapore") {
+            setCountrySinga(true)
+          } else {
+            setCountrySinga(false);
+          }
+          setFormData((prev) => ({ ...prev, [name]: value }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -681,7 +690,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 </div>
                                     <div className="mb-3">
                             <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
-                            <div className="mt-3 flex gap-20 justify-around">
+                            <div className={` mt-3 flex gap-20  ${countrysinga ? "justify-around":"justify-start ps-1 md:ps-5"}`}>
                                 <div className="flex items-center cursor-pointer">
                                 <input
                                     id="main-account"
@@ -696,6 +705,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     Self Collect
                                 </label>
                                 </div>
+                                {
+                      countrysinga &&
                                 <div className="flex items-center cursor-pointer">
                                 <input
                                     id="sub-account"
@@ -709,7 +720,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black">
                                     Delivery
                                 </label>
-                                </div>
+                                </div>}
                             </div>
                             </div>
                                 <div className='text-end'>
