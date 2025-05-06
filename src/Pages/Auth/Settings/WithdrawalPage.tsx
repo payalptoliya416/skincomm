@@ -9,21 +9,19 @@ import { fetchWithDrawalPageData } from '../../../Redux/thunks/WithDThunk';
 function WithdrawalPage() {
     const dispatch = useDispatch<any>();
 
-    const { WhithdrawalPageData  } = useSelector((state: RootState) => state.withdrwalrequest);
+    const { WhithdrawalPageData , loading } = useSelector((state: RootState) => state.withdrwalrequest);
+
         const tableRef = useRef<HTMLTableElement | null>(null);
 
-    useEffect(() => {
-      
-    }, [dispatch]);
        useEffect(() => {
         dispatch(fetchWithDrawalPageData());
         }, [dispatch]);
                
-          const [loading, setLoading] = useState(true);
+          // const [loading, setLoading] = useState(true);
           let dataTable: any = null;
       useEffect(() => {
         if (tableRef.current && Array.isArray(WhithdrawalPageData?.withdrawals) && WhithdrawalPageData?.withdrawals?.length > 0) {
-            setLoading(false);
+            // setLoading(false);
             dataTable = new DataTable(tableRef.current, {
                 searching: true,
                 paging: true,
@@ -129,8 +127,11 @@ function WithdrawalPage() {
                             </td>
                           </tr>
                         ))
-                      ) :''}
-
+                      ) :<tr>
+                      <td colSpan={5} className="text-center py-4 text-gray-500">
+                        No data found
+                      </td>
+                    </tr>}
                           </tbody>
                         </table>
                       </div>

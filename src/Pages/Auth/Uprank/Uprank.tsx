@@ -273,27 +273,6 @@ const comboRetailProduct= UprankGetData && UprankGetData.packages
             }
           }, []);
           
-          // const rankValidation = () => {
-      
-          //   const numericCurrentRank = Number(currentRank);
-          //   const maxLPitems = Object.values(maxLP);
-          //   const maximumTotalLP = maxLPitems.reduce((total: number, item: any) => total + item.price, 0);
-          //   const matchingItem = UprankGetData.rank_data.find((i: any) => i.rank_id === numericCurrentRank);
-
-          //    if(currentRank > 3 ){
-          //   toast.error(`You cannot Up Rank anymore`);
-          //    }else if (matchingItem) {
-          //     if (matchingItem.max_lp > maximumTotalLP) {
-          //       toast.error(`max_lp should be greater than current LP : ${matchingItem.max_lp}`);
-          //       return false; 
-          //     }
-          //   } else {
-          //     toast.error("You Cannot UpRank");
-          //     return false; 
-          //   }
-          
-          //   return true; 
-          // };
           const rankValidation = () => {
             const numericCurrentRank = Number(currentRank);
             const maxLPitems = Object.values(maxLP);
@@ -317,84 +296,6 @@ const comboRetailProduct= UprankGetData && UprankGetData.packages
             return true;
           };
            const [disable , setDisable]= useState(false);
-            // const handleSubmit =async (e: React.FormEvent<HTMLFormElement>)=> {
-            //   e.preventDefault();
-            //    setDisable(true);
-              
-            //   const data = {
-            //     "package_ids": products_data,
-            //       "payment_type" : formData.currency,
-            //       "deliver_status": formData.deliver_status
-            //     }  
-
-            //     if (products_data.length === 0) {
-            //         toast.error("Please select at least one product.");
-            //         setDisable(false);
-            //         return;
-            //       }
-                
-            //       const isRankValid = rankValidation();
-            //       if (!isRankValid) {
-            //         setDisable(false);
-            //         return; 
-            //       }
-
-            //   const errors = validationErrors();
-            //         if (Object.keys(errors).length === 0 ) {
-                        
-            //           if (!stripe || !elements) {
-            //             toast.error("Stripe or Elements not initialized."); 
-            //             setDisable(false);
-            //             return;
-            //           }
-            //           if(formData.currency === "credit_card" || formData.currency === "e-wallet" ){
-            //                           sessionStorage.setItem("uprankCredit" ,JSON.stringify(formData));
-            //                           const creditcardData = {
-            //                               "payment_type":formData.currency,
-            //                               "amount_type" : comboRetailPrices[0], 
-            //                               "product_type" : comboRetailProduct[0], 
-            //                               "products_data" :products_data,
-            //                               "deliver_status" : formData.deliver_status,
-            //                               "success_url" :`${LIVE_URL}/uprank-payment`,
-            //                               "cancel_url":`${LIVE_URL}/uprank`
-            //                           }
-            //                           const availableUrl = await dispatch(fetchPaymentLink(creditcardData));
-            //                           if (availableUrl?.url) {
-            //                               let storedData = JSON.parse(sessionStorage.getItem("uprankCredit") || "{}");
-            //                               storedData.payment_type = availableUrl?.paymentType || storedData.payment_type;
-            //                               sessionStorage.setItem("uprankCredit", JSON.stringify(storedData));
-            //                               window.location.href = availableUrl.url;
-            //                           } else {
-            //                               toast.error("Invalid URL received:", availableUrl);
-            //                           }
-                                      
-            //           }else{
-            //                            const formDataToSend = {
-            //                              ...data,
-            //                            };
-            //                                 const res =  await dispatch(fetchUpRankPost(formDataToSend));
-            //                                 if(res.data.success === true){
-            //                                     toast.success(res.data.message)
-            //                                     sessionStorage.removeItem('cart')
-            //                                     sessionStorage.removeItem('totalPrice')   
-            //                                     setFormData({
-            //                                      id: '',
-            //                                      currency : "",
-            //                                      deliver_status:'self_collect'
-            //                                     })
-            //                                     navigate('/successfully', {state : { message: res.data.message } } );
-            //                                     setDisable(false);
-            //                                  }else{
-            //                                     toast.error(res.data.message)
-            //                                     setDisable(false); 
-            //                                 }
-            //           }
-            //         } else {
-            //           setError(errors)
-            //           setDisable(false);
-            //         }
-                
-            // }
             const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               setDisable(true);
