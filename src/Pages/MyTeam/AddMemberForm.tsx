@@ -663,7 +663,7 @@ const comboRetailProduct= productListData && productListData.products
                         </option>
                       ))
                     ) : (
-                      <option disabled>No products available</option>
+                      <option disabled>No Country available</option>
                     )}
                   </select>
                   {errors.country && (
