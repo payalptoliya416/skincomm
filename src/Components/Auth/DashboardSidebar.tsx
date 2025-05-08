@@ -61,7 +61,6 @@ const DashboardSidebar = ({ loginState }: any) => {
     }, []);
 
     const { balanceData } = useSelector((state: RootState) => state.balance);
-
     useEffect(() => {
         dispatch(fetchBalance());
     }, [dispatch]);
@@ -131,26 +130,30 @@ const DashboardSidebar = ({ loginState }: any) => {
                             <div className="text-black">
                                 <h6 className="text-xs font-medium text-white">Purchase Point - PP</h6>
                                 <h4 className="text-sm sm:text-3xl font-semibold mt-1 text-white">
-                                  USD {balanceData.available_pp.toFixed(2)}
+                                  USD {balanceData.available_pp}
+                                  {/* USD {balanceData.available_pp.toFixed(2)} */}
                                 </h4>
                             </div>
                             <div className="text-black">
                                 <h6 className="text-xs font-medium text-white">Loyalty Point - LP</h6>
                                 <h4 className="text-sm sm:text-3xl font-semibold mt-1 text-white">
-                                  USD {balanceData.available_lp.toFixed(2)}
+                                  USD {balanceData.available_lp}
+                                  {/* USD {balanceData.available_lp.toFixed(2)} */}
                                 </h4>
                             </div>
 
                             <div className="text-black">
                                 <h6 className="text-xs font-medium text-white">Old Purchase Point - O PP</h6>
                                 <h4 className="text-sm sm:text-3xl font-semibold mt-1 text-white">
-                                  USD {balanceData.available_pp2.toFixed(2)}
+                                  USD {balanceData.available_pp2}
+                                  {/* USD {balanceData.available_pp2.toFixed(2)} */}
                                 </h4>
                             </div>
                             <div className="text-black">
                                 <h6 className="text-xs font-medium text-white">Reward Point - RP</h6>
                                 <h4 className="text-sm sm:text-3xl font-semibold mt-1 text-white">
-                                  USD {balanceData.available_sp.toFixed(2)}
+                                  USD {balanceData.available_sp}
+                                  {/* USD {balanceData.available_sp.toFixed(2)} */}
                                 </h4>
                             </div>
                         </>

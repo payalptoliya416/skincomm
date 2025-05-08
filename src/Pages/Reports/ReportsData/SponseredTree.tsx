@@ -226,22 +226,7 @@ useEffect(() => {
                                                 </tr>
                                             ))
                     ):"" }
-                    {/* {reportData && reportData.length > 0 ? (
-    [...reportData].reverse().map((item: any, index: number) => (
-        <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#efeff1]"}>
-            <td className="px-6 py-2 text-black">{item.trans_no}</td>
-            <td className="px-6 py-2 text-black">
-                {item.period}
-            </td>
-            <td className="px-6 py-2 text-black">{item.description}</td>
-            <td className="px-6 py-2 text-black">{item.credit}</td>
-            <td className="px-6 py-2 text-black">{item.debit}</td>
-            <td className="px-6 py-2 text-black">{item.balance}</td>
-        </tr>
-    ))
-) : ""} */}
-
-                    </tbody>
+                   </tbody>
                 </table>
             </div>
                     </div>

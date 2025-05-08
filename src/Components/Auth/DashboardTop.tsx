@@ -38,7 +38,8 @@ const DashboardTop = () => {
                     </h5>
                     {balanceData && (
                     <h3 className="font-semibold text-sm md:text-3xl text-custom-text-color mt-2">
-                        USD {balanceData.available_lp.toFixed(2)}
+                        USD {balanceData.available_lp}
+                        {/* USD {balanceData.available_lp.toFixed(2)} */}
                     </h3> 
                    )}
                     <ul className="mt-5 border-t border-custom-border pt-5 flex items-center justify-between">
