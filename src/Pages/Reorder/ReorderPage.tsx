@@ -63,7 +63,6 @@ const comboRetailProduct= productData && productData
     const [eWallerRPText ,setEWalletRPText] = useState<any>();
     const [isOpen, setIsOpen] = useState<any>(null);
     const [disable , setDisable] = useState<any>(false);
-    const [singapure , setSingapure] = useState<boolean>(false);
      const [cart, setCart] = useState<{ [productId: string]: CartItem }>(() => {
     const savedCart = sessionStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : {};
@@ -132,12 +131,13 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
           0
         );
         
-       if(formData.deliver_status === "delivery"){
-        calculateDeliveryCharge(newTotalPrice ,formData.deliver_status);
-       }else{
-        setTotalPrice(Number(newTotalPrice));
-       }
-       
+      //  if(formData.deliver_status === "delivery"){
+      //   calculateDeliveryCharge(newTotalPrice ,formData.deliver_status);
+      //  }else{
+      //   setTotalPrice(Number(newTotalPrice));
+      //  }
+
+         setTotalPrice(Number(newTotalPrice));
         if (formData.currency === 'e-wallet') {
           updateEwalletData(newTotalPrice);
         }
@@ -175,9 +175,9 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
             if (value) {
                 dispatch(fetchPaymentBy(value));  
             }
-            if (name === "deliver_status") {
-              calculateDeliveryCharge(totalPrice, value); // Pass the new value (delivery or self-collect)
-            }
+            // if (name === "deliver_status") {
+            //   calculateDeliveryCharge(totalPrice, value); // Pass the new value (delivery or self-collect)
+            // }
 
             if (name === 'currency') {
               if (value === 'e-wallet') {
@@ -239,7 +239,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
               setEWalletRPText(`- RP converted to ${ValuOfBalance.currency} base on (${(formattedValue)})`)
 
             }
-          if (ValuOfBalance.balance_rc === 0 && ValuOfBalance.balance_sp === 0) {
+          if (  parseFloat(ValuOfBalance.balance_rc) === 0 && ValuOfBalance.balance_sp === 0) {
             toast.error(ValuOfBalance.message);
           }
           if (ValuOfBalance.currency.trim() !== 'USD') {
@@ -380,7 +380,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
     
           try {
             const availableCountry = await dispatch(fetchSingapure(parsedData.userid));
-            setSingapure(availableCountry.CountryName === "Singapore" ? true : false);
           } catch (error) {
             console.error("Error fetching country data:", error);
           }
@@ -700,7 +699,7 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                     </div>
                     <div className="mb-3">
                 <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
-                <div className={` mt-3 flex gap-20  ${singapure ? "justify-around":"justify-start ps-1 md:ps-5"}`}>
+                <div className={` mt-3 flex gap-20 justify-around `}>
                   <div className="flex items-center cursor-pointer">
                     <input
                       id="main-account"
@@ -715,8 +714,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                       Self Collect
                     </label>
                   </div>
-                  {
-                    singapure &&
                   <div className="flex items-center cursor-pointer">
                     <input
                       id="sub-account"
@@ -731,7 +728,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                       Delivery
                     </label>
                   </div>  
-                  }
                 </div>
                     </div>
                      <div className='text-end flex justify-end mb-3 '>

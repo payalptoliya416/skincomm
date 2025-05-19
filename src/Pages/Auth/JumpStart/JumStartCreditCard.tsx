@@ -27,7 +27,7 @@ function JumStartCreditCard() {
                 setError(successData.data.data.message);
                 sessionStorage.removeItem('jumpstartCredit');
               } else {
-                navigate('/successfully', { state: { successnavigate: successData.data.data } });
+                navigate('/successfully', { state: { message : successData.message } });
                 sessionStorage.removeItem('jumpstartCredit');
               }
             } catch (error) {

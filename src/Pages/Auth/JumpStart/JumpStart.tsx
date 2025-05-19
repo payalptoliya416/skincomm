@@ -19,7 +19,7 @@ interface FormData {
   upload_image: any;
 }
 interface Package {
-  id: string;
+  id: string | number;
   combo_product_name: string;
   combo_product_retail_price: string;
   combo_product_lp: string;
@@ -300,11 +300,11 @@ const comboRetailProduct= packages && packages
                     onChange={(e) => {
                       handleChange(e);
                       const selectedPackage = packages.find(
-                        (pkg) => pkg.id === e.target.value
-                      );
+                          (pkg) => pkg.id === Number(e.target.value)
+                        );
+
                       const packageInfoDiv =
                         document.getElementById("package-info");
-
                       if (selectedPackage && packageInfoDiv) {
                         packageInfoDiv.classList.remove("hidden");
                         document.getElementById(

@@ -49,8 +49,8 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
      const [errors, setErrors] = useState<any>({});
      const [cart, setCart] = useState<any[]>([]); 
      const [totalPrice, setTotalPrice] = useState(0); 
-     const [countrysinga , setCountrySinga] = useState<any>(false);
       const [isOpen, setIsOpen] = useState<any>(null);
+      const [selectedCountryName , setSelectedCountryName] = useState<any>('');
       const [matrixside , setMatrixSide] = useState('');
           const [formData, setFormData] = useState<FormData>({
         sponsor:  ID || "",
@@ -174,22 +174,11 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
        const blankCols = placementTree.data.level5
       .filter((item: any) => item.type === "blank")
       .map((item: any) => item.col);
-      // setMatrixSide(blankCols)
     return { placementTree, blankCols };
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    
-  //   useEffect(() => {
-  //     if (matrixSide.length > 0) {
-  //         const firstCol = matrixSide[0];
-  //         setFormData(prev => ({
-  //             ...prev,
-  //             matrix_side: firstCol === "L" ? "R" : "L" 
-  //         }));
-  //     }
-  // }, [matrixSide]);
   
   useEffect(() => {
     if (matrixside) {
@@ -283,11 +272,7 @@ const comboRetailProduct= productListSignUpData && productListSignUpData.product
         
         } else if(name === "country" ){      
           const selectedCountry = productListSignUpData.countries.find((country: any) => Number(country.id) === Number(value));
-          if (selectedCountry.country_name === "Singapore") {
-            setCountrySinga(true)
-          } else {
-            setCountrySinga(false);
-          }
+            setSelectedCountryName(selectedCountry.country_name)
           setFormData((prev) => ({ ...prev, [name]: value }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
@@ -400,6 +385,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             if (numberData.success) {
               sessionStorage.setItem("signupcredit" ,JSON.stringify(formDataToSend));
               const creditcardData = {
+                  "action":"add-member",
+                  "country" : selectedCountryName,
                   "payment_type":formData.payment_type,
                   "amount_type" : comboRetailPrices[0], 
                   "product_type" : comboRetailProduct[0], 
@@ -690,7 +677,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 </div>
                                     <div className="mb-3">
                             <label className="text-[#1e293b] text-[14px] mb-1">Deliver Status</label>
-                            <div className={` mt-3 flex gap-20  ${countrysinga ? "justify-around":"justify-start ps-1 md:ps-5"}`}>
+                            <div className={` mt-3 flex gap-8 sm:gap-20 justify-around`}>
                                 <div className="flex items-center cursor-pointer">
                                 <input
                                     id="main-account"
@@ -705,8 +692,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                     Self Collect
                                 </label>
                                 </div>
-                                {
-                      countrysinga &&
                                 <div className="flex items-center cursor-pointer">
                                 <input
                                     id="sub-account"
@@ -720,7 +705,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                                 <label htmlFor="sub-account" className="ms-2 text-sm font-medium text-black">
                                     Delivery
                                 </label>
-                                </div>}
+                                </div>
                             </div>
                             </div>
                                 <div className='text-end'>

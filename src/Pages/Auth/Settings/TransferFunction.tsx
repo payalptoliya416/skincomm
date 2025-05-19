@@ -59,7 +59,7 @@ const validateForm = () => {
     }
 
     if (parseFloat(formData.amount) > availableBalance) {
-      newErrors.amount = `Transfer amount exceeds the available balance of ${availableBalance.toFixed(2)}`;
+      newErrors.amount = `Transfer amount exceeds the available balance of ${availableBalance}`;
     }
   }
 

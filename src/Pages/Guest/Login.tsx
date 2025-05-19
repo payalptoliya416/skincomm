@@ -48,7 +48,7 @@ const Login = () => {
     
     return (
         <>
-            {/* <section className="h-screen flex items-center justify-center">
+             {/* <section className="h-screen flex items-center justify-center">
            <ToastContainer />
              <div className="bg-white px-6 py-6 rounded-2xl sm:mx-auto w-full max-w-lg mx-2">
                         <div className="mt-5">
@@ -95,7 +95,7 @@ const Login = () => {
                             </div>
                         </form>
               </div>
-            </section> */}
+            </section>  */}
         </>
     );
 }

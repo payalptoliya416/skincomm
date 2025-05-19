@@ -66,7 +66,7 @@ const comboRetailProduct= productListData && productListData.products
   const [cart, setCart] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<any>(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [countrysinga , setCountrySinga] = useState<any>(false);
+  const [selectedCountryName , setSelectedCountryName] = useState<any>('');
   const [formData, setFormData] = useState<FormData>({
     sponsor: upline_id || "", 
     placement: upline_id || "",
@@ -183,7 +183,7 @@ const comboRetailProduct= productListData && productListData.products
         const ValuOfBalance = ewalletDataValue.data;
         setEwalletData(ValuOfBalance);
 
-        if (ValuOfBalance.balance_rc === 0 && ValuOfBalance.balance_sp === 0) {
+        if (parseFloat(ValuOfBalance.balance_rc) === 0 && ValuOfBalance.balance_sp === 0) {
           toast.error(ValuOfBalance.message);
           return;
         }
@@ -204,11 +204,7 @@ const comboRetailProduct= productListData && productListData.products
       setFormData((prev) => ({ ...prev, [name]: value }));
     } else if(name === "country" ){      
       const selectedCountry = productListData.countries.find((country: any) => Number(country.id) === Number(value));
-      if (selectedCountry.country_name === "Singapore") {
-        setCountrySinga(true)
-      } else {
-        setCountrySinga(false);
-      }
+      setSelectedCountryName(selectedCountry.country_name)
       setFormData((prev) => ({ ...prev, [name]: value }));
     }else{
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -423,6 +419,8 @@ const comboRetailProduct= productListData && productListData.products
              return;
            }
                 const creditcardData = {
+                                    "action":"add-member",
+                                    "country" : selectedCountryName,
                                     "payment_type":formData.payment_type,
                                     "amount_type" : comboRetailPrices[0], 
                                     "product_type" : comboRetailProduct[0], 
@@ -882,7 +880,7 @@ const comboRetailProduct= productListData && productListData.products
                   <label className="text-[#1e293b] text-[14px] mb-1">
                     Deliver Status
                   </label>
-                  <div className={` mt-3 flex gap-20  ${countrysinga ? "justify-around":"justify-start ps-1 md:ps-5"}`}>
+                  <div className={` mt-3 flex gap-8 sm:gap-20 justify-around`}>
                     <div className="flex items-center cursor-pointer">
                       <input
                         id="main-account"
@@ -900,8 +898,6 @@ const comboRetailProduct= productListData && productListData.products
                         Self Collect
                       </label>
                     </div>
-                    {
-                      countrysinga &&
                     <div className="flex items-center cursor-pointer">
                       <input
                         id="sub-account"
@@ -919,7 +915,6 @@ const comboRetailProduct= productListData && productListData.products
                         Delivery
                       </label>
                     </div>
-                    }
                   </div>
                 </div>
                 <div className="text-end flex justify-end">

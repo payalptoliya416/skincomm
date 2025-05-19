@@ -175,7 +175,7 @@ const comboRetailProduct= UprankGetData && UprankGetData.packages
                   setEWalletRPText(`- RP converted to ${ValuOfBalance.currency} base on (${(formattedValue)})`)
     
                 }
-              if (ValuOfBalance.balance_rc === 0 && ValuOfBalance.balance_sp === 0) {
+              if (  parseFloat(ValuOfBalance.balance_rc) === 0 && ValuOfBalance.balance_sp === 0) {
                 toast.error(ValuOfBalance.message);
               }
               if (ValuOfBalance.currency.trim() !== 'USD') {
@@ -305,7 +305,11 @@ const comboRetailProduct= UprankGetData && UprankGetData.packages
                 setDisable(false);
                 return;
               }
-            
+              if (nextError) {
+              toast.error("Next Rank is not available.");
+              setDisable(false);
+              return;
+            }
               if (!rankValidation()) { 
                 setDisable(false); 
                 return;

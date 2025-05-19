@@ -93,12 +93,14 @@ function Withdrawal() {
       if (data?.data?.success) {
         toast.success(data.data.message); 
         setFormData({ lp_amount: 0, security_password: "" });
+         dispatch(fetchLpBalance());
+         setCalculatedRate('');
+         setIsConfirmationOpen(false);
     } else if (data?.Error) {
         toast.error(data.Error);  
     } else if (data?.error) {
         toast.error(data.message); 
     }
-      setIsConfirmationOpen(false);
       
     } catch (error) {
       console.error("Error submitting withdrawal:", error);

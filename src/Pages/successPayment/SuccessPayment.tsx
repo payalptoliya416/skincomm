@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 function SuccessPayment() {
     const location = useLocation();
-    const { successnavigate } = location.state || {}; 
+    const { successnavigate } = location.state || {};
     const memberDetail = successnavigate?.member_detail;
   return (
     <>
