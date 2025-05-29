@@ -111,7 +111,7 @@ function ConverPage() {
               <h5 className="text-base text-custom-text-color font-medium">
                 Loyalty Point - LP :{" "}
                 {getLPBalanceDetail && (
-                  <span>${getLPBalanceDetail.available_lp}</span>
+                  <span> ${ (Number(getLPBalanceDetail?.available_lp) || 0).toFixed(2) }</span>
                 )}
               </h5>
 

@@ -809,7 +809,7 @@ const comboRetailProduct= productListData && productListData.products
                         <input
                           type="text"
                           className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-300"
-                          value={ewalletData.balance_rc}
+                          value={(+ewalletData?.balance_rc || 0).toFixed(2)}
                           readOnly
                         />
                       </div>
@@ -818,7 +818,7 @@ const comboRetailProduct= productListData && productListData.products
                         <input
                           type="text"
                           className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black  bg-gray-300"
-                          value={ewalletData.balance_sp}
+                        value={(+ewalletData?.balance_sp || 0).toFixed(2)}
                           readOnly
                         />
                       </div>
@@ -826,26 +826,6 @@ const comboRetailProduct= productListData && productListData.products
                   ) : (
                     ""
                   )}
-                  {/* {formData.payment_type === "credit_card" ? (
-                    <div className="mt-4">
-                      <CardElement
-                        className="border py-2 px-3 rounded-md"
-                        options={{ hidePostalCode: true }}
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )} */}
-                  {/* {formData.payment_type === "e-wallet" && stripInput ? (
-                    <div className="mt-4">
-                      <CardElement
-                        className="border py-2 px-3 rounded-md"
-                        options={{ hidePostalCode: true }}
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )} */}
                   {formData.payment_type === "upload_payment_slip" ? (
                     <input
                       type="file"

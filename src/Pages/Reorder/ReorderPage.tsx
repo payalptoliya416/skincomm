@@ -661,19 +661,6 @@ const [minDeliverCharge , setMinDeliveryCharge ] = useState<any>('');
                                     </>
                                 ) : ''
                              }
-                          {/* {formData.currency === "credit_card" && (
-                                <div className="mt-4">
-                                <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
-                                </div>
-                            )}  */}
-                             {/* {
-                                formData.currency === 'e-wallet' && stripShow? (
-                                    <div className="mt-4">
-                                   {eWallerCreditText &&  <p className='text-sm mb-1'>{eWallerCreditText}</p>}   
-                                    <CardElement className="border py-2 px-3 rounded-md" options={{ hidePostalCode: true }} />
-                                    </div>
-                                ) : ""
-                            } */}
                             { formData.currency === 'e-wallet' ? <input
                           type="text"
                           placeholder="balance"

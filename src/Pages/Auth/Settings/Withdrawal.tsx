@@ -144,7 +144,7 @@ function Withdrawal() {
               <h5 className="text-base text-custom-text-color font-medium">
                 Loyalty Point - LP :{" "}
                 {getLPBalanceDetail && (
-                  <span>${getLPBalanceDetail.available_lp}</span>
+                  <span>$ {(Number(getLPBalanceDetail.available_lp) || 0).toFixed(2)}</span>
                 )}
               </h5>
 
@@ -159,7 +159,7 @@ function Withdrawal() {
                       name=""
                       placeholder="Amount"
                       className="mt-2 w-full text-[14px] placeholder:text-[14px] border py-2 px-3 rounded-md placeholder:text-black bg-gray-200"
-                      value={getLPBalanceDetail.withdrawal_rate}
+                     value={Number(getLPBalanceDetail.withdrawal_rate || 0).toFixed(2)}
                       readOnly
                     />
                   </div>
